@@ -1,5 +1,7 @@
+import Server.Server;
+
 public class Main {
-    private void main(){
+    public static void main(String args[]){
         Server server = new Server();
         server.run();
     }
