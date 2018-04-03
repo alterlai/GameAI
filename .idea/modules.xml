@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/BKE/BKE.iml" filepath="$PROJECT_DIR$/BKE/BKE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BKE/Main.iml" filepath="$PROJECT_DIR$/BKE/Main.iml" />
       <module fileurl="file://$PROJECT_DIR$/Project-2.3.iml" filepath="$PROJECT_DIR$/Project-2.3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mainModule/mainModule.iml" filepath="$PROJECT_DIR$/mainModule/mainModule.iml" />
     </modules>
   </component>
 </project>
