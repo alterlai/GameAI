@@ -1,11 +1,22 @@
 public class Move {
-    int x;
-    int y;
-    Boolean Maximizer;
+    private int x;
+    private int y;
+    private Player player;
 
-    public Move(int x, int y, Boolean Maximizer) {
+    public Move(int x, int y, Player player) {
         this.x = x;
         this.y = y;
-        this.Maximizer = Maximizer;
+        this.player = player;
     }
+
+    public int getX(){
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+    public Player getPlayer() {
+        return player;
+    }
+
 }

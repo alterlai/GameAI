@@ -1,19 +1,19 @@
 import java.util.ArrayList;
+import java.util.Observable;
 
 /**
- *Board model and Tic Tac Toe logic which should be redundant after Server is implemented.
+ *Board model and Tic Tac Toe logic
  */
-public class Board {
+
+public class Board extends Observable {
 
 
-    public char[][] xy = new char[3][3];
+    private char[][] xy = new char[3][3];
+
     public Board() {
-
         xy[0][0] = ' '; xy[1][0] = ' '; xy[2][0] = ' ';
         xy[0][1] = ' '; xy[1][1] = ' '; xy[2][1] = ' ';
         xy[0][2] = ' '; xy[1][2] = ' '; xy[2][2] = ' ';
-
-
     }
 
     public Board(Board old) { //To prevent passing by reference, or something like that..
@@ -22,13 +22,13 @@ public class Board {
                 xy[i][j] = old.xy[i][j];
     }
 
-    public Boolean Win(Boolean Maxer){
+    public Boolean Win(Boolean Maxer, Player player, Player opponent){
         char Player = ' ';
         if (Maxer) {
-            Player = 'X';
+            Player = player.getMark();
         }
         else {
-            Player = 'O';
+            Player = opponent.getMark();
         }
 
         if (xy[0][0] == Player & xy[0][1] == Player & xy[0][2] == Player) { return true; }
@@ -50,13 +50,13 @@ public class Board {
      * @param Maxer
      * @return Boolean that is true when the opponent has won.
      */
-    public Boolean Lose(Boolean Maxer){
+    public Boolean Lose(Boolean Maxer, Player player, Player opponent){
         char Player = ' ';
         if (Maxer) {
-            Player = 'O';
+            Player = opponent.getMark();
         }
         else {
-            Player = 'X';
+            Player = player.getMark();
         }
 
         if (xy[0][0] == Player & xy[0][1] == Player & xy[0][2] == Player) { return true; }
@@ -75,7 +75,7 @@ public class Board {
     public Boolean Draw(){
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (xy[i][j] != 'X' & xy[i][j] != 'O') {
+                if (xy[i][j] == ' ' & xy[i][j] == ' ') {
                     return false;
                 }
             }
@@ -90,23 +90,20 @@ public class Board {
             System.out.println("\n");
         }
     }
-    public ArrayList<Move> getValidMoves(Boolean Maximizer) {
+    public ArrayList<Move> getValidMoves(Player player) {
         ArrayList Moves = new ArrayList();
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
-                if (xy[x][y] != 'X' & xy[x][y] != 'O') {
-                    Moves.add(new Move(x, y, Maximizer));
+                if (xy[x][y] == ' ' & xy[x][y] == ' ') {
+                    Moves.add(new Move(x, y, player));
                 }
             }
         }
         return Moves;
     }
     public void playMove(Move move) {
-        if (move.Maximizer) {
-            xy[move.x][move.y] = 'X';
-        }
-        else {
-            xy[move.x][move.y] = 'O';
-        }
+        xy[move.getX()][move.getY()] = move.getPlayer().getMark();
+        setChanged();
+        notifyObservers(this);
     }
 }
