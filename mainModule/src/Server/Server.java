@@ -25,6 +25,8 @@ public class Server extends Observable implements Runnable {
         private volatile boolean connected;
         private BufferedReader dataIn;
         private PrintWriter dataOut;
+        private final Object lock = new Object();
+        private volatile boolean wait = false;
 
 
         public Server() {}
@@ -44,19 +46,24 @@ public class Server extends Observable implements Runnable {
 
         @Override
         public void run() {
-            try {
-                while(true){
-                    System.out.println(getPlayerlist());
-                    Thread.sleep(5000);
+            synchronized (lock) {
+                try {
+                    while (true) {
+                       // System.out.println(getPlayerlist());
+                        System.out.println(wait);
+                        if (wait == true){
+                            System.out.println("waiting");
+                            lock.wait();
+                        }
+                        Thread.sleep(500);
+                    }
+                    //help();
+                    // disconnect();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                //help();
-                //disconnect();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
 
@@ -87,29 +94,41 @@ public class Server extends Observable implements Runnable {
         }
 
         public ArrayList<String> getGameList() throws Exception {
-            dataOut.println("get gamelist");
-            String data = dataIn.readLine();
-            if (data.equals("OK")) {
-                data = dataIn.readLine();
-                data = data.replaceAll("\"", "");
-                ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(14, data.length() - 1).replace(" ", "").split(",")));
-                return list;
-            } else {
-                throw new Exception("no server response");
+            wait = true;
+
+            synchronized (lock){
+                dataOut.println("get gamelist");
+                String data = dataIn.readLine();
+                if (data.equals("OK")) {
+                    data = dataIn.readLine();
+                    data = data.replaceAll("\"", "");
+                    ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(14, data.length() - 1).replace(" ", "").split(",")));
+                    wait = false;
+                    lock.notify();
+                    return list;
+                } else {
+                    throw new Exception("no server response");
+                }
             }
+
 
         }
 
         public ArrayList<String> getPlayerlist() throws Exception {
-            dataOut.println("get playerlist");
-            String data = dataIn.readLine();
-            if (data.equals("OK")) {
-                data = dataIn.readLine();
-                data = data.replaceAll("\"", "");
-                ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).replace(" ", "").split(",")));
-                return list;
-            } else {
-                throw new Exception("no server response");
+            wait = true;
+            synchronized (lock) {
+                dataOut.println("get playerlist");
+                String data = dataIn.readLine();
+                if (data.equals("OK")) {
+                    data = dataIn.readLine();
+                    data = data.replaceAll("\"", "");
+                    ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).replace(" ", "").split(",")));
+                    wait = false;
+                    lock.notify();
+                    return list;
+                } else {
+                    throw new Exception("no server response");
+                }
             }
         }
 
@@ -136,12 +155,17 @@ public class Server extends Observable implements Runnable {
         }
 
         public void forfeit() throws IOException {
-            dataOut.println("forfeit");
-            dataIn.readLine();
+            wait = true;
+            synchronized (lock) {
+                dataOut.println("forfeit");
+                dataIn.readLine();
+                wait = false;
+                lock.notify();
+            }
         }
         public void help() throws IOException {
             dataOut.println("help move");
-            while(true) {
+            while(dataIn.ready()) {
                 System.out.println(dataIn.readLine());
             }
         }
