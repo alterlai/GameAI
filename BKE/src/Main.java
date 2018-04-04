@@ -1,5 +1,6 @@
 public class Main {
-    public static void Main(){
-        System.out.println("hello world");
+    public static void main(String[] args){
+        TicTacToe TTT = new TicTacToe();
+        TTT.findBestMove(true);
     }
 }
