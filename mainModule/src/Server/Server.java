@@ -53,7 +53,7 @@ public class Server extends Observable implements Runnable {
                 System.out.println(getGameList());
                 getPlayerlist();
                 System.out.println(subscribe("Reversi"));
-                help();
+                //help();
                 //disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -75,9 +75,12 @@ public class Server extends Observable implements Runnable {
             connected = true;
         }
 
-        public void login(String name) throws IOException {
+        public boolean login(String name) throws IOException {
             dataOut.println("login " + name);
-            System.out.println(dataIn.readLine());
+            if(dataIn.readLine().equals("OK")){
+                return true;
+            }
+            return false;
         }
 
         public boolean disconnect() throws IOException, InterruptedException {
@@ -114,9 +117,6 @@ public class Server extends Observable implements Runnable {
                 data = data.replaceAll("\"", "");
                 System.out.println(data);
                 ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).replace(" ", "").split(",")));
-                for (String s : list) {
-                    System.out.println(s);
-                }
                 return list;
             } else {
                 throw new Exception("no server response");
@@ -154,5 +154,9 @@ public class Server extends Observable implements Runnable {
             while(true) {
                 System.out.println(dataIn.readLine());
             }
+        }
+
+        public void handleMessage(){
+
         }
 }
