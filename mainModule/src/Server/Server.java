@@ -19,18 +19,15 @@ import java.util.Observable;
 
 public class Server extends Observable implements Runnable {
 
-        private String serverIp;
-        private int serverPort;
+        private String serverIp = "localhost";
+        private int serverPort = 7789;
         private Socket socket;
         private volatile boolean connected;
         private BufferedReader dataIn;
         private PrintWriter dataOut;
 
 
-        public Server() {
-            serverIp = "localhost";
-            serverPort = 7789;
-        }
+        public Server() {}
 
         public Server(String serverIp) {
             this.serverIp = serverIp;
@@ -48,11 +45,10 @@ public class Server extends Observable implements Runnable {
         @Override
         public void run() {
             try {
-                connect();
-                login("rudolf");
-                System.out.println(getGameList());
-                getPlayerlist();
-                System.out.println(subscribe("Reversi"));
+                while(true){
+                    System.out.println(getPlayerlist());
+                    Thread.sleep(5000);
+                }
                 //help();
                 //disconnect();
             } catch (IOException e) {
@@ -62,7 +58,6 @@ public class Server extends Observable implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
 
         public void connect() throws IOException {
@@ -97,11 +92,7 @@ public class Server extends Observable implements Runnable {
             if (data.equals("OK")) {
                 data = dataIn.readLine();
                 data = data.replaceAll("\"", "");
-                System.out.println(data);
                 ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(14, data.length() - 1).replace(" ", "").split(",")));
-                for (String s : list) {
-                    System.out.println(s);
-                }
                 return list;
             } else {
                 throw new Exception("no server response");
@@ -115,7 +106,6 @@ public class Server extends Observable implements Runnable {
             if (data.equals("OK")) {
                 data = dataIn.readLine();
                 data = data.replaceAll("\"", "");
-                System.out.println(data);
                 ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).replace(" ", "").split(",")));
                 return list;
             } else {
@@ -140,7 +130,7 @@ public class Server extends Observable implements Runnable {
         }
 
         public void challenge(String speler, String game) throws IOException {
-            dataOut.println("challenge " + speler + " " + game);
+            dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
             dataIn.readLine();
             dataIn.readLine();
         }
@@ -156,7 +146,7 @@ public class Server extends Observable implements Runnable {
             }
         }
 
-        public void handleMessage(){
-
+        public void handleMessage() throws IOException {
+                dataIn.readLine();
         }
 }
