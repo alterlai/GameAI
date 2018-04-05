@@ -53,14 +53,10 @@ public class Server extends Observable implements Runnable {
                 try {
                     while (true) {
                         if (wait){
-                            System.out.println("waiting");
                             lock.wait();
                         }
-                        int count = 0;
                         while(dataIn.ready()){
-                            count++;
-                            System.out.println(count);
-                            handleMessage();
+                            messageHandler.handleMessage(dataIn.readLine());
                         }
                         Thread.sleep(10);
                     }
@@ -139,7 +135,7 @@ public class Server extends Observable implements Runnable {
                     lock.notify();
                     return list;
                 } else {
-                    handleMessage();
+                    messageHandler.handleMessage(data);
                 }
             }return list;
         }
@@ -180,47 +176,6 @@ public class Server extends Observable implements Runnable {
             dataOut.println("help move");
             while(dataIn.ready()) {
                 System.out.println(dataIn.readLine());
-            }
-        }
-
-        public void handleMessage() throws Exception {
-            String data = dataIn.readLine();
-            System.out.println(data);
-            if(data.startsWith("SVR GAME CHALLENGE {")) {
-                System.out.println("I am challenged");
-                return;
-            }
-            else if(data.startsWith("SVR GAME CHALLENGE CANCELLED")){
-                System.out.println("I am no longer challenged");
-                return;
-            }
-            else if(data.startsWith("SVR GAME MATCH")){
-                System.out.println("I got a match!!!");
-                return;
-            }
-            else if (data.startsWith("SVR GAME YOURTURN")){
-                System.out.println("It's my turn");
-
-                return;
-            }
-            else if (data.startsWith("SVR GAME MOVE")){
-                System.out.println("This was a move");
-                return;
-            }
-            else if (data.startsWith("SVR GAME WIN")){
-                System.out.println("I win!!!");
-                return;
-            }
-            else if (data.startsWith("SVR GAME LOSS")){
-                System.out.println("I lose :(");
-                return;
-            }
-            else if (data.startsWith("SVR GAME DRAW")){
-                System.out.println("I'm more even then the other guy");
-                return;
-            }
-            else{
-                throw new Exception("unkown message");
             }
         }
 }
