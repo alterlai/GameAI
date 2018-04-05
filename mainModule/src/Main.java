@@ -7,7 +7,7 @@ public class Main {
         server.connect();
         server.login("Karel");
         System.out.println(server.getGameList());
-        server.challenge("Karel2", "Reversi");
+        server.challenge("freek", "Reversi");
         Thread thread = new Thread(server);
         thread.start();
         while (true) {

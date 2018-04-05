@@ -1,5 +1,7 @@
 package Server;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -46,6 +48,14 @@ public class messageHandler {
         }
         else{
             throw new Exception("unkown message");
+        }
+    }
+    public static void waitForOk(BufferedReader dataIn) throws Exception {
+        String data = dataIn.readLine();
+        while (!data.equals("OK")) {
+            System.out.println(data);
+            messageHandler.handleMessage(data);
+            data = dataIn.readLine();
         }
     }
 

@@ -122,18 +122,14 @@ public class Server extends Observable implements Runnable {
             ArrayList<String> list =new ArrayList<String>();
             synchronized (lock) {
                 dataOut.println("get playerlist");
+                messageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
-                if (data.equals("OK")) {
-                    data = dataIn.readLine();
-                   list = listHandler.handlePlayerList(data);
-                    wait = false;
-                    lock.notify();
-                    System.out.println("returning the list");
-                    return list;
-                } else {
-                    messageHandler.handleMessage(data);
-                }
-            }return list;
+                list = listHandler.handlePlayerList(data);
+                wait = false;
+                lock.notify();
+                System.out.println("returning the list");
+                return list;
+            }
         }
 
         public boolean subscribe(String game) throws IOException {
