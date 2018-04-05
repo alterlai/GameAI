@@ -1,4 +1,4 @@
-public class GameController implements MainController {
+public class GameController{
     //Model model
     //Server server
     //View view
@@ -15,10 +15,7 @@ public class GameController implements MainController {
     }
 
 
-    @Override
-    public void Update_view() {
 
-    }
 
     public void findMove() throws InterruptedException {
 //        move=null;

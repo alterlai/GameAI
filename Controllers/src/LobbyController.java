@@ -2,7 +2,7 @@ import Server.Server;
 
 import java.io.IOException;
 
-public class LobbyController implements MainController {
+public class LobbyController{
     //Model model
     Server server;
     //View view
@@ -18,10 +18,7 @@ public class LobbyController implements MainController {
         server.run();
     }
 
-    @Override
-    public void Update_view() {
 
-    }
 
     public void Challenge(String Tegenstander, String Game){
         //view.challenge(Tegenstander, Game);
