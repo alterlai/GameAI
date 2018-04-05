@@ -56,6 +56,7 @@ public class Server extends Observable implements Runnable {
                             lock.wait();
                         }
                         while(dataIn.ready()){
+                            System.out.println("I need to handle a message");
                             messageHandler.handleMessage(dataIn.readLine());
                         }
                         Thread.sleep(10);
@@ -124,15 +125,10 @@ public class Server extends Observable implements Runnable {
                 String data = dataIn.readLine();
                 if (data.equals("OK")) {
                     data = dataIn.readLine();
-                    //data = data.replaceAll(",", "");
-                    list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).split("\"")));
-                    for (int i = 0; i < list.size()-1; i++){
-                        if (list.get(i).equals("") || list.get(i).equals(" ") || list.get(i).equals(",") || list.get(i).equals(", ")){
-                            list.remove(i);
-                        }
-                    }
+                   list = listHandler.handlePlayerList(data);
                     wait = false;
                     lock.notify();
+                    System.out.println("returning the list");
                     return list;
                 } else {
                     messageHandler.handleMessage(data);
