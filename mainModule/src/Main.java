@@ -12,7 +12,7 @@ public class Main {
         thread.start();
         while (true) {
             System.out.println(server.getPlayerlist());
-            thread.sleep(500);
+            thread.sleep(1000);
         }
     }
 }

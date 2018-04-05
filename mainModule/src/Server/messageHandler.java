@@ -12,44 +12,23 @@ public class messageHandler {
     }*/
 
     public static void handleMessage(String message) throws Exception {
-        System.out.println(message);
-        if(message.startsWith("SVR GAME CHALLENGE {")) {
-            System.out.println("I am challenged");
+        if(message.startsWith("SVR GAME")) {
+            gameMessageHandler.handleMessage(message);
             return;
         }
-        else if(message.startsWith("SVR GAME CHALLENGE CANCELLED")){
-            System.out.println("I am no longer challenged");
+        else if(message.startsWith("ERR")){
+            System.out.println("I need to handle a error");
             return;
         }
-        else if(message.startsWith("SVR GAME MATCH")){
-            System.out.println("I got a match!!!");
-            return;
-        }
-        else if (message.startsWith("SVR GAME YOURTURN")){
-            System.out.println("It's my turn");
-
-            return;
-        }
-        else if (message.startsWith("SVR GAME MOVE")){
-            System.out.println("This was a move");
-            return;
-        }
-        else if (message.startsWith("SVR GAME WIN")){
-            System.out.println("I win!!!");
-            return;
-        }
-        else if (message.startsWith("SVR GAME LOSS")){
-            System.out.println("I lose :(");
-            return;
-        }
-        else if (message.startsWith("SVR GAME DRAW")){
-            System.out.println("I'm more even then the other guy");
+        else if(message.startsWith("OK")){
+            System.out.println("I lost a OK");
             return;
         }
         else{
             throw new Exception("unkown message");
         }
     }
+
     public static void waitForOk(BufferedReader dataIn) throws Exception {
         String data = dataIn.readLine();
         while (!data.equals("OK")) {
@@ -58,5 +37,4 @@ public class messageHandler {
             data = dataIn.readLine();
         }
     }
-
 }
