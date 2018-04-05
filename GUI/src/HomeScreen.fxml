@@ -6,9 +6,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.collections.FXCollections?>
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LobbyController">
     <children>
         <GridPane prefHeight="400.0" prefWidth="172.0" style="-fx-padding: 20;">
             <columnConstraints>
@@ -26,21 +24,14 @@
                     </GridPane.margin>
                 </ListView>
                 <Label alignment="CENTER" prefHeight="17.0" prefWidth="205.0" text="Play game" textAlignment="CENTER" GridPane.vgrow="ALWAYS" />
-                <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+                <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2" >
                     <children>
                         <ComboBox fx:id="gamemode" prefWidth="150.0" promptText="Game mode">
                             <VBox.margin>
                                 <Insets bottom="20.0" top="20.0" />
                             </VBox.margin>
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Player vs Player" />
-                                    <String fx:value="Player vs AI" />
-                                    <String fx:value="AI vs Remote Player" />
-                                </FXCollections>
-                            </items>
                         </ComboBox>
-                        <Button mnemonicParsing="false" prefWidth="2000.0" text="Play" VBox.vgrow="ALWAYS" />
+                        <Button fx:id="play" mnemonicParsing="false" onAction="#handleStartEvent" prefWidth="2000.0" text="Play" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
             </children>
