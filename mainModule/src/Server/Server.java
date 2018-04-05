@@ -8,8 +8,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Observable;
 
     /**
@@ -61,8 +59,6 @@ public class Server extends Observable implements Runnable {
                         }
                         Thread.sleep(10);
                     }
-                    //help();
-                    // disconnect();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -99,27 +95,23 @@ public class Server extends Observable implements Runnable {
 
         public ArrayList<String> getGameList() throws Exception {
             wait = true;
+            ArrayList<String> list =new ArrayList<String>();
 
             synchronized (lock){
                 dataOut.println("get gamelist");
+                messageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
-                if (data.equals("OK")) {
-                    data = dataIn.readLine();
-                    System.out.println(data);
-                    data = data.replaceAll("\"", "");
-                    ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(14, data.length() - 1).replace(" ", "").split(",")));
-                    wait = false;
-                    lock.notify();
-                    return list;
-                } else {
-                    throw new Exception("no games were returnred by the server");
-                }
+                list = listHandler.handleGamelist(data);
+                wait = false;
+                lock.notify();
+                return list;
             }
         }
 
         public ArrayList<String> getPlayerlist() throws Exception {
             wait = true;
             ArrayList<String> list =new ArrayList<String>();
+
             synchronized (lock) {
                 dataOut.println("get playerlist");
                 messageHandler.waitForOk(dataIn);
@@ -127,19 +119,14 @@ public class Server extends Observable implements Runnable {
                 list = listHandler.handlePlayerList(data);
                 wait = false;
                 lock.notify();
-                System.out.println("returning the list");
                 return list;
             }
         }
 
-        public boolean subscribe(String game) throws IOException {
+        public boolean subscribe(String game) throws Exception {
             dataOut.println("subscribe " + game);
-            String data = dataIn.readLine();
-            if (data.equals("OK")) {
-                return true;
-            } else {
-                return false;
-            }
+            messageHandler.waitForOk(dataIn);
+            return true;
         }
 
         public void move(Move move) throws IOException {
@@ -150,9 +137,9 @@ public class Server extends Observable implements Runnable {
             dataIn.readLine();
         }
 
-        public void challenge(String speler, String game) throws IOException {
+        public void challenge(String speler, String game) throws Exception {
             dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
-            System.out.println(dataIn.readLine());
+            messageHandler.waitForOk(dataIn);
         }
 
         public void forfeit() throws IOException {

@@ -34,6 +34,8 @@ public class messageHandler {
         while (!data.equals("OK")) {
             System.out.println(data);
             messageHandler.handleMessage(data);
+            if (data.startsWith("ERR"))
+                break;
             data = dataIn.readLine();
         }
     }
