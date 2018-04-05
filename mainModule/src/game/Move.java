@@ -1,3 +1,5 @@
+package game;
+
 public class Move {
     private int x;
     private int y;

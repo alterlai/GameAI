@@ -1,5 +1,7 @@
 package Server;
 
+import game.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -126,10 +128,10 @@ public class Server extends Observable implements Runnable {
                 String data = dataIn.readLine();
                 if (data.equals("OK")) {
                     data = dataIn.readLine();
-                    data = data.replaceAll(",", "");
-                    list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).replace("", "").split("\"")));
+                    //data = data.replaceAll(",", "");
+                    list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).split("\"")));
                     for (int i = 0; i < list.size()-1; i++){
-                        if (list.get(i).equals("") || list.get(i).equals(" ")){
+                        if (list.get(i).equals("") || list.get(i).equals(" ") || list.get(i).equals(",") || list.get(i).equals(", ")){
                             list.remove(i);
                         }
                     }
@@ -152,8 +154,10 @@ public class Server extends Observable implements Runnable {
             }
         }
 
-        public void move(int x, int y) throws IOException {
-            dataOut.println("move " + x + ", " + y);
+        public void move(Move move) throws IOException {
+            int x = move.getX();
+            int y = move.getY();
+            dataOut.println("move " + x + " " + y);
             dataIn.readLine();
             dataIn.readLine();
         }
@@ -196,6 +200,7 @@ public class Server extends Observable implements Runnable {
             }
             else if (data.startsWith("SVR GAME YOURTURN")){
                 System.out.println("It's my turn");
+
                 return;
             }
             else if (data.startsWith("SVR GAME MOVE")){

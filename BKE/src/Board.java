@@ -1,3 +1,6 @@
+import game.Move;
+import game.Player;
+
 import java.util.ArrayList;
 import java.util.Observable;
 

@@ -1,3 +1,5 @@
+package game;
+
 public class Player {
     private char mark = ' ';
     private Boolean AI;
