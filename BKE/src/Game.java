@@ -11,4 +11,6 @@ public interface Game {
 
     Board getBoard();
     Move findBestMove(Player player);
+
+    Move createMove(int x, int y, Player player);
 }

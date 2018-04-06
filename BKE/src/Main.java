@@ -33,7 +33,7 @@ public class Main implements Observer {
             int y = new Integer(split[1]);
 
 
-            Move pmove = new Move(x, y, p2);
+            Move pmove =  TTT.createMove(x, y, p2);
 
             TTT.playMove(pmove);
 
