@@ -1,11 +1,11 @@
 package Server;
 
-public class challenge {
+public class Challenge {
     private String playerName;
     private String game;
     private int challengeNumber;
 
-    public challenge (String playerName, String game, int challengeNumber){
+    public Challenge(String playerName, String game, int challengeNumber){
         this.playerName = playerName;
         this.game = game;
         this.challengeNumber = challengeNumber;
