@@ -1,54 +1,64 @@
+import game.Move;
+import game.Player;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 public class GameController{
-    //Model model
-    //Server server
-    //View view
-    //Game game
-    //chosenMove
+    private Game game;
+    private Server server;
+    private ViewActionHandler view;
 
-    //Move move;
+    private CountDownLatch moveLatch;
+    private Move selectedMove;
 
-    public GameController(){
-//        this.model = model;
-//        view =;
-//        view.createview();
-//        model.init();
+
+    public GameController(ViewActionHandler view){
+        this.server = Server.getReference(); //Server should be singleton.
+        this.view = view;
+    }
+
+    public void init(Player opponent) {
+        game = new TicTacToe(new Player(), opponent);
     }
 
 
+    public Move getMove(Player player) throws InterruptedException {
 
+        if (player.isAI()) {
+            return game.findBestMove(player);
+        }
 
-    public void findMove() throws InterruptedException {
-//        move=null;
-//        if(playerIsAi){
-//            move = model.getmove();
-//        }
-//        else{
-//            view.yourturn();
-//            wait();
-//
-//        }
-//        return move;
+        selectedMove = null;
+        moveLatch = new CountDownLatch(1);
+        moveLatch.await(10, TimeUnit.SECONDS);
+        if (selectedMove == null) {
+            //Handling of no input, server makes you lose..
 
-    }
-
-    public void moveSucces(){
-        //wanneer de move is goed gekeurd door de server moet dit geupdate worden in het gamemodel.
-        //game.player(move);
+        }
+        return selectedMove;
 
     }
 
-    public void Forfeit(){
-        //wanneer onze client forfiet moet dit worden doorgestuurd naar de server
+    public void moveSucces(Move move){
+        game.playMove(move);
+
+    }
+
+    public void forfeit(){
+        server.forfeit();
     }
 
     public void endGame(){
-        //wanneer iemand heeft verloren zal de server deze methode aanroepen wat ervoor zorgt dat de model en view wordt geupdate
 
     }
 
-    public void  registermove(){
-        //update de move variable in de controller;
-        //this.move = move;
+    public void registermove(move){
+        if (game.isValid(move)) {
+            selectedMove = move;
+            moveLatch.countDown();
+        }
+
 
     }
 
