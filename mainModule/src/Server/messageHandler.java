@@ -24,8 +24,9 @@ public class MessageHandler implements MessageHandlerInterface {
         while (!data.equals("OK")) {
             System.out.println(data);
             MessageHandler.handleMessage(data);
-            if (data.startsWith("ERR"))
+            if (data.startsWith("ERR")) {
                 break;
+            }
             data = dataIn.readLine();
         }
     }

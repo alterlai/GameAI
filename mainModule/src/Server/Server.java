@@ -158,4 +158,8 @@ public class Server extends Observable implements Runnable {
                 System.out.println(dataIn.readLine());
             }
         }
+
+        public void acceptChallenge(Challenge challenge){
+            dataOut.println("challence accept " + challenge.getChallengeNumber());
+        }
 }
