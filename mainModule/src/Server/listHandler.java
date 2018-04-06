@@ -3,7 +3,7 @@ package Server;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class listHandler {
+public class ListHandler {
 
     public static ArrayList<String> handlePlayerList(String data){
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).split("\"")));

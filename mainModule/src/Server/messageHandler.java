@@ -1,18 +1,15 @@
 package Server;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-public class messageHandler implements messageHandlerInterface {
+public class MessageHandler implements MessageHandlerInterface {
 
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME")) {
-            gameMessageHandler.handleMessage(message);
+            GameMessageHandler.handleMessage(message);
         }
         else if(message.startsWith("ERR")){
-            errorMessageHandler.handleMessage(message);
+            ErrorMessageHandler.handleMessage(message);
         }
         else if(message.startsWith("OK")){
             System.out.println("I lost a OK");
@@ -26,9 +23,10 @@ public class messageHandler implements messageHandlerInterface {
         String data = dataIn.readLine();
         while (!data.equals("OK")) {
             System.out.println(data);
-            messageHandler.handleMessage(data);
-            if (data.startsWith("ERR"))
+            MessageHandler.handleMessage(data);
+            if (data.startsWith("ERR")) {
                 break;
+            }
             data = dataIn.readLine();
         }
     }

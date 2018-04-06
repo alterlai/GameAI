@@ -54,8 +54,7 @@ public class Server extends Observable implements Runnable {
                             lock.wait();
                         }
                         while(dataIn.ready()){
-                            System.out.println("I need to handle a message");
-                            messageHandler.handleMessage(dataIn.readLine());
+                            MessageHandler.handleMessage(dataIn.readLine());
                         }
                         Thread.sleep(10);
                     }
@@ -100,9 +99,9 @@ public class Server extends Observable implements Runnable {
 
             synchronized (lock){
                 dataOut.println("get gamelist");
-                messageHandler.waitForOk(dataIn);
+                MessageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
-                list = listHandler.handleGamelist(data);
+                list = ListHandler.handleGamelist(data);
                 wait = false;
                 lock.notify();
                 return list;
@@ -115,9 +114,9 @@ public class Server extends Observable implements Runnable {
 
             synchronized (lock) {
                 dataOut.println("get playerlist");
-                messageHandler.waitForOk(dataIn);
+                MessageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
-                list = listHandler.handlePlayerList(data);
+                list = ListHandler.handlePlayerList(data);
                 wait = false;
                 lock.notify();
                 return list;
@@ -126,7 +125,7 @@ public class Server extends Observable implements Runnable {
 
         public boolean subscribe(String game) throws Exception {
             dataOut.println("subscribe " + game);
-            messageHandler.waitForOk(dataIn);
+            MessageHandler.waitForOk(dataIn);
             return true;
         }
 
@@ -140,7 +139,7 @@ public class Server extends Observable implements Runnable {
 
         public void challenge(String speler, String game) throws Exception {
             dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
-            messageHandler.waitForOk(dataIn);
+            MessageHandler.waitForOk(dataIn);
         }
 
         public void forfeit() throws IOException {
@@ -152,10 +151,15 @@ public class Server extends Observable implements Runnable {
                 lock.notify();
             }
         }
+
         public void help() throws IOException {
             dataOut.println("help move");
             while(dataIn.ready()) {
                 System.out.println(dataIn.readLine());
             }
+        }
+
+        public void acceptChallenge(Challenge challenge){
+            dataOut.println("challence accept " + challenge.getChallengeNumber());
         }
 }
