@@ -34,8 +34,10 @@ public class Main implements Observer {
 
 
             Move pmove =  TTT.createMove(x, y, p2);
-
-            TTT.playMove(pmove);
+            if (((TicTacToe) TTT).isValid(pmove)) {
+                TTT.playMove(pmove);
+            }
+            else { System.out.println("Move not valid.."); break;}
 
             //Playing move based on 2 dimensional position.. made by Game objects or in the controller..
             //Move pmove = ((TicTacToe) TTT).createMove(x, y,  p2); //deze hoort in ttt

@@ -93,6 +93,12 @@ public class Board extends Observable {
             System.out.println("\n");
         }
     }
+    public Boolean isValid(Move move) {
+        if (xy[move.getX()][move.getY()] == ' ') {
+            return true;
+        }
+        return false;
+    }
     public void playMove(Move move) {
         move.makePlayable(this.getSize());
         xy[move.getX()][move.getY()] = move.getPlayer().getMark();
