@@ -24,6 +24,7 @@ public class listHandler {
     private static ArrayList<String> correctList(int i, ArrayList<String> list){
         if (list.get(i).equals("") || list.get(i).equals(" ") || list.get(i).equals(",") || list.get(i).equals(", ")){
             list.remove(i);
+            correctList(i, list);
         }
         return list;
     }

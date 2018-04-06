@@ -5,24 +5,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class messageHandler {
-
-    /*public messageHandler(String message){
-        this.message = message;
-    }*/
+public class messageHandler implements messageHandlerInterface {
 
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME")) {
             gameMessageHandler.handleMessage(message);
-            return;
         }
         else if(message.startsWith("ERR")){
-            System.out.println("I need to handle a error");
-            return;
+            errorMessageHandler.handleMessage(message);
         }
         else if(message.startsWith("OK")){
             System.out.println("I lost a OK");
-            return;
         }
         else{
             throw new Exception("unkown message");

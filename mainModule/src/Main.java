@@ -1,4 +1,7 @@
 import Server.Server;
+import GUI.MainFrame;
+
+import static javafx.application.Application.launch;
 
 
 public class Main {
@@ -9,6 +12,7 @@ public class Main {
         System.out.println(server.getGameList());
         server.challenge("freek", "Reversi");
         Thread thread = new Thread(server);
+        launch(MainFrame.class);
         thread.start();
         while (true) {
             System.out.println(server.getPlayerlist());
