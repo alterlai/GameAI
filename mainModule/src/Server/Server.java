@@ -1,13 +1,13 @@
 package Server;
 
+import game.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Observable;
 
     /**
@@ -51,19 +51,14 @@ public class Server extends Observable implements Runnable {
                 try {
                     while (true) {
                         if (wait){
-                            System.out.println("waiting");
                             lock.wait();
                         }
-                        int count = 0;
                         while(dataIn.ready()){
-                            count++;
-                            System.out.println(count);
-                            handleMessage();
+                            System.out.println("I need to handle a message");
+                            messageHandler.handleMessage(dataIn.readLine());
                         }
                         Thread.sleep(10);
                     }
-                    //help();
-                    // disconnect();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -100,67 +95,51 @@ public class Server extends Observable implements Runnable {
 
         public ArrayList<String> getGameList() throws Exception {
             wait = true;
+            ArrayList<String> list =new ArrayList<String>();
 
             synchronized (lock){
                 dataOut.println("get gamelist");
+                messageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
-                if (data.equals("OK")) {
-                    data = dataIn.readLine();
-                    System.out.println(data);
-                    data = data.replaceAll("\"", "");
-                    ArrayList<String> list = new ArrayList<String>(Arrays.asList(data.substring(14, data.length() - 1).replace(" ", "").split(",")));
-                    wait = false;
-                    lock.notify();
-                    return list;
-                } else {
-                    throw new Exception("no games were returnred by the server");
-                }
+                list = listHandler.handleGamelist(data);
+                wait = false;
+                lock.notify();
+                return list;
             }
         }
 
         public ArrayList<String> getPlayerlist() throws Exception {
             wait = true;
             ArrayList<String> list =new ArrayList<String>();
+
             synchronized (lock) {
                 dataOut.println("get playerlist");
+                messageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
-                if (data.equals("OK")) {
-                    data = dataIn.readLine();
-                    data = data.replaceAll(",", "");
-                    list = new ArrayList<String>(Arrays.asList(data.substring(16, data.length() - 1).replace("", "").split("\"")));
-                    for (int i = 0; i < list.size()-1; i++){
-                        if (list.get(i).equals("") || list.get(i).equals(" ")){
-                            list.remove(i);
-                        }
-                    }
-                    wait = false;
-                    lock.notify();
-                    return list;
-                } else {
-                    handleMessage();
-                }
-            }return list;
-        }
-
-        public boolean subscribe(String game) throws IOException {
-            dataOut.println("subscribe " + game);
-            String data = dataIn.readLine();
-            if (data.equals("OK")) {
-                return true;
-            } else {
-                return false;
+                list = listHandler.handlePlayerList(data);
+                wait = false;
+                lock.notify();
+                return list;
             }
         }
 
-        public void move(int x, int y) throws IOException {
-            dataOut.println("move " + x + ", " + y);
+        public boolean subscribe(String game) throws Exception {
+            dataOut.println("subscribe " + game);
+            messageHandler.waitForOk(dataIn);
+            return true;
+        }
+
+        public void move(Move move) throws IOException {
+            int x = move.getX();
+            int y = move.getY();
+            dataOut.println("move " + x + " " + y);
             dataIn.readLine();
             dataIn.readLine();
         }
 
-        public void challenge(String speler, String game) throws IOException {
+        public void challenge(String speler, String game) throws Exception {
             dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
-            System.out.println(dataIn.readLine());
+            messageHandler.waitForOk(dataIn);
         }
 
         public void forfeit() throws IOException {
@@ -176,46 +155,6 @@ public class Server extends Observable implements Runnable {
             dataOut.println("help move");
             while(dataIn.ready()) {
                 System.out.println(dataIn.readLine());
-            }
-        }
-
-        public void handleMessage() throws Exception {
-            String data = dataIn.readLine();
-            System.out.println(data);
-            if(data.startsWith("SVR GAME CHALLENGE {")) {
-                System.out.println("I am challenged");
-                return;
-            }
-            else if(data.startsWith("SVR GAME CHALLENGE CANCELLED")){
-                System.out.println("I am no longer challenged");
-                return;
-            }
-            else if(data.startsWith("SVR GAME MATCH")){
-                System.out.println("I got a match!!!");
-                return;
-            }
-            else if (data.startsWith("SVR GAME YOURTURN")){
-                System.out.println("It's my turn");
-                return;
-            }
-            else if (data.startsWith("SVR GAME MOVE")){
-                System.out.println("This was a move");
-                return;
-            }
-            else if (data.startsWith("SVR GAME WIN")){
-                System.out.println("I win!!!");
-                return;
-            }
-            else if (data.startsWith("SVR GAME LOSS")){
-                System.out.println("I lose :(");
-                return;
-            }
-            else if (data.startsWith("SVR GAME DRAW")){
-                System.out.println("I'm more even then the other guy");
-                return;
-            }
-            else{
-                throw new Exception("unkown message");
             }
         }
 }

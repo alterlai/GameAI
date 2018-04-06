@@ -1,3 +1,6 @@
+
+import game.Move;
+import game.Player;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -9,7 +12,6 @@ public class Board extends Observable {
 
     private Integer size = 3;
     private char[][] xy = new char[size][size];
-
 
     public Board() {
         xy[0][0] = ' '; xy[1][0] = ' '; xy[2][0] = ' ';
@@ -91,14 +93,13 @@ public class Board extends Observable {
             System.out.println("\n");
         }
     }
-
     public void playMove(Move move) {
         move.makePlayable(this.getSize());
         xy[move.getX()][move.getY()] = move.getPlayer().getMark();
         setChanged();
         notifyObservers(this);
     }
-
+  
     public ArrayList<Move> getValidMoves(Player player) {
         ArrayList Moves = new ArrayList();
         for (int x = 0; x < 3; x++) {
@@ -110,7 +111,5 @@ public class Board extends Observable {
         }
         return Moves;
     }
-
     public int getSize() { return size; }
-
 }

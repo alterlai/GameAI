@@ -1,3 +1,5 @@
+import game.Move;
+import game.Player;
 import java.util.Observer;
 import java.util.Stack;
 
