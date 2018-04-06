@@ -70,9 +70,8 @@ public class Server extends Observable implements Runnable {
             socket = new Socket(serverIp, serverPort);
             dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             dataOut = new PrintWriter(socket.getOutputStream(), true);
-            String data = dataIn.readLine();
-            System.out.println(data);
-            System.out.println(dataIn.readLine());
+            dataIn.readLine();
+            dataIn.readLine();
             connected = true;
         }
 
