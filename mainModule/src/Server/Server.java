@@ -80,6 +80,7 @@ public class Server extends Observable implements Runnable {
         public boolean login(String name) throws IOException {
             dataOut.println("login " + name);
             if(dataIn.readLine().equals("OK")){
+
                 return true;
             }
             return false;

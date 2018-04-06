@@ -1,6 +1,6 @@
 package Server;
 
-public class errorMessageHandler {
+public class errorMessageHandler implements messageHandlerInterface {
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME CHALLENGE {")) {
             System.out.println("I am challenged");

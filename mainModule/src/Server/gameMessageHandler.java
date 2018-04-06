@@ -1,6 +1,6 @@
 package Server;
 
-public class gameMessageHandler {
+public class gameMessageHandler implements messageHandlerInterface {
 
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME CHALLENGE {")) {
