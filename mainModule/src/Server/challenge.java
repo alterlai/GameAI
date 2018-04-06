@@ -16,4 +16,5 @@ public class challenge {
     public String getGame(){return game;}
 
     public int getChallengeNumber(){return challengeNumber;}
+
 }
