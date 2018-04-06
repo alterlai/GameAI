@@ -34,7 +34,7 @@ public class Main implements Observer {
 
 
             Move pmove =  TTT.createMove(x, y, p2);
-            if (((TicTacToe) TTT).isValid(pmove)) {
+            if (TTT.isValid(pmove)) {
                 TTT.playMove(pmove);
             }
             else { System.out.println("Move not valid.."); break;}
@@ -56,8 +56,8 @@ public class Main implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         System.out.println("State has changed, observer was notified..");
-        Board b = (Board)o;
-        b.print();
+        TicTacToe b = (TicTacToe)o;
+        b.getBoard().print();
 
     }
 }

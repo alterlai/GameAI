@@ -13,5 +13,5 @@ public interface Game {
     Move findBestMove(Player player);
 
     Move createMove(int x, int y, Player player);
-    Boolean isValid(Move move); 
+    Boolean isValid(Move move);
 }
