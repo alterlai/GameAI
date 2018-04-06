@@ -8,17 +8,22 @@ public class LobbyObservable extends Observable implements Runnable {
     private ArrayList<String> playerList = new ArrayList<String>();
     Server server;
 
-    LobbyObservable(Server server){
+    public LobbyObservable(Server server){
         this.server = server;
     }
 
     @Override
     public void run() {
-        try {
-            playerList = server.getPlayerlist();
-            Thread.sleep(10000);
-        } catch (Exception e) {
-            e.printStackTrace();
+        while (true) {
+            try {
+                System.out.println("pass");
+                playerList = server.getPlayerlist();
+                setChanged();
+                notifyObservers(this);
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

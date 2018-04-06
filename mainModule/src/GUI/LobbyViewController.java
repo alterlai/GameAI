@@ -1,36 +1,61 @@
 package GUI;
+import Server.Server;
+import Server.LobbyObservable;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
-public class LobbyViewController implements ViewActionHandler{
+
+
+public class LobbyViewController implements ViewActionHandler, Observer{
 
     @FXML private ListView<String> playerList;
     @FXML private ListView<String> gameList;
     @FXML private ComboBox<String> gameModeList;
-    @FXML private HBox hbox;
-    private Stage stage;
+    LobbyObservable lobby;
 
     public LobbyViewController(){}
 
     @FXML
     public void initialize() {
-       // stage = (Stage) hbox.getScene().getWindow();
-        ArrayList<String> temp = new ArrayList<>();
-        temp.add("String1");
-        temp.add("String2");
-        updateGameList(temp);
-        updateGameModeList(temp);
+        //Create server
+        Server server = new Server();
+        try {
+            server.connect();
+            server.login("Jeroen");
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unable to connect");
+            alert.setHeaderText(null);
+            alert.setContentText("Unable to connect to server");
+
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        if (server.isConnected()) {
+            // Create lobby
+            lobby = new LobbyObservable(server);
+            lobby.addObserver(this);
+            Thread thread = new Thread(lobby);
+            thread.start();
+            try {
+                updateGameList(server.getGameList());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+           // updatePlayerList(lobby.getPlayerList());
+        }
     }
 
     /**
@@ -41,10 +66,19 @@ public class LobbyViewController implements ViewActionHandler{
         String selectedGame = gameList.getSelectionModel().getSelectedItem();
         String selectedMode = gameModeList.getValue();
         if (selectedGame == null) {
-            new Popup(stage, "Pleaes select a game.");
+            //new Popup(stage, "Pleaes select a game.");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to start game.");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a game to play.");
+            alert.showAndWait();
         }
         else if (selectedMode == null) {
-            new Popup(stage, "Please select a gamemode");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to start game.");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a gamemode to play.");
+            alert.showAndWait();
         }
         else {
             // TODO start spel
@@ -54,6 +88,9 @@ public class LobbyViewController implements ViewActionHandler{
 
     public void updatePlayerList(List<String> playerArrayList) {
         ObservableList<String> observableList = FXCollections.observableArrayList(playerArrayList);
+        for(String name: playerArrayList) {
+            System.out.println(name);
+        }
         playerList.setItems(observableList);
     }
 
@@ -67,4 +104,8 @@ public class LobbyViewController implements ViewActionHandler{
         gameModeList.setItems(observableList);
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        updatePlayerList(lobby.getPlayerList());
+    }
 }
