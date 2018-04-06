@@ -1,6 +1,6 @@
+
 import game.Move;
 import game.Player;
-
 import java.util.ArrayList;
 import java.util.Observer;
 import java.util.Stack;
@@ -128,6 +128,10 @@ public class TicTacToe implements Game {
             }
             return bestValue;
 
+    }
+
+    public Move createMove(int x, int y, Player player) {
+        return new Move(x, y, board.getSize(), player);
     }
 
     /**
