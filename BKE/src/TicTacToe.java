@@ -2,10 +2,11 @@
 import game.Move;
 import game.Player;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Observer;
 import java.util.Stack;
 
-public class TicTacToe implements Game {
+public class TicTacToe extends Observable implements Game {
 
     private Board board;
 
@@ -130,9 +131,8 @@ public class TicTacToe implements Game {
 
     }
 
-    public Move createMove(int x, int y, Player player) {
-        return new Move(x, y, board.getSize(), player);
-    }
+    public Move createMove(int x, int y, Player player) { return new Move(x, y, board.getSize(), player); }
+    public Boolean isValid(Move move) {return board.isValid(move);}
 
     /**
      * Plays a certain move. Only accessed through controller which means that these moves have been played on the server and are "valid"
@@ -141,10 +141,11 @@ public class TicTacToe implements Game {
     public void playMove(Move move) {
         board.playMove(move);
         moveHistory.add(move);
+        setChanged();
+        notifyObservers(this); //Should have a security proxy.
     }
 
-    public void registerView (Observer view) {
-        board.addObserver(view);
+    public void registerView (Observer view) {addObserver(view);
     }
 
     /**
