@@ -54,7 +54,6 @@ public class Server extends Observable implements Runnable {
                             lock.wait();
                         }
                         while(dataIn.ready()){
-                            System.out.println("I need to handle a message");
                             messageHandler.handleMessage(dataIn.readLine());
                         }
                         Thread.sleep(10);
@@ -152,6 +151,7 @@ public class Server extends Observable implements Runnable {
                 lock.notify();
             }
         }
+
         public void help() throws IOException {
             dataOut.println("help move");
             while(dataIn.ready()) {
