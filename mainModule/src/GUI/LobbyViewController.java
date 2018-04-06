@@ -2,6 +2,7 @@ package GUI;
 import Server.Server;
 import Server.LobbyObservable;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -86,11 +87,13 @@ public class LobbyViewController implements ViewActionHandler, Observer{
 
     }
 
+    @FXML
+    private void openSettings() {
+        // TODO
+    }
+
     public void updatePlayerList(List<String> playerArrayList) {
         ObservableList<String> observableList = FXCollections.observableArrayList(playerArrayList);
-        for(String name: playerArrayList) {
-            System.out.println(name);
-        }
         playerList.setItems(observableList);
     }
 
@@ -106,6 +109,11 @@ public class LobbyViewController implements ViewActionHandler, Observer{
 
     @Override
     public void update(Observable o, Object arg) {
-        updatePlayerList(lobby.getPlayerList());
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                updatePlayerList(lobby.getPlayerList());
+            }
+        });
     }
 }

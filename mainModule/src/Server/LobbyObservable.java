@@ -16,11 +16,10 @@ public class LobbyObservable extends Observable implements Runnable {
     public void run() {
         while (true) {
             try {
-                System.out.println("pass");
                 playerList = server.getPlayerlist();
                 setChanged();
                 notifyObservers(this);
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
