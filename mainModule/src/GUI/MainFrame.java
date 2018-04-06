@@ -19,7 +19,9 @@ public class MainFrame extends Application {
         Parent homeView = FXMLLoader.load(getClass().getResource("HomeScreen.fxml"));
         this.mainScene = new Scene(homeView);
 
-        viewController = new ViewController(mainScene);
+        viewController = ViewController.getInstance();
+        viewController.setScene(mainScene);
+
         viewController.addView("homeView", homeView);
 
         //test code
