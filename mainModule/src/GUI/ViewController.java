@@ -3,14 +3,22 @@ package GUI;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
+import javax.swing.text.View;
 import java.util.HashMap;
 
+/**
+ * Singleton ViewController is used for switching scenes.
+ */
 public class ViewController {
 
+    private static ViewController instance = new ViewController();
     private HashMap<String, Parent> paneMap = new HashMap<>();
     private Scene main;
 
-    public ViewController(Scene main) {
+    // Private constructor for singleton pattern.
+    private ViewController() {};
+
+    public void setScene(Scene main) {
         this.main = main;
     }
 
@@ -24,5 +32,15 @@ public class ViewController {
 
     public void activate(String name) {
         main.setRoot(paneMap.get(name));
+    }
+
+    public static ViewController getInstance() {
+        if (instance == null) {
+            instance = new ViewController();
+            return instance;
+        }
+        else {
+            return instance;
+        }
     }
 }
