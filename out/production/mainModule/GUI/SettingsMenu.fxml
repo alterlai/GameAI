@@ -27,7 +27,7 @@
         </rowConstraints>
          <children>
             <Label text="Server IP" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-            <TextField fx:id="ip" maxWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="6" />
+            <TextField fx:id="serverip" maxWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="6" />
             <Label text="Server Port" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
             <TextField fx:id="port" maxWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Nickname" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
