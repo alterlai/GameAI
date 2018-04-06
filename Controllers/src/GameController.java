@@ -53,7 +53,7 @@ public class GameController{
 
     }
 
-    public void registermove(move){
+    public void registermove(Move move){
         if (game.isValid(move)) {
             selectedMove = move;
             moveLatch.countDown();
