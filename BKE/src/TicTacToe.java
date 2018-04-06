@@ -127,6 +127,10 @@ public class TicTacToe implements Game {
 
     }
 
+    public Move createMove(int x, int y, Player player) {
+        return new Move(x, y, board.getSize(), player);
+    }
+
     /**
      * Plays a certain move. Only accessed through controller which means that these moves have been played on the server and are "valid"
      * @param move Move to play

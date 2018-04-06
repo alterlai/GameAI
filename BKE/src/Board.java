@@ -7,8 +7,9 @@ import java.util.Observable;
 
 public class Board extends Observable {
 
+    private Integer size = 3;
+    private char[][] xy = new char[size][size];
 
-    private char[][] xy = new char[3][3];
 
     public Board() {
         xy[0][0] = ' '; xy[1][0] = ' '; xy[2][0] = ' ';
@@ -90,20 +91,26 @@ public class Board extends Observable {
             System.out.println("\n");
         }
     }
+
+    public void playMove(Move move) {
+        move.makePlayable(this.getSize());
+        xy[move.getX()][move.getY()] = move.getPlayer().getMark();
+        setChanged();
+        notifyObservers(this);
+    }
+
     public ArrayList<Move> getValidMoves(Player player) {
         ArrayList Moves = new ArrayList();
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
                 if (xy[x][y] == ' ' & xy[x][y] == ' ') {
-                    Moves.add(new Move(x, y, player));
+                    Moves.add(new Move(x, y, this.size, player));
                 }
             }
         }
         return Moves;
     }
-    public void playMove(Move move) {
-        xy[move.getX()][move.getY()] = move.getPlayer().getMark();
-        setChanged();
-        notifyObservers(this);
-    }
+
+    public int getSize() { return size; }
+
 }

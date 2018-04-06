@@ -29,9 +29,16 @@ public class Main implements Observer {
             int x = new Integer(split[0]);
             int y = new Integer(split[1]);
 
-            Move pmove = new Move(x, y, p2);
+            //Playing move based on 2 dimensional position.. made by Game objects or in the controller..
+            //Move pmove = ((TicTacToe) TTT).createMove(x, y,  p2); //deze hoort in ttt
 
-            TTT.playMove(pmove);
+            ///TTT.playMove(pmove);
+
+            //Playing moves based on 1 dimensional position.. made by server
+            TTT.playMove(new Move(4, p2));
+            TTT.playMove(new Move(5, p2));
+            TTT.playMove(new Move(6, p2));
+            TTT.playMove(new Move(7, p2));
         }
     }
 
