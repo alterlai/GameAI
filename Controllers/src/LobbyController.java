@@ -1,43 +1,46 @@
+import GUI.ViewActionHandler;
 import Server.Server;
-
-import java.io.IOException;
+import Server.Challenge;
 
 public class LobbyController{
-    //Model model
-    Server server;
-    //View view
+    private Server server;
+    private ViewActionHandler view;
 
-    public LobbyController(){
-
-//        this.model = model;
-//        view =;
-//        view.createview();
-//        model.init();
-        this.server = new Server();
-        new Thread(server).start();
-        server.run();
+    /**
+     * Handles the communication between the lobby view and the server model.
+     * @param server Temporary. Server will be singleton in the future.
+     * @param view
+     */
+    public LobbyController(Server server, ViewActionHandler view){
+        this.server = server;
+        this.view = view;
     }
 
-
-
-    public void Challenge(String Tegenstander, String Game){
-        //view.challenge(Tegenstander, Game);
+    /**
+     * Accept a certain challenge
+     * @param challenge challenge that is to be accepted.
+     */
+    public void acceptChallenge(Challenge challenge) {
+        server.acceptChallenge(challenge);
     }
 
-    public void ChallengePlayer(String Game, String PlayerName) throws IOException {
-        server.challenge(PlayerName, Game);
-        //update view dat we een speller hebben uitgedaagt
+    /**
+     * Challenge a certain player connected to the server to a certain game.
+     * @param playerName the name of the player
+     * @param game the name of the game to be played
+     * @throws Exception connection issues, handled by the server and it's observers. Server should be throwing more meaningful exceptions.
+     */
+    public void sendChallenge(String playerName, String game) throws Exception{
+        server.challenge(playerName, game);
     }
 
-    public void acceptChallenge(){
-        //server.acceptchallenge();
-    }
-
-    public void SubscribeGame(String Game) throws IOException {
-        if(server.subscribe(Game)){
-            //update view dat we in queue zitten
-        }
-
+    /**
+     * Enter the matchmaking queue of a specified game.
+     * @param game the name of the game to queue for
+     * @throws Exception connection issues, handled by the server and it's observers. Server should be throwing more meaningful exceptions.
+     */
+    public void subscribeGame(String game) throws Exception {
+        server.subscribe(game);
     }
 
 }
