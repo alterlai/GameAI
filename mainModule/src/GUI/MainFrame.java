@@ -16,7 +16,7 @@ public class MainFrame extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Parent homeView = FXMLLoader.load(getClass().getResource("GUI/HomeScreen.fxml"));
+        Parent homeView = FXMLLoader.load(getClass().getResource("HomeScreen.fxml"));
         this.mainScene = new Scene(homeView);
 
         viewController = new ViewController(mainScene);
