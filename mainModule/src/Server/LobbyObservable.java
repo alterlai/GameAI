@@ -4,41 +4,53 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class LobbyObservable extends Observable implements Runnable {
-    private static ArrayList<Challenge> challengesList = new ArrayList<Challenge>();
+    private ArrayList<Challenge> challengesList = new ArrayList<Challenge>();
     private ArrayList<String> playerList = new ArrayList<String>();
-    Server server;
+    private static LobbyObservable lobby = new LobbyObservable();
+    Server server = Server.getInstance();
 
-    public LobbyObservable(Server server){
-        this.server = server;
+
+    private LobbyObservable(){
+    }
+
+    public static LobbyObservable getInstance() {
+        return lobby;
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                System.out.println("pass");
-                playerList = server.getPlayerlist();
-                setChanged();
-                notifyObservers(this);
-                Thread.sleep(1000);
+                ArrayList <String> tempPlayerList = server.getPlayerlist();
+                if (!tempPlayerList.equals(playerList)) {
+                    playerList = tempPlayerList;
+                    setChanged();
+                    notifyObservers(this);
+                }
+                Thread.sleep(5000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void addChallenge(Challenge challenge){
+    public void addChallenge(Challenge challenge){
         challengesList.add(challenge);
         System.out.println(challengesList);
+        setChanged();
+        notifyObservers(this);
     }
 
-    public static void removeChallenge(int challengeNumber){
-        for (int i=0; i < challengesList.size(); i++)
-            if (challengesList.get(i).getChallengeNumber() == challengeNumber){
-                challengesList.remove(challengesList.get(i));
+    public void removeChallenge(int challengeNumber) {
+        for (int i = 0; i < challengesList.size(); i++) {
+            if (challengesList.get(i).getChallengeNumber() == challengeNumber) {
+                challengesList.remove(i);
                 System.out.println(challengesList);
+                setChanged();
+                notifyObservers(this);
                 break;
             }
+        }
     }
 
     @Override
@@ -51,7 +63,7 @@ public class LobbyObservable extends Observable implements Runnable {
         super.notifyObservers(this);
     }
 
-    public static ArrayList<Challenge> getChallengesList() {
+    public ArrayList<Challenge> getChallengesList() {
         return challengesList;
     }
 

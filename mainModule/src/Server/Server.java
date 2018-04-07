@@ -28,21 +28,13 @@ public class Server extends Observable implements Runnable {
         private PrintWriter dataOut;
         private final Object lock = new Object();
         private volatile boolean wait = false;
+        private static Server server = new Server();
 
 
-        public Server() {}
+        private Server() {}
 
-        public Server(String serverIp) {
-            this.serverIp = serverIp;
-        }
-
-        public Server(int serverPort) {
-            this.serverPort = serverPort;
-        }
-
-        public Server(String serverIp, int serverPort) {
-            this.serverIp = serverIp;
-            this.serverPort = serverPort;
+        static public Server getInstance(){
+            return server;
         }
 
         @Override

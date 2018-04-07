@@ -53,10 +53,10 @@ public class GameMessageHandler implements MessageHandlerInterface {
         int challengeNumber = Integer.parseInt(list.get(1).substring(19, list.get(1).length()-1));
         playerName = playerName.substring(13, playerName.length()-1);
         game = game.substring(12, game.length()-1);
-        LobbyObservable.addChallenge(new Challenge(playerName, game, challengeNumber));
+        LobbyObservable.getInstance().addChallenge(new Challenge(playerName, game, challengeNumber));
     }
 
     private static void handleChallengeCancel(String message){
-        LobbyObservable.removeChallenge(Integer.parseInt(message.substring(48, message.length()-2)));
+        LobbyObservable.getInstance().removeChallenge(Integer.parseInt(message.substring(48, message.length()-2)));
     }
 }

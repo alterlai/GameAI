@@ -30,7 +30,7 @@ public class LobbyViewController implements ViewActionHandler, Observer{
     @FXML
     public void initialize() {
         //Create server
-        Server server = new Server();
+        Server server = Server.getInstance();
         try {
             server.connect();
             server.login("Jeroen");
@@ -45,7 +45,7 @@ public class LobbyViewController implements ViewActionHandler, Observer{
         }
         if (server.isConnected()) {
             // Create lobby
-            lobby = new LobbyObservable(server);
+            lobby = LobbyObservable.getInstance();
             lobby.addObserver(this);
             Thread thread = new Thread(lobby);
             thread.start();
