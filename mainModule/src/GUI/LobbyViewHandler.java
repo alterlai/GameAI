@@ -1,5 +1,6 @@
 package GUI;
 import Server.Server;
+import Server.Challenge;
 import Server.LobbyObservable;
 import Server.MessageHandler;
 
@@ -10,18 +11,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-
+import java.util.*;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class LobbyViewHandler implements ViewActionHandler, Observer{
@@ -33,6 +30,8 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
     private Server server;
     LobbyObservable lobby;
 
+    private Semaphore challengeLock = new Semaphore(1);
+
     public LobbyViewHandler(){}
 
     @FXML
@@ -41,7 +40,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         server = Server.getInstance();
         try {
             server.connect();
-            server.login("Jeroen");
+            server.login("Mandela");
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Unable to connect");
@@ -188,6 +187,25 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         ObservableList<String> observableList = FXCollections.observableArrayList(gameModeArrayList);
         gameModeList.setItems(observableList);
     }
+    public void displayChallenges(List<Challenge> challenges) {
+        for (int i = 0; i < challenges.size(); i++) { //Iterating through it normally so that we can remove elements during the loop. Chance of challenges reappearing despite being handled already otherwise..
+            Challenge challenge = challenges.get(i);
+            challenges.remove(i); //Prevents the challenge being displayed twice if the observable notifies again while notificiation is still visible
+
+            String contentText = "User " + challenge.getPlayerName() + " has challenged you to a game of " + challenge.getGame() +"!";
+            ButtonType btnYes = new ButtonType("Accept", ButtonBar.ButtonData.YES);
+            ButtonType btnNo = new ButtonType("Decline", ButtonBar.ButtonData.NO);
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, contentText, btnNo, btnYes);
+            alert.setTitle("Challenge!");
+            alert.setHeaderText(null);
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get().getButtonData() == ButtonBar.ButtonData.YES) {
+                server.acceptChallenge(challenge);
+            }
+        }
+    }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -195,6 +213,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             @Override
             public void run() {
                 updatePlayerList(lobby.getPlayerList());
+                displayChallenges(lobby.getChallengesList());
             }
         });
     }
