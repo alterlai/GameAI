@@ -32,6 +32,14 @@
                             </VBox.margin>
                         </ComboBox>
                         <Button fx:id="play" mnemonicParsing="false" onAction="#handleStartEvent" prefWidth="2000.0" text="Play" VBox.vgrow="ALWAYS" />
+                        <Button fx:id="settings" onAction="#openSettings" mnemonicParsing="false" prefHeight="25.0" prefWidth="239.0" text="Settings">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <VBox.margin>
+                                <Insets top="20.0" />
+                            </VBox.margin>
+                        </Button>
                     </children>
                 </VBox>
             </children>
@@ -41,11 +49,20 @@
                 <ListView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" fx:id="playerList"/>
             </center>
             <bottom>
-                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="0.0" style="-fx-padding: 20;" BorderPane.alignment="CENTER">
+                <VBox prefHeight="100.0" style="-fx-padding: 20;" BorderPane.alignment="CENTER">
                     <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Challenge" HBox.hgrow="ALWAYS" />
+                        <AnchorPane prefHeight="41.0" prefWidth="355.0">
+                            <children>
+                                <ComboBox fx:id="challengeGameList" layoutX="103.0" layoutY="5.0" prefHeight="25.0" prefWidth="251.0" promptText="Game" />
+                                <Label layoutX="14.0" layoutY="6.0" text="Select a game" />
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="20.0" />
+                            </VBox.margin>
+                        </AnchorPane>
+                        <Button onAction="#challenge" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="25.0" prefWidth="268.0" text="Challenge" />
                     </children>
-                </HBox>
+                </VBox>
             </bottom>
             <top>
                 <Label text="Challenge a player" BorderPane.alignment="CENTER">

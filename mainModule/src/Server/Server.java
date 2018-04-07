@@ -154,6 +154,10 @@ public class Server extends Observable implements Runnable {
             dataOut.println("challence accept " + challenge.getChallengeNumber());
         }
 
+        public void commandStatus() {
+
+        }
+
         public boolean isConnected() {
             return connected;
         }
