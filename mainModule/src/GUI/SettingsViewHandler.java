@@ -5,13 +5,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class SettingsViewController implements ViewActionHandler {
+public class SettingsViewHandler implements ViewActionHandler {
     @FXML private TextField serverip;
     @FXML private TextField port;
     @FXML private TextField nickname;
     @FXML private Button cancel;
 
-    public SettingsViewController() { }
+    public SettingsViewHandler() { }
 
     @FXML
     public void initialize() {

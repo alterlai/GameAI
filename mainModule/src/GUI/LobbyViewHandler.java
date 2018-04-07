@@ -24,7 +24,7 @@ import java.util.Observer;
 
 
 
-public class LobbyViewController implements ViewActionHandler, Observer{
+public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     @FXML private ListView<String> playerList;
     @FXML private ListView<String> gameList;
@@ -33,7 +33,7 @@ public class LobbyViewController implements ViewActionHandler, Observer{
     private Server server;
     LobbyObservable lobby;
 
-    public LobbyViewController(){}
+    public LobbyViewHandler(){}
 
     @FXML
     public void initialize() {
