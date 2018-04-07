@@ -38,7 +38,7 @@ public class LobbyViewController implements ViewActionHandler, Observer{
     @FXML
     public void initialize() {
         //Create server
-        Server server = Server.getInstance();
+        server = Server.getInstance();
         try {
             server.connect();
             server.login("Jeroen");
@@ -102,7 +102,7 @@ public class LobbyViewController implements ViewActionHandler, Observer{
             try {
                 server.subscribe(selectedGame);
                 if (MessageHandler.lastMessageStatus()) {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Subscribed to game.");
                     alert.setHeaderText(null);
                     alert.setContentText("You are now subscribed to the game " + selectedGame + "\nYou will be notified when a game is ready.");
