@@ -1,6 +1,7 @@
 package GUI;
 import Server.Server;
 import Server.LobbyObservable;
+import Server.MessageHandler;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -14,9 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.BufferUnderflowException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -30,6 +29,8 @@ public class LobbyViewController implements ViewActionHandler, Observer{
     @FXML private ListView<String> playerList;
     @FXML private ListView<String> gameList;
     @FXML private ComboBox<String> gameModeList;
+    @FXML private ComboBox<String> challengeGameList;
+    private Server server;
     LobbyObservable lobby;
 
     public LobbyViewController(){}
@@ -37,7 +38,7 @@ public class LobbyViewController implements ViewActionHandler, Observer{
     @FXML
     public void initialize() {
         //Create server
-        Server server = new Server();
+        server = new Server();
         try {
             server.connect();
             server.login("Jeroen");
@@ -61,7 +62,17 @@ public class LobbyViewController implements ViewActionHandler, Observer{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-           // updatePlayerList(lobby.getPlayerList());
+
+            // Fill gamemodes list.
+            ArrayList<String> gamemodes = new ArrayList<>();
+            gamemodes.add("Player vs Player");
+            gamemodes.add("AI vs Player");
+            gameModeList.setItems(FXCollections.observableArrayList(gamemodes));
+            try {
+                challengeGameList.setItems(FXCollections.observableArrayList(server.getGameList()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -88,9 +99,64 @@ public class LobbyViewController implements ViewActionHandler, Observer{
             alert.showAndWait();
         }
         else {
-            // TODO start spel
+            try {
+                server.subscribe(selectedGame);
+                if (MessageHandler.lastMessageStatus()) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Subscribed to game.");
+                    alert.setHeaderText(null);
+                    alert.setContentText("You are now subscribed to the game " + selectedGame + "\nYou will be notified when a game is ready.");
+                    alert.showAndWait();
+                }
+                else {
+                    throw new Exception("Server did not return OK");
+                }
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Unable to start game.");
+                alert.setHeaderText(null);
+                alert.setContentText("Unable to subscribe to game.");
+                alert.showAndWait();
+                e.printStackTrace();
+
+            }
         }
 
+    }
+
+    // Handle challenge button
+    @FXML
+    private void challenge() {
+        String selectedPlayer = playerList.getSelectionModel().getSelectedItem();
+        String gameMode = challengeGameList.getSelectionModel().getSelectedItem();
+        //Check wether a player has been selected
+        if(selectedPlayer == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to start game.");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a player to challenge.");
+            alert.showAndWait();
+        }
+        // Check wether a game has been selected to play
+        else if(gameMode == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to start game.");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a game to challenge a player");
+            alert.showAndWait();
+        }
+        else {
+            try {
+                server.challenge(selectedPlayer, gameMode);
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Unable to start game.");
+                alert.setHeaderText(null);
+                alert.setContentText("Something went wrong. Please try again.");
+                alert.showAndWait();
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
