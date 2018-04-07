@@ -13,10 +13,11 @@ public class ViewController {
 
     private static ViewController instance = new ViewController();
     private HashMap<String, Parent> paneMap = new HashMap<>();
+    private static ViewController self = new ViewController();
     private Scene main;
 
     // Private constructor for singleton pattern.
-    private ViewController() {};
+    private ViewController() {}
 
     public void setScene(Scene main) {
         this.main = main;
@@ -35,12 +36,6 @@ public class ViewController {
     }
 
     public static ViewController getInstance() {
-        if (instance == null) {
-            instance = new ViewController();
-            return instance;
-        }
-        else {
-            return instance;
-        }
+        return self;
     }
 }

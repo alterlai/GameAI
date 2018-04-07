@@ -22,8 +22,11 @@ public class MainFrame extends Application {
         // Set title bar
         primaryStage.setTitle("GameClient v0.1");
         primaryStage.getIcons().add(new Image("GUI/icon.png"));
-        Parent homeView = FXMLLoader.load(getClass().getResource("HomeScreen.fxml"));
         primaryStage.setResizable(false);
+
+        Parent homeView = FXMLLoader.load(getClass().getResource("HomeScreen.fxml"));
+        Parent boardView = FXMLLoader.load(getClass().getResource("BoardView.fxml"));
+
         this.mainScene = new Scene(homeView);
 
         // Handle shutdown.
@@ -35,6 +38,7 @@ public class MainFrame extends Application {
         viewController = ViewController.getInstance();
         viewController.setScene(mainScene);
         viewController.addView("homeView", homeView);
+        viewController.addView("BoardView", boardView);
         viewController.activate("homeView");
         primaryStage.setScene(mainScene);
         primaryStage.show();

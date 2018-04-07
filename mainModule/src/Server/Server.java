@@ -77,10 +77,12 @@ public class Server extends Observable implements Runnable {
         }
 
         public boolean disconnect() throws IOException, InterruptedException {
-            dataOut.println("bye");
-            Thread.sleep(200);
-            socket.close();
-            connected = false;
+            if (isConnected()) {
+                dataOut.println("bye");
+                Thread.sleep(200);
+                socket.close();
+                connected = false;
+            }
             return connected;
         }
 
@@ -161,4 +163,22 @@ public class Server extends Observable implements Runnable {
         public boolean isConnected() {
             return connected;
         }
+
+        public String getServerIp() {
+            return serverIp;
+        }
+
+        public int getServerPort() {
+            return serverPort;
+        }
+
+        public void setServerIp(String serverIp) {
+            this.serverIp = serverIp;
+        }
+
+        public void setServerPort(int serverPort) {
+            this.serverPort = serverPort;
+        }
+
+
 }
