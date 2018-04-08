@@ -52,6 +52,8 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         }
         if (server.isConnected()) {
             // Create lobby
+            Thread serverThread = new Thread(server);
+            serverThread.start();
             lobby = LobbyObservable.getInstance();
             lobby.addObserver(this);
             lobby.setPlayerName(server.getPlayerName());

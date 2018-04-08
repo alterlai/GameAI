@@ -25,7 +25,6 @@ public class MessageHandler implements MessageHandlerInterface {
     public static void waitForOk(BufferedReader dataIn) throws Exception {
         String data = dataIn.readLine();
         while (!data.equals("OK")) {
-            System.out.println(data);
             MessageHandler.handleMessage(data);
             if (data.startsWith("ERR")) {
                 lastCommandAnswer = false;
