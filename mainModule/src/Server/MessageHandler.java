@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 
 public class MessageHandler implements MessageHandlerInterface {
 
+    private static boolean lastCommandAnswer = false;
+
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME")) {
             GameMessageHandler.handleMessage(message);
         }
         else if(message.startsWith("ERR")){
+            lastCommandAnswer = false;
             ErrorMessageHandler.handleMessage(message);
         }
         else if(message.startsWith("OK")){
@@ -25,9 +28,19 @@ public class MessageHandler implements MessageHandlerInterface {
             System.out.println(data);
             MessageHandler.handleMessage(data);
             if (data.startsWith("ERR")) {
+                lastCommandAnswer = false;
                 break;
             }
             data = dataIn.readLine();
         }
+        lastCommandAnswer = true;
+    }
+
+    /**
+     * Returns the status of the last message sent.
+     * @return boolean
+     */
+    public static boolean lastMessageStatus() {
+        return lastCommandAnswer;
     }
 }

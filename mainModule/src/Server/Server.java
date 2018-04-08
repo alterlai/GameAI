@@ -28,21 +28,14 @@ public class Server extends Observable implements Runnable {
         private PrintWriter dataOut;
         private final Object lock = new Object();
         private volatile boolean wait = false;
+        private static Server server = new Server();
+        private String playerName;
 
 
-        public Server() {}
+        private Server() {}
 
-        public Server(String serverIp) {
-            this.serverIp = serverIp;
-        }
-
-        public Server(int serverPort) {
-            this.serverPort = serverPort;
-        }
-
-        public Server(String serverIp, int serverPort) {
-            this.serverIp = serverIp;
-            this.serverPort = serverPort;
+        static public Server getInstance(){
+            return server;
         }
 
         @Override
@@ -70,14 +63,14 @@ public class Server extends Observable implements Runnable {
             socket = new Socket(serverIp, serverPort);
             dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             dataOut = new PrintWriter(socket.getOutputStream(), true);
-            String data = dataIn.readLine();
-            System.out.println(data);
-            System.out.println(dataIn.readLine());
+            dataIn.readLine();
+            dataIn.readLine();
             connected = true;
         }
 
         public boolean login(String name) throws IOException {
-            dataOut.println("login " + name);
+            playerName = name;
+            dataOut.println("login " + playerName);
             if(dataIn.readLine().equals("OK")){
 
                 return true;
@@ -86,10 +79,12 @@ public class Server extends Observable implements Runnable {
         }
 
         public boolean disconnect() throws IOException, InterruptedException {
-            dataOut.println("bye");
-            Thread.sleep(200);
-            socket.close();
-            connected = false;
+            if (isConnected()) {
+                dataOut.println("bye");
+                Thread.sleep(200);
+                socket.close();
+                connected = false;
+            }
             return connected;
         }
 
@@ -160,6 +155,34 @@ public class Server extends Observable implements Runnable {
         }
 
         public void acceptChallenge(Challenge challenge){
-            dataOut.println("challence accept " + challenge.getChallengeNumber());
+            dataOut.println("challenge accept " + challenge.getChallengeNumber());
         }
+
+        public void commandStatus() {
+
+        }
+
+        public boolean isConnected() {
+            return connected;
+        }
+
+        public String getServerIp() {
+            return serverIp;
+        }
+
+        public int getServerPort() {
+            return serverPort;
+        }
+
+        public void setServerIp(String serverIp) {
+            this.serverIp = serverIp;
+        }
+
+        public void setServerPort(int serverPort) {
+            this.serverPort = serverPort;
+        }
+
+        public String getPlayerName(){return playerName;}
+
+
 }
