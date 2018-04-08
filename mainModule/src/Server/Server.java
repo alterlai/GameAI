@@ -29,6 +29,7 @@ public class Server extends Observable implements Runnable {
         private final Object lock = new Object();
         private volatile boolean wait = false;
         private static Server server = new Server();
+        private String playerName;
 
 
         private Server() {}
@@ -68,7 +69,8 @@ public class Server extends Observable implements Runnable {
         }
 
         public boolean login(String name) throws IOException {
-            dataOut.println("login " + name);
+            playerName = name;
+            dataOut.println("login " + playerName);
             if(dataIn.readLine().equals("OK")){
 
                 return true;
@@ -179,6 +181,8 @@ public class Server extends Observable implements Runnable {
         public void setServerPort(int serverPort) {
             this.serverPort = serverPort;
         }
+
+        public String getPlayerName(){return playerName;}
 
 
 }

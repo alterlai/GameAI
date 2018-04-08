@@ -2,6 +2,7 @@ package GUI;
 
 import Server.Server;
 import Server.ConfigHandler;
+import Server.LobbyObservable;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -17,6 +18,7 @@ public class SettingsViewHandler implements ViewActionHandler {
     @FXML private Button cancel;
     private ConfigHandler config;
     private Server server = Server.getInstance();
+    private LobbyObservable lobby = LobbyObservable.getInstance();
 
     public SettingsViewHandler() { }
 
@@ -59,6 +61,7 @@ public class SettingsViewHandler implements ViewActionHandler {
             alert.showAndWait();
         }
         if (success){
+            lobby.setPlayerName(nickname.getText());
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();
         }

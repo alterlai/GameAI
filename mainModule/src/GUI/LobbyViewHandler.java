@@ -54,6 +54,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             // Create lobby
             lobby = LobbyObservable.getInstance();
             lobby.addObserver(this);
+            lobby.setPlayerName(server.getPlayerName());
             Thread thread = new Thread(lobby);
             thread.start();
             try {
@@ -187,6 +188,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         ObservableList<String> observableList = FXCollections.observableArrayList(gameModeArrayList);
         gameModeList.setItems(observableList);
     }
+
     public void displayChallenges(List<Challenge> challenges) {
         for (int i = 0; i < challenges.size(); i++) { //Iterating through it normally so that we can remove elements during the loop. Chance of challenges reappearing despite being handled already otherwise..
             Challenge challenge = challenges.get(i);
