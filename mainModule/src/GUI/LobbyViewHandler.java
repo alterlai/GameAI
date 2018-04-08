@@ -206,7 +206,11 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get().getButtonData() == ButtonBar.ButtonData.YES) {
-                server.acceptChallenge(challenge);
+                try {
+                    server.acceptChallenge(challenge);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
