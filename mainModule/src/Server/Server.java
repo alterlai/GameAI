@@ -154,8 +154,9 @@ public class Server extends Observable implements Runnable {
             }
         }
 
-        public void acceptChallenge(Challenge challenge){
+        public void acceptChallenge(Challenge challenge) throws Exception {
             dataOut.println("challenge accept " + challenge.getChallengeNumber());
+            MessageHandler.waitForOk(dataIn);
         }
 
         public void commandStatus() {

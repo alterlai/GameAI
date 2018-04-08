@@ -38,7 +38,6 @@ public class LobbyObservable extends Observable implements Runnable {
 
     public void addChallenge(Challenge challenge){
         challengesList.add(challenge);
-        System.out.println(challengesList);
         setChanged();
         notifyObservers(this);
     }
@@ -47,7 +46,6 @@ public class LobbyObservable extends Observable implements Runnable {
         for (int i = 0; i < challengesList.size(); i++) {
             if (challengesList.get(i).getChallengeNumber() == challengeNumber) {
                 challengesList.remove(i);
-                System.out.println(challengesList);
                 setChanged();
                 notifyObservers(this);
                 break;
