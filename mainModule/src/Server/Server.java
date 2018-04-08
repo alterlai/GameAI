@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Observable;
+import Controller.GameController;
+import game.Player;
 
     /**
      * <H1> Server</H1>
@@ -32,6 +34,8 @@ public class Server extends Observable implements Runnable {
         private static Server server = new Server();
         private String playerName;
 
+        private GameController gamecontroller = new GameController();
+
 
         private Server() {}
 
@@ -48,7 +52,7 @@ public class Server extends Observable implements Runnable {
                             lock.wait();
                         }
                         while(dataIn.ready()){
-                            MessageHandler.handleMessage(dataIn.readLine());
+                            MessageHandler.handleMessage(dataIn.readLine(), gamecontroller);
                         }
                         Thread.sleep(10);
                     }

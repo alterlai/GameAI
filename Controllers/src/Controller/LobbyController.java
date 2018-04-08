@@ -1,4 +1,5 @@
-import Server.Server;
+/**package Controller;
+import Server.*;
 
 import java.io.IOException;
 
@@ -40,4 +41,4 @@ public class LobbyController{
 
     }
 
-}
+}**/

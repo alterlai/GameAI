@@ -1,9 +1,11 @@
-
+package Game;
+import Game.TicTacToe;
 import game.Move;
 import game.Player;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
+
 
 /**
  * Useless object used for independent testing of module..
@@ -16,8 +18,8 @@ public class Main implements Observer {
         main.testRun();
     }
     public void testRun() {
-        Player p1 = new Player();
-        Player p2 = new Player();
+        Player p1 = new Player("J");
+        Player p2 = new Player("U");
 
         Game TTT = new TicTacToe(p1, p2);
         TTT.registerView(this);

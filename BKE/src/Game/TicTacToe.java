@@ -1,4 +1,4 @@
-
+package Game;
 import game.Move;
 import game.Player;
 import java.util.ArrayList;
@@ -141,6 +141,7 @@ public class TicTacToe extends Observable implements Game {
     public void playMove(Move move) {
         board.playMove(move);
         moveHistory.add(move);
+        board.print();
         setChanged();
         notifyObservers(this); //Should have a security proxy.
     }
@@ -164,5 +165,7 @@ public class TicTacToe extends Observable implements Game {
         return new Board(this.board);
     }
 
+    public Player getPlayer1() {return this.player1;}
+    public Player getPlayer2() {return this.player2;}
 
 }

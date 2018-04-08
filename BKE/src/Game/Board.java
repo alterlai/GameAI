@@ -1,4 +1,4 @@
-
+package Game;
 import game.Move;
 import game.Player;
 import java.util.ArrayList;

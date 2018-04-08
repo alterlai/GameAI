@@ -1,8 +1,14 @@
+package Controller;
+
+import GUI.ViewActionHandler;
 import game.Move;
 import game.Player;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import Server.Server;
+
+import Game.*;
 
 public class GameController{
     private Game game;
@@ -13,13 +19,13 @@ public class GameController{
     private Move selectedMove;
 
 
-    public GameController(ViewActionHandler view){
-        this.server = Server.getReference(); //Server should be singleton.
-        this.view = view;
+    public GameController(/*ViewActionHandler view*/){
+        this.server = Server.getInstance(); //Server should be singleton.
+        //this.view = view;
     }
 
-    public void init(Player opponent) {
-        game = new TicTacToe(new Player(), opponent);
+    public void init(Player local, Player opponent) {
+        game = new TicTacToe(local, opponent);
     }
 
 
@@ -45,9 +51,9 @@ public class GameController{
 
     }
 
-    public void forfeit(){
-        server.forfeit();
-    }
+    //public void forfeit(){
+    //    server.forfeit();
+    //}
 
     public void endGame(){
 
@@ -58,8 +64,19 @@ public class GameController{
             selectedMove = move;
             moveLatch.countDown();
         }
-
-
     }
+
+    public Player getPlayer(int number) {
+        switch(number) {
+            case 1:
+                return game.getPlayer1();
+
+            case 2:
+                return game.getPlayer2();
+
+        }
+        return null;
+    }
+
 
 }

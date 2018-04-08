@@ -1,14 +1,18 @@
 package Server;
 
+import Controller.GameController;
+
 import java.io.BufferedReader;
 
 public class MessageHandler implements MessageHandlerInterface {
 
     private static boolean lastCommandAnswer = false;
 
-    public static void handleMessage(String message) throws Exception {
+
+    //Server should have a reference to the game controller when a game is ongoing, but it should not be given as a parameter here.. Gamecontroller is irrelevant when in lobby-mode.
+    public static void handleMessage(String message, GameController controller) throws Exception {
         if(message.startsWith("SVR GAME")) {
-            GameMessageHandler.handleMessage(message);
+            GameMessageHandler.handleMessage(message, controller);
         }
         else if(message.startsWith("ERR")){
             lastCommandAnswer = false;
@@ -25,7 +29,7 @@ public class MessageHandler implements MessageHandlerInterface {
     public static void waitForOk(BufferedReader dataIn) throws Exception {
         String data = dataIn.readLine();
         while (!data.equals("OK")) {
-            MessageHandler.handleMessage(data);
+            new MessageHandler().handleMessage(data, new GameController()); //Uhh.. see the comments above.
             if (data.startsWith("ERR")) {
                 lastCommandAnswer = false;
                 break;
