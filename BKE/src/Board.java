@@ -8,7 +8,7 @@ import java.util.Observable;
  *Board model and Tic Tac Toe logic
  */
 
-public class Board extends Observable {
+public class Board {
 
     private Integer size = 3;
     private char[][] xy = new char[size][size];
@@ -93,11 +93,15 @@ public class Board extends Observable {
             System.out.println("\n");
         }
     }
+    public Boolean isValid(Move move) {
+        if (xy[move.getX()][move.getY()] == ' ') {
+            return true;
+        }
+        return false;
+    }
     public void playMove(Move move) {
         move.makePlayable(this.getSize());
         xy[move.getX()][move.getY()] = move.getPlayer().getMark();
-        setChanged();
-        notifyObservers(this);
     }
   
     public ArrayList<Move> getValidMoves(Player player) {

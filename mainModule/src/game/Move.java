@@ -93,6 +93,7 @@ public class Move {
     public Player getPlayer() {
         return player;
     }
+    public int getPos(){return pos;}
 
 
 

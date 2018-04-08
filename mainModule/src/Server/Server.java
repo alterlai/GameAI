@@ -1,6 +1,7 @@
 package Server;
 
 import game.*;
+import org.omg.PortableInterceptor.LOCATION_FORWARD;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,21 +29,14 @@ public class Server extends Observable implements Runnable {
         private PrintWriter dataOut;
         private final Object lock = new Object();
         private volatile boolean wait = false;
+        private static Server server = new Server();
+        private String playerName;
 
 
-        public Server() {}
+        private Server() {}
 
-        public Server(String serverIp) {
-            this.serverIp = serverIp;
-        }
-
-        public Server(int serverPort) {
-            this.serverPort = serverPort;
-        }
-
-        public Server(String serverIp, int serverPort) {
-            this.serverIp = serverIp;
-            this.serverPort = serverPort;
+        static public Server getInstance(){
+            return server;
         }
 
         @Override
@@ -54,8 +48,7 @@ public class Server extends Observable implements Runnable {
                             lock.wait();
                         }
                         while(dataIn.ready()){
-                            System.out.println("I need to handle a message");
-                            messageHandler.handleMessage(dataIn.readLine());
+                            MessageHandler.handleMessage(dataIn.readLine());
                         }
                         Thread.sleep(10);
                     }
@@ -71,25 +64,28 @@ public class Server extends Observable implements Runnable {
             socket = new Socket(serverIp, serverPort);
             dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             dataOut = new PrintWriter(socket.getOutputStream(), true);
-            String data = dataIn.readLine();
-            System.out.println(data);
-            System.out.println(dataIn.readLine());
+            dataIn.readLine();
+            dataIn.readLine();
             connected = true;
         }
 
         public boolean login(String name) throws IOException {
-            dataOut.println("login " + name);
+            playerName = name;
+            dataOut.println("login " + playerName);
             if(dataIn.readLine().equals("OK")){
+
                 return true;
             }
             return false;
         }
 
         public boolean disconnect() throws IOException, InterruptedException {
-            dataOut.println("bye");
-            Thread.sleep(200);
-            socket.close();
-            connected = false;
+            if (isConnected()) {
+                dataOut.println("bye");
+                Thread.sleep(200);
+                socket.close();
+                connected = false;
+            }
             return connected;
         }
 
@@ -99,9 +95,9 @@ public class Server extends Observable implements Runnable {
 
             synchronized (lock){
                 dataOut.println("get gamelist");
-                messageHandler.waitForOk(dataIn);
+                MessageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
-                list = listHandler.handleGamelist(data);
+                list = ListHandler.handleGamelist(data);
                 wait = false;
                 lock.notify();
                 return list;
@@ -114,9 +110,9 @@ public class Server extends Observable implements Runnable {
 
             synchronized (lock) {
                 dataOut.println("get playerlist");
-                messageHandler.waitForOk(dataIn);
+                MessageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
-                list = listHandler.handlePlayerList(data);
+                list = ListHandler.handlePlayerList(data);
                 wait = false;
                 lock.notify();
                 return list;
@@ -125,21 +121,20 @@ public class Server extends Observable implements Runnable {
 
         public boolean subscribe(String game) throws Exception {
             dataOut.println("subscribe " + game);
-            messageHandler.waitForOk(dataIn);
+            MessageHandler.waitForOk(dataIn);
             return true;
         }
 
-        public void move(Move move) throws IOException {
-            int x = move.getX();
-            int y = move.getY();
-            dataOut.println("move " + x + " " + y);
-            dataIn.readLine();
+        public void move(Move move) throws Exception {
+            int pos = move.getPos();
+            dataOut.println("move " + pos);
+            MessageHandler.waitForOk(dataIn);
             dataIn.readLine();
         }
 
         public void challenge(String speler, String game) throws Exception {
             dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
-            messageHandler.waitForOk(dataIn);
+            MessageHandler.waitForOk(dataIn);
         }
 
         public void forfeit() throws IOException {
@@ -151,10 +146,44 @@ public class Server extends Observable implements Runnable {
                 lock.notify();
             }
         }
+
         public void help() throws IOException {
             dataOut.println("help move");
             while(dataIn.ready()) {
                 System.out.println(dataIn.readLine());
             }
         }
+
+        public void acceptChallenge(Challenge challenge) throws Exception {
+            dataOut.println("challenge accept " + challenge.getChallengeNumber());
+            MessageHandler.waitForOk(dataIn);
+        }
+
+        public void commandStatus() {
+
+        }
+
+        public boolean isConnected() {
+            return connected;
+        }
+
+        public String getServerIp() {
+            return serverIp;
+        }
+
+        public int getServerPort() {
+            return serverPort;
+        }
+
+        public void setServerIp(String serverIp) {
+            this.serverIp = serverIp;
+        }
+
+        public void setServerPort(int serverPort) {
+            this.serverPort = serverPort;
+        }
+
+        public String getPlayerName(){return playerName;}
+
+
 }

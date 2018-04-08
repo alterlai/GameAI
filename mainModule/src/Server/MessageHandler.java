@@ -1,28 +1,21 @@
 package Server;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-public class messageHandler {
+public class MessageHandler implements MessageHandlerInterface {
 
-    /*public messageHandler(String message){
-        this.message = message;
-    }*/
+    private static boolean lastCommandAnswer = false;
 
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME")) {
-            gameMessageHandler.handleMessage(message);
-            return;
+            GameMessageHandler.handleMessage(message);
         }
         else if(message.startsWith("ERR")){
-            System.out.println("I need to handle a error");
-            return;
+            lastCommandAnswer = false;
+            ErrorMessageHandler.handleMessage(message);
         }
         else if(message.startsWith("OK")){
             System.out.println("I lost a OK");
-            return;
         }
         else{
             throw new Exception("unkown message");
@@ -32,11 +25,21 @@ public class messageHandler {
     public static void waitForOk(BufferedReader dataIn) throws Exception {
         String data = dataIn.readLine();
         while (!data.equals("OK")) {
-            System.out.println(data);
-            messageHandler.handleMessage(data);
-            if (data.startsWith("ERR"))
+            MessageHandler.handleMessage(data);
+            if (data.startsWith("ERR")) {
+                lastCommandAnswer = false;
                 break;
+            }
             data = dataIn.readLine();
         }
+        lastCommandAnswer = true;
+    }
+
+    /**
+     * Returns the status of the last message sent.
+     * @return boolean
+     */
+    public static boolean lastMessageStatus() {
+        return lastCommandAnswer;
     }
 }
