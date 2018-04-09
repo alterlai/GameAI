@@ -1,6 +1,6 @@
 package Server;
 
-import Game.*;
+import Game.Move;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -125,17 +125,29 @@ public class Server extends Observable implements Runnable {
                 dataOut.println("subscribe " + game);
                 MessageHandler.waitForOk(dataIn);
                 wait = false;
+                lock.notify();
                 return true;
             }
         }
 
         public void move(Move move) throws Exception {
-            int pos = move.getPos();
-            dataOut.println("move " + pos);
-            MessageHandler.waitForOk(dataIn);
+            wait = true;
+
+            synchronized (lock){
+                int pos = move.getPos();
+                dataOut.println("move " + pos);
+                MessageHandler.waitForOk(dataIn);
+                wait = true;
+                lock.notify();
+            }
         }
 
         public void challenge(String speler, String game) throws Exception {
+            wait = true;
+
+            synchronized (lock){
+
+            }
             dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
             MessageHandler.waitForOk(dataIn);
         }
