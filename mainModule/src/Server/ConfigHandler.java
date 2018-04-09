@@ -5,7 +5,7 @@ import java.util.Properties;
 
 public class ConfigHandler {
 
-    private String filename = "\\mainModule\\src\\resources\\config.properties";
+    private String filename = "\\mainModule\\src\\Resources\\config.properties";
     private Properties properties;
     private static ConfigHandler self = new ConfigHandler();
     private String ip;
@@ -15,7 +15,7 @@ public class ConfigHandler {
     private ConfigHandler () {
         properties = new Properties();
 
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("resources/config.properties");
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Resources/config.properties");
 
         if (inputStream != null) {
             try {
@@ -37,7 +37,7 @@ public class ConfigHandler {
     private void createNewConfig() {
         // NOT WORKING CURRENTLY
         try {
-            PrintWriter writer = new PrintWriter("resources\\config.properties");
+            PrintWriter writer = new PrintWriter("Resources\\config.properties");
             writer.println("IP=localhost");
             writer.println("PORT=7789");
             writer.println("NICKNAME=NewUser");

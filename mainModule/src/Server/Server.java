@@ -1,7 +1,6 @@
 package Server;
 
-import game.*;
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
+import Game.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -120,16 +119,20 @@ public class Server extends Observable implements Runnable {
         }
 
         public boolean subscribe(String game) throws Exception {
-            dataOut.println("subscribe " + game);
-            MessageHandler.waitForOk(dataIn);
-            return true;
+            wait = true;
+
+            synchronized (lock) {
+                dataOut.println("subscribe " + game);
+                MessageHandler.waitForOk(dataIn);
+                wait = false;
+                return true;
+            }
         }
 
         public void move(Move move) throws Exception {
             int pos = move.getPos();
             dataOut.println("move " + pos);
             MessageHandler.waitForOk(dataIn);
-            dataIn.readLine();
         }
 
         public void challenge(String speler, String game) throws Exception {

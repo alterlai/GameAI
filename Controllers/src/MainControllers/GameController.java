@@ -1,6 +1,13 @@
-import game.Move;
-import game.Player;
+package MainControllers;
 
+import BKEGame.Game;
+import BKEGame.TicTacToe;
+import GUI.ViewActionHandler;
+import Game.Move;
+import Game.Player;
+import Server.Server;
+
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +21,7 @@ public class GameController{
 
 
     public GameController(ViewActionHandler view){
-        this.server = Server.getReference(); //Server should be singleton.
+        this.server = Server.getInstance(); //Server should be singleton.
         this.view = view;
     }
 
@@ -45,7 +52,7 @@ public class GameController{
 
     }
 
-    public void forfeit(){
+    public void forfeit() throws IOException {
         server.forfeit();
     }
 

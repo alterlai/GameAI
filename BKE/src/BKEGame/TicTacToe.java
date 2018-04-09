@@ -1,6 +1,7 @@
+package BKEGame;
 
-import game.Move;
-import game.Player;
+import Game.Move;
+import Game.Player;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -25,7 +26,7 @@ public class TicTacToe extends Observable implements Game {
     private Player minimizing;
 
     /**
-     * Creates a new game of Tic Tac Toe. Initializes the marks to represent the two players.
+     * Creates a new Game of Tic Tac Toe. Initializes the marks to represent the two players.
      * @param player1
      * @param player2
      */

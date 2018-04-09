@@ -1,4 +1,4 @@
-package game;
+package Game;
 
 public class Player {
     private char mark = ' ';
@@ -25,7 +25,7 @@ public class Player {
     }
 
     /**
-     * @param mark Used to distinguish who occupied a certain spot. Not set in constructor because Player() may be called outside of game modules.
+     * @param mark Used to distinguish who occupied a certain spot. Not set in constructor because Player() may be called outside of Game modules.
      */
     public void setMark(char mark) {
         this.mark = mark;
