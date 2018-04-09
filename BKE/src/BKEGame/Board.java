@@ -1,11 +1,11 @@
+package BKEGame;
 
-import game.Move;
-import game.Player;
+import Game.Move;
+import Game.Player;
 import java.util.ArrayList;
-import java.util.Observable;
 
 /**
- *Board model and Tic Tac Toe logic
+ *BKEGame.Board model and Tic Tac Toe logic
  */
 
 public class Board {

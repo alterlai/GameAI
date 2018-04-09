@@ -1,5 +1,7 @@
-import game.Move;
-import game.Player;
+package BKEGame;
+
+import Game.Move;
+import Game.Player;
 import java.util.Observer;
 import java.util.Stack;
 

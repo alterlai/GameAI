@@ -1,3 +1,5 @@
+package MainControllers;
+
 import Server.Server;
 
 import java.io.IOException;
@@ -13,7 +15,7 @@ public class LobbyController{
 //        view =;
 //        view.createview();
 //        model.init();
-        this.server = new Server();
+        this.server = Server.getInstance();
         new Thread(server).start();
         server.run();
     }
@@ -24,7 +26,7 @@ public class LobbyController{
         //view.challenge(Tegenstander, Game);
     }
 
-    public void ChallengePlayer(String Game, String PlayerName) throws IOException {
+    public void ChallengePlayer(String Game, String PlayerName) throws Exception {
         server.challenge(PlayerName, Game);
         //update view dat we een speller hebben uitgedaagt
     }
@@ -33,7 +35,7 @@ public class LobbyController{
         //server.acceptchallenge();
     }
 
-    public void SubscribeGame(String Game) throws IOException {
+    public void SubscribeGame(String Game) throws Exception {
         if(server.subscribe(Game)){
             //update view dat we in queue zitten
         }
