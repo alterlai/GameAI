@@ -1,17 +1,18 @@
-package MainControllers;
+package otherControllers;
 
 import BKEGame.Game;
 import BKEGame.TicTacToe;
 import GUI.ViewActionHandler;
 import Game.Move;
 import Game.Player;
+import MainControllers.GameControllerInterface;
 import Server.Server;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class GameController{
+public class GameController implements GameControllerInterface {
     private Game game;
     private Server server;
     private ViewActionHandler view;
@@ -65,8 +66,6 @@ public class GameController{
             selectedMove = move;
             moveLatch.countDown();
         }
-
-
     }
 
 }
