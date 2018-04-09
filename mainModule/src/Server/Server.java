@@ -134,7 +134,7 @@ public class Server extends Observable implements Runnable {
             }
         }
 
-        public void move(Move move) throws Exception {
+        public void doMove(Move move) throws Exception {
             wait = true;
             synchronized (lock){
                 int pos = move.getPos();

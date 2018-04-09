@@ -17,8 +17,8 @@ public class Main implements Observer {
         main.testRun();
     }
     public void testRun() {
-        Player p1 = new Player();
-        Player p2 = new Player();
+        Player p1 = new Player("p1", true);
+        Player p2 = new Player("p2");
 
         Game TTT = new TicTacToe(p1, p2);
         TTT.registerView(this);
