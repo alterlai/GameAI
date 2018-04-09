@@ -25,7 +25,7 @@ public class MainFrame extends Application {
         primaryStage.setResizable(false);
 
         Parent homeView = FXMLLoader.load(getClass().getResource("HomeScreen.fxml"));
-        Parent boardView = FXMLLoader.load(getClass().getResource("BoardView.fxml"));
+        Parent boardView = FXMLLoader.load(getClass().getResource("GameBoard.fxml"));
 
         this.mainScene = new Scene(homeView);
 

@@ -47,21 +47,15 @@ public class SettingsViewHandler implements ViewActionHandler {
             server.login(nickname.getText());
             success = true;
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Unable to connect to server");
-            alert.setHeaderText(null);
-            alert.setContentText("Unable to connect to new server");
-            alert.showAndWait();
+            showErrorPopup("Unable to connect to new server");
             System.err.println("Unable to disconnect. The client was probably not connected to a server.");
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch(NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Unable to connect to server");
-            alert.setHeaderText(null);
-            alert.setContentText("Invalid port number!");
-            alert.showAndWait();
+        }catch(IllegalArgumentException e) {
+            showErrorPopup("Invalid port number");
+            e.printStackTrace();
         }
+
         if (success){
             lobby.setPlayerName(nickname.getText());
 
@@ -85,5 +79,13 @@ public class SettingsViewHandler implements ViewActionHandler {
     private void close() {
         Stage stage = (Stage) cancel.getScene().getWindow();
         stage.close();
+    }
+
+    private void showErrorPopup(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Unable to connect to server");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
