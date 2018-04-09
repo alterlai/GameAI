@@ -26,3 +26,6 @@ hs_err_pid*
 .idea/workspace.xml
 .idea/workspace.xml
 .idea/workspace.xml
+mainModule/src/resources/config.properties
+.idea/workspace.xml
+out/production/mainModule/resources/config.properties

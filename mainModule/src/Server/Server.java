@@ -1,6 +1,6 @@
 package Server;
 
-import Game.*;
+import Game.Move;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,14 +68,20 @@ public class Server extends Observable implements Runnable {
             connected = true;
         }
 
-        public boolean login(String name) throws IOException {
-            playerName = name;
-            dataOut.println("login " + playerName);
-            if(dataIn.readLine().equals("OK")){
-
-                return true;
+        public boolean login(String playerName) throws IOException {
+            this.playerName = playerName;
+            wait = true;
+            synchronized (lock){
+                dataOut.println("login " + playerName);
+                if(dataIn.readLine().equals("OK")){
+                    wait = false;
+                    lock.notify();
+                    return true;
+                }
+                wait = false;
+                lock.notify();
+                return false;
             }
-            return false;
         }
 
         public boolean disconnect() throws IOException, InterruptedException {
@@ -91,7 +97,6 @@ public class Server extends Observable implements Runnable {
         public ArrayList<String> getGameList() throws Exception {
             wait = true;
             ArrayList<String> list =new ArrayList<String>();
-
             synchronized (lock){
                 dataOut.println("get gamelist");
                 MessageHandler.waitForOk(dataIn);
@@ -120,24 +125,35 @@ public class Server extends Observable implements Runnable {
 
         public boolean subscribe(String game) throws Exception {
             wait = true;
-
             synchronized (lock) {
                 dataOut.println("subscribe " + game);
                 MessageHandler.waitForOk(dataIn);
                 wait = false;
+                lock.notify();
                 return true;
             }
         }
 
-        public void move(Move move) throws Exception {
-            int pos = move.getPos();
-            dataOut.println("move " + pos);
-            MessageHandler.waitForOk(dataIn);
+        public void doMove(Move move) throws Exception {
+            wait = true;
+            synchronized (lock){
+                int pos = move.getPos();
+                dataOut.println("move " + pos);
+                MessageHandler.waitForOk(dataIn);
+                wait = false;
+                lock.notify();
+            }
         }
 
         public void challenge(String speler, String game) throws Exception {
-            dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
-            MessageHandler.waitForOk(dataIn);
+            wait = true;
+            synchronized (lock){
+                dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
+                MessageHandler.waitForOk(dataIn);
+                wait = false;
+                lock.notify();
+            }
+
         }
 
         public void forfeit() throws IOException {
@@ -158,8 +174,11 @@ public class Server extends Observable implements Runnable {
         }
 
         public void acceptChallenge(Challenge challenge) throws Exception {
-            dataOut.println("challenge accept " + challenge.getChallengeNumber());
-            MessageHandler.waitForOk(dataIn);
+            wait = true;
+            synchronized (lock){
+                dataOut.println("challenge accept " + challenge.getChallengeNumber());
+                MessageHandler.waitForOk(dataIn);
+            }
         }
 
         public void commandStatus() {
