@@ -20,7 +20,8 @@ public class LobbyObservable extends Observable implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        boolean running = true;
+        while (running) {
             try {
                 ArrayList <String> tempPlayerList = server.getPlayerlist();
                 tempPlayerList.remove(playerName);
@@ -31,6 +32,7 @@ public class LobbyObservable extends Observable implements Runnable {
                 }
                 Thread.sleep(5000);
             } catch (Exception e) {
+                running = false;
                 e.printStackTrace();
             }
         }
