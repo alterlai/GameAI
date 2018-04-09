@@ -4,9 +4,11 @@ import Server.Server;
 import Server.ConfigHandler;
 import Server.LobbyObservable;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -62,6 +64,18 @@ public class SettingsViewHandler implements ViewActionHandler {
         }
         if (success){
             lobby.setPlayerName(nickname.getText());
+
+            // Update variables in lobby view.
+            FXMLLoader loader = new FXMLLoader();
+            try {
+                Pane lobby = loader.load(getClass().getResource("HomeScreen.fxml").openStream());
+                LobbyViewHandler lobbyViewHandler = (LobbyViewHandler) loader.getController();
+                lobbyViewHandler.update(null, null);
+            } catch (IOException e) {
+                System.err.println("Failed to load HomeScreen.fxml steam");
+                e.printStackTrace();
+            }
+
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();
         }
