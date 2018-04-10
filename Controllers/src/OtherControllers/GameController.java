@@ -15,6 +15,7 @@ import Server.Server;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
 
 public class GameController implements GameControllerInterface {
     private Game game;
@@ -40,11 +41,17 @@ public class GameController implements GameControllerInterface {
 
     public void initView() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        Parent gameView =loader.load(getClass().getResource("GUI/GameBoard.fxml"));
+        Parent gameView =loader.load(getClass().getResource("/GUI/GameBoard.fxml"));
         ViewController viewController = ViewController.getInstance();
         viewController.addView("gameView", gameView);
         viewController.activate("gameView");
-        gameBoardHandler = loader.getController();
+
+
+        // Get view handler.
+        FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/GUI/GameBoard.fxml"));
+        loader2.load();
+        GameBoardHandler gameBoardHandler = loader2.getController();
+        gameBoardHandler.observe(game);
     }
 
     /*public void init() {

@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 
+import BKEGame.Game;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
@@ -31,6 +32,7 @@ public class GameBoardHandler implements Initializable, Observer {
     private ListView ListV;
 
 
+
     static int BoardSize = 3;
 
 
@@ -45,7 +47,6 @@ public class GameBoardHandler implements Initializable, Observer {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         int X = getGameboard();
         int Y = getGameboard();
 
@@ -125,5 +126,7 @@ public class GameBoardHandler implements Initializable, Observer {
         System.out.println("Player forfeit.");
     }
 
-
+    public void observe(Game game) {
+        game.registerView(this);
+    }
 }
