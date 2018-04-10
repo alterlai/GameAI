@@ -1,4 +1,5 @@
-package BKEGame;
+package Game;
+import BKEGame.Board;
 import Game.Move;
 import Game.Player;
 import java.util.Observer;

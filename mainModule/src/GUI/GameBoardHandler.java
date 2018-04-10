@@ -12,7 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 
-import BKEGame.Game;
+import Game.Game;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
@@ -85,7 +85,6 @@ public class GameBoardHandler implements Initializable, Observer {
                         btn.setText("clicked");
                     }
                 });
-
                 GameB.add(btn,x,y);
             }
         }
@@ -95,6 +94,7 @@ public class GameBoardHandler implements Initializable, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+
         Button GeselecteerdeBtn = (Button) GameB.lookup("#" + arg);
         System.out.println(GeselecteerdeBtn);
         //GeselecteerdeBtn.setText("X");
