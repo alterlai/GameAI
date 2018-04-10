@@ -12,7 +12,7 @@ public interface Game {
 
     ArrayList<Move> getMoveHistory();
 
-    Board getBoard();
+    AbstractBoard getBoard();
     Move findBestMove(Player player);
 
     Move createMove(int x, int y, Player player);
