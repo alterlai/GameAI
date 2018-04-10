@@ -2,7 +2,7 @@ package Server;
 
 import Game.Player;
 import MainControllers.GameControllerInterface;
-import otherControllers.GameController;
+import OtherControllers.GameController;
 
 public class GameHandler {
     private GameControllerInterface gameController;

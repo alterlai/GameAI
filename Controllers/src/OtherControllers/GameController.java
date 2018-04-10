@@ -1,4 +1,4 @@
-package otherControllers;
+package OtherControllers;
 
 import BKEGame.Game;
 import BKEGame.TicTacToe;
@@ -13,11 +13,8 @@ import java.util.concurrent.TimeUnit;
 import MainControllers.GameControllerInterface;
 import Server.Server;
 
-import Game.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 
 public class GameController implements GameControllerInterface {
     private Game game;

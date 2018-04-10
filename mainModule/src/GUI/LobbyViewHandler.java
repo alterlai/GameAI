@@ -27,6 +27,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
     @FXML private ListView<String> gameList;
     @FXML private ComboBox<String> gameModeList;
     @FXML private ComboBox<String> challengeGameList;
+    ArrayList<String> gamemodes;
     private Server server;
     LobbyObservable lobby;
 
@@ -66,7 +67,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             }
 
             // Fill gamemodes list.
-            ArrayList<String> gamemodes = new ArrayList<>();
+            gamemodes = new ArrayList<>();
             gamemodes.add("Player vs Player");
             gamemodes.add("AI vs Player");
             gameModeList.setItems(FXCollections.observableArrayList(gamemodes));
@@ -222,6 +223,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             public void run() {
                 updatePlayerList(lobby.getPlayerList());
                 displayChallenges(lobby.getChallengesList());
+                updateGameModeList(gamemodes);
             }
         });
     }
