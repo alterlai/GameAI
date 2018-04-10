@@ -5,7 +5,7 @@ import otherControllers.GameController;
 
 public class gameHandler {
     private GameControllerInterface gameController;
-    static gameHandler gameHandlerSingelton = new gameHandler();
+    private static gameHandler gameHandlerSingelton = new gameHandler();
 
     private gameHandler(){};
 
