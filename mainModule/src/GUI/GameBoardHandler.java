@@ -77,7 +77,7 @@ public class GameBoardHandler implements Initializable, Observer {
         for(int y = 0; y < Y; y++) {
             for(int x = 0; x < X; x++){
                 int nummer = ((y) * X)  +  x;
-                Button btn = new Button( " " + nummer);
+                Button btn = new Button( " ");
                 btn.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
                 btn.setId(String.valueOf(nummer));
 
