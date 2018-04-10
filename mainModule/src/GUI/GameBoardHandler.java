@@ -87,6 +87,7 @@ public class GameBoardHandler implements Initializable, Observer {
                         btn.setText("clicked");
                     }
                 });
+                System.out.println(btn);
                 GameB.add(btn,x,y);
             }
         }
@@ -97,9 +98,11 @@ public class GameBoardHandler implements Initializable, Observer {
     public void update(Observable o, Object arg) {
         Game game = (Game) arg;
         Move move = game.getMoveHistory().pop();
-        Button GeselecteerdeBtn = (Button) GameB.lookup("#" + move.getPos());
+        Button geselecteerdeBtn = (Button) GameB.lookup("#" + move.getPos());
+        System.out.println(geselecteerdeBtn);
         System.out.println(String.valueOf(move.getPlayer().getMark()));
-        GeselecteerdeBtn.setText("test");
+        geselecteerdeBtn.setText("test");
+        System.out.println(geselecteerdeBtn);
     }
 
 
