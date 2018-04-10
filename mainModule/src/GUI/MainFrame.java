@@ -1,5 +1,6 @@
 package GUI;
 
+import Server.Server;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -10,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.io.IOException;
 
 
 public class MainFrame extends Application {
@@ -32,7 +35,16 @@ public class MainFrame extends Application {
 
         // Handle shutdown.
         primaryStage.setOnCloseRequest(e -> {  //
-            // TODO nice shutdown
+            Server server = Server.getInstance();
+            try {
+                server.disconnect();
+                server.quit();
+            } catch (IOException e1) {
+                System.err.println("Error disconnecting");
+                e1.printStackTrace();
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
         });
 
 

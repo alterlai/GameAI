@@ -1,6 +1,8 @@
+package BKEGame;
 
-import game.Move;
-import game.Player;
+
+import Game.Player;
+import Game.Move;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -67,10 +69,10 @@ public class TicTacToe extends Observable implements Game {
             Board newState = new Board(board);
             newState.playMove(move);
             int moveScore = getFinalScore(newState, !Maxer, 0, minimizing, maximizing);
-                if (moveScore > currentBestScore) {
-                    currentBestScore = moveScore;
-                    currentBestMove = move;
-                }
+            if (moveScore > currentBestScore) {
+                currentBestScore = moveScore;
+                currentBestMove = move;
+            }
         }
 
         return currentBestMove;
@@ -116,18 +118,18 @@ public class TicTacToe extends Observable implements Game {
             newState.playMove(move);
 
             int MoveScore = getFinalScore(newState, !Maxer, count, opponent, player);
-                if (Maxer) {
-                    if (MoveScore > bestValue) {
-                        bestValue = MoveScore - count;
-                    }
-                }
-                else {
-                    if (MoveScore < bestValue) {
-                        bestValue = count + MoveScore;
-                    }
+            if (Maxer) {
+                if (MoveScore > bestValue) {
+                    bestValue = MoveScore - count;
                 }
             }
-            return bestValue;
+            else {
+                if (MoveScore < bestValue) {
+                    bestValue = count + MoveScore;
+                }
+            }
+        }
+        return bestValue;
 
     }
 
@@ -141,6 +143,7 @@ public class TicTacToe extends Observable implements Game {
     public void playMove(Move move) {
         board.playMove(move);
         moveHistory.add(move);
+        board.print();
         setChanged();
         notifyObservers(this); //Should have a security proxy.
     }
@@ -164,5 +167,7 @@ public class TicTacToe extends Observable implements Game {
         return new Board(this.board);
     }
 
+    public Player getPlayer1() {return this.player1;}
+    public Player getPlayer2() {return this.player2;}
 
 }

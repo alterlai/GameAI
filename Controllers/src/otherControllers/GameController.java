@@ -1,10 +1,20 @@
-import game.Move;
-import game.Player;
+package otherControllers;
+
+import BKEGame.Game;
+import BKEGame.TicTacToe;
+import GUI.ViewActionHandler;
+import Game.Move;
+import Game.Player;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class GameController{
+import MainControllers.GameControllerInterface;
+import Server.Server;
+
+import Game.*;
+
+public class GameController implements GameControllerInterface {
     private Game game;
     private Server server;
     private ViewActionHandler view;
@@ -13,13 +23,17 @@ public class GameController{
     private Move selectedMove;
 
 
-    public GameController(ViewActionHandler view){
-        this.server = Server.getReference(); //Server should be singleton.
-        this.view = view;
+    public GameController(/*ViewActionHandler view*/){
+        this.server = Server.getInstance(); //Server should be singleton.
+        //this.view = view;
     }
 
-    public void init(Player opponent) {
-        game = new TicTacToe(new Player(), opponent);
+    public void init(Player local, Player opponent, String nameGame) {
+        if(nameGame.equals("Tic-tac-toe")){
+            game = new TicTacToe(local, opponent);
+        }
+        else{
+        }
     }
 
 
@@ -45,9 +59,9 @@ public class GameController{
 
     }
 
-    public void forfeit(){
-        server.forfeit();
-    }
+    //public void forfeit(){
+    //    server.forfeit();
+    //}
 
     public void endGame(){
 
@@ -58,8 +72,19 @@ public class GameController{
             selectedMove = move;
             moveLatch.countDown();
         }
-
-
     }
+
+    public Player getPlayer(int number) {
+        switch(number) {
+            case 1:
+                return game.getPlayer1();
+
+            case 2:
+                return game.getPlayer2();
+
+        }
+        return null;
+    }
+
 
 }

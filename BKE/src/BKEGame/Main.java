@@ -1,6 +1,7 @@
+package BKEGame;
 
-import game.Move;
-import game.Player;
+import Game.Move;
+import Game.Player;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -16,8 +17,8 @@ public class Main implements Observer {
         main.testRun();
     }
     public void testRun() {
-        Player p1 = new Player();
-        Player p2 = new Player();
+        Player p1 = new Player("p1", true);
+        Player p2 = new Player("p2");
 
         Game TTT = new TicTacToe(p1, p2);
         TTT.registerView(this);
@@ -39,8 +40,8 @@ public class Main implements Observer {
             }
             else { System.out.println("Move not valid.."); break;}
 
-            //Playing move based on 2 dimensional position.. made by Game objects or in the controller..
-            //Move pmove = ((TicTacToe) TTT).createMove(x, y,  p2); //deze hoort in ttt
+            //Playing move based on 2 dimensional position.. made by BKEGame.Game objects or in the controller..
+            //Move pmove = ((BKEGame.TicTacToe) TTT).createMove(x, y,  p2); //deze hoort in ttt
 
             ///TTT.playMove(pmove);
 
