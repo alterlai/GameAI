@@ -5,11 +5,11 @@ import otherControllers.GameController;
 
 public class GameHandler {
     private GameControllerInterface gameController;
-    private static Server.GameHandler gameHandlerSingelton = new Server.GameHandler();
+    private static GameHandler gameHandlerSingelton = new GameHandler();
 
     private GameHandler(){};
 
-    public static Server.GameHandler getInstance(){return gameHandlerSingelton;}
+    public static GameHandler getInstance(){return gameHandlerSingelton;}
 
     public void initGameController(){
         if(gameController == null){
