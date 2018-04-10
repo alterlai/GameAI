@@ -3,13 +3,13 @@ package Server;
 import MainControllers.GameControllerInterface;
 import otherControllers.GameController;
 
-public class gameHandler {
+public class GameHandler {
     private GameControllerInterface gameController;
-    private static gameHandler gameHandlerSingelton = new gameHandler();
+    private static Server.GameHandler gameHandlerSingelton = new Server.GameHandler();
 
-    private gameHandler(){};
+    private GameHandler(){};
 
-    public static gameHandler getInstance(){return gameHandlerSingelton;}
+    public static Server.GameHandler getInstance(){return gameHandlerSingelton;}
 
     public void initGameController(){
         if(gameController == null){
