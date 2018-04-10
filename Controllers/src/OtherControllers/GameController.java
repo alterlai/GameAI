@@ -7,6 +7,7 @@ import Game.Move;
 import Game.Player;
 
 import java.io.IOException;
+import java.util.Observer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +51,7 @@ public class GameController implements GameControllerInterface {
         FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/GUI/GameBoard.fxml"));
         //loader.load();
         GameBoardHandler gameBoardHandler = loader.getController();
-        gameBoardHandler.observe(game);
+        gameBoardHandler.setController(this);
     }
 
     /*public void init() {
@@ -96,8 +97,12 @@ public class GameController implements GameControllerInterface {
     public void endGame(){
 
     }
+    public void registerView(Observer view) { //heh
+        game.registerView(view);
+    }
 
-    public void registermove(Move move){
+    public void registerMove(int pos){
+        Move move = new Move(pos, new Player(Server.getInstance().getPlayerName())); //NO!
         if (game.isValid(move)) {
             selectedMove = move;
             moveLatch.countDown();

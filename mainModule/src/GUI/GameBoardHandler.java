@@ -1,5 +1,6 @@
 package GUI;
 
+import OtherControllers.GameController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -34,7 +35,7 @@ public class GameBoardHandler implements Initializable, Observer {
     @FXML
     private ListView ListV;
 
-
+    private GameController gamecontroller;
 
     static int BoardSize = 3;
 
@@ -84,8 +85,7 @@ public class GameBoardHandler implements Initializable, Observer {
                 btn.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        System.out.println(btn.getId());
-                        btn.setText("clicked");
+                        gamecontroller.registerMove(nummer);
                     }
                 });
                 System.out.println(btn);
@@ -96,14 +96,14 @@ public class GameBoardHandler implements Initializable, Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
         Game game = (Game) arg;
         Move move = game.getMoveHistory().pop();
-        Button geselecteerdeBtn = (Button) GameB.lookup("#" + move.getPos());
+        Button selectedButton = (Button) GameB.lookup("#" + move.getPos());
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                geselecteerdeBtn.setText(String.valueOf(move.getPlayer().getMark()));
+                selectedButton.setText(String.valueOf(move.getPlayer().getMark()));
             }
         });
     }
@@ -133,7 +133,8 @@ public class GameBoardHandler implements Initializable, Observer {
         System.out.println("Player forfeit.");
     }
 
-    public void observe(Game game) {
-        game.registerView(this);
+    public void setController(GameController controller) {
+        this.gamecontroller = controller;
+        controller.registerView(this);
     }
 }
