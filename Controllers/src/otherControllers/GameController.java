@@ -2,10 +2,11 @@ package otherControllers;
 
 import BKEGame.Game;
 import BKEGame.TicTacToe;
-import GUI.ViewActionHandler;
+import GUI.*;
 import Game.Move;
 import Game.Player;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -13,6 +14,10 @@ import MainControllers.GameControllerInterface;
 import Server.Server;
 
 import Game.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 
 public class GameController implements GameControllerInterface {
     private Game game;
@@ -21,21 +26,43 @@ public class GameController implements GameControllerInterface {
 
     private CountDownLatch moveLatch;
     private Move selectedMove;
+    private GameBoardHandler gameBoardHandler;
 
 
-    public GameController(/*ViewActionHandler view*/){
+    public GameController(Player local, Player opponent, String nameGame){
         this.server = Server.getInstance(); //Server should be singleton.
-        //this.view = view;
+        if(nameGame.equals("Tic-tac-toe")) {
+            game = new TicTacToe(local, opponent);
+        }
+        try {
+            initView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void init(Player local, Player opponent, String nameGame) {
-        if(nameGame.equals("Tic-tac-toe")){
-            game = new TicTacToe(local, opponent);
+    public void initView() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        Parent gameView =loader.load(getClass().getResource("GUI/GameBoard.fxml"));
+        ViewController viewController = ViewController.getInstance();
+        viewController.addView("gameView", gameView);
+        viewController.activate("gameView");
+        gameBoardHandler = loader.getController();
+    }
+
+    /*public void init() {
+
+
         }
         else{
         }
-    }
+    }*/
 
+
+    @Override
+    public void init(Player local, Player opponent, String nameGame) {
+
+    }
 
     public Move getMove(Player player) throws InterruptedException {
 
