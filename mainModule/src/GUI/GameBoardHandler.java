@@ -71,9 +71,9 @@ public class GameBoardHandler implements Initializable, Observer {
             movenode(ForfeitB, GameB.getColumnConstraints().size());
         }
 
-        for(int x = 1; x <= X; x++) {
-            for(int y = 1; y <= Y; y++){
-                int nummer = ((x-1) * X)  +  y;
+        for(int y = 0; y < Y; y++) {
+            for(int x = 0; x < X; x++){
+                int nummer = ((y) * X)  +  x;
                 Button btn = new Button( " " + nummer);
                 btn.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
                 btn.setId(String.valueOf(nummer));
@@ -86,7 +86,7 @@ public class GameBoardHandler implements Initializable, Observer {
                     }
                 });
 
-                GameB.add(btn,x-1,y-1);
+                GameB.add(btn,x,y);
             }
         }
 
@@ -95,10 +95,9 @@ public class GameBoardHandler implements Initializable, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-
         Button GeselecteerdeBtn = (Button) GameB.lookup("#" + arg);
-        GeselecteerdeBtn.setText("X");
-
+        System.out.println(GeselecteerdeBtn);
+        //GeselecteerdeBtn.setText("X");
     }
 
 
