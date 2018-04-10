@@ -1,5 +1,7 @@
 package GUI;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -11,9 +13,11 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 
-public class GameBoardHandler implements Initializable {
+public class GameBoardHandler implements Initializable, Observer {
 
     @FXML
     private GridPane GameB;
@@ -58,14 +62,53 @@ public class GameBoardHandler implements Initializable {
                 int nummer = ((x-1) * X)  +  y;
                 Button btn = new Button( " " + nummer);
                 btn.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+                btn.setId(String.valueOf(nummer));
+
+                btn.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        System.out.println(btn.getId());
+                        btn.setText("clicked");
+                    }
+                });
+
                 GameB.add(btn,x-1,y-1);
             }
         }
+
+        updateMovehistory();
     }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+        Button GeselecteerdeBtn = (Button) GameB.lookup("#" + arg);
+        GeselecteerdeBtn.setText("X");
+
+    }
+
+
+
+    public void updateMovehistory(){
+        //ListV.setItems();
+
+
+
+    }
+
 
     private void movenode(Node Node, int rij){
         GameB.getChildren().remove(Node);
         GameB.add(Node,GameB.getRowConstraints().size(),rij);
     }
+
+    @FXML
+    private void Forfeit(){
+        //handlefor feit action
+
+        //GameController.foerfeit();
+        System.out.println("Player forfeit.");
+    }
+
 
 }

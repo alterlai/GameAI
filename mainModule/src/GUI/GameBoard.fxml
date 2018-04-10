@@ -20,7 +20,7 @@
     <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Button fx:id="ForfeitB" mnemonicParsing="false" prefHeight="37.0" prefWidth="137.0" text="Forfeit" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+      <Button fx:id="ForfeitB" onAction="#Forfeit" mnemonicParsing="false" prefHeight="37.0" prefWidth="137.0" text="Forfeit" GridPane.columnIndex="3" GridPane.rowIndex="3" />
       <Text fx:id="Player2T" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 2" textAlignment="CENTER" translateX="5.0" wrappingWidth="129.13671875" GridPane.columnIndex="3" />
       <Text fx:id="Player1T" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1" textAlignment="CENTER" translateX="5.0" translateY="-30.0" wrappingWidth="128.7421875" GridPane.columnIndex="3" />
       <Button mnemonicParsing="false" opacity="0.0" prefHeight="120.0" prefWidth="249.0" />

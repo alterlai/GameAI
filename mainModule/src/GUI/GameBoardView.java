@@ -1,16 +1,19 @@
 package GUI;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 
 
 public class GameBoardView extends Application {
-
+    @FXML
+    private ListView ListV;
 
      static int BoardSize = 3;
 
@@ -24,8 +27,14 @@ public class GameBoardView extends Application {
     }
 
     public static int getGameboard(){
+
         return (BoardSize);
     }
+
+    public void updateListview(String item){
+        ListV.getItems().add(item);
+    }
+
 
 
     @Override
@@ -53,7 +62,7 @@ public class GameBoardView extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.show();
-
+        //updateListview("test");
 
     }
 
