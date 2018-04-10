@@ -40,7 +40,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         server = Server.getInstance();
         try {
             server.connect();
-            server.login("Mandela");
+            server.login(server.getPlayerName());
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Unable to connect");
