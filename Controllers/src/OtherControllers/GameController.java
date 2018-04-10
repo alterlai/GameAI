@@ -1,6 +1,6 @@
 package OtherControllers;
 
-import BKEGame.Game;
+import Game.Game;
 import BKEGame.TicTacToe;
 import GUI.*;
 import Game.Move;
@@ -15,7 +15,6 @@ import Server.Server;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
 
 public class GameController implements GameControllerInterface {
     private Game game;

@@ -13,7 +13,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 
 import Game.Game;
+import Game.Move;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -88,16 +90,16 @@ public class GameBoardHandler implements Initializable, Observer {
                 GameB.add(btn,x,y);
             }
         }
-
         updateMovehistory();
     }
 
     @Override
     public void update(Observable o, Object arg) {
-
-        Button GeselecteerdeBtn = (Button) GameB.lookup("#" + arg);
-        System.out.println(GeselecteerdeBtn);
-        //GeselecteerdeBtn.setText("X");
+        Game game = (Game) arg;
+        Move move = game.getMoveHistory().pop();
+        Button GeselecteerdeBtn = (Button) GameB.lookup("#" + move.getPos());
+        System.out.println(String.valueOf(move.getPlayer().getMark()));
+        GeselecteerdeBtn.setText("test");
     }
 
 
