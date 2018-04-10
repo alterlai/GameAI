@@ -1,58 +1,61 @@
 package GUI;
 
-import Server.Server;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-
-import java.io.IOException;
 
 
-public class MainFrame extends Application {
+
+public class GameBoardView extends Application {
+
+
+//     static int BoardSize = 3;
 
     Scene mainScene;
     ViewController viewController;
 
+
+//    public void setGameboard(int grote){
+//        this.BoardSize = grote;
+//
+//    }
+//
+//    public static int getGameboard(){
+//
+//        return (BoardSize);
+//    }
+
+
+
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Set title bar
+
         primaryStage.setTitle("GameClient v0.1");
         primaryStage.getIcons().add(new Image("GUI/icon.png"));
+        Parent homeView = FXMLLoader.load(getClass().getResource("GameBoard.fxml"));
         primaryStage.setResizable(false);
-
-        Parent homeView = FXMLLoader.load(getClass().getResource("HomeScreen.fxml"));
-        //GameBoardHandler.setGameboard(8);
-        Parent boardView = FXMLLoader.load(getClass().getResource("GameBoard.fxml"));
-
         this.mainScene = new Scene(homeView);
+
 
         // Handle shutdown.
         primaryStage.setOnCloseRequest(e -> {  //
-            Server server = Server.getInstance();
-            try {
-                server.disconnect();
-                server.quit();
-            } catch (IOException e1) {
-                System.err.println("Error disconnecting");
-                e1.printStackTrace();
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
+            // TODO nice shutdown
         });
 
 
         viewController = ViewController.getInstance();
         viewController.setScene(mainScene);
         viewController.addView("homeView", homeView);
-        viewController.addView("BoardView", boardView);
         viewController.activate("homeView");
+
 
         primaryStage.setScene(mainScene);
         primaryStage.show();
@@ -60,3 +63,4 @@ public class MainFrame extends Application {
     }
 
 }
+
