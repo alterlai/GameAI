@@ -94,10 +94,16 @@ public class GameBoardHandler implements Initializable, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-
+        //(Game) o.getboard/spellers/history//
+        //player.getmark = icon
         Button GeselecteerdeBtn = (Button) GameB.lookup("#" + arg);
         GeselecteerdeBtn.setText("X");
 
+    }
+
+    public void SetController(){
+        //this.gamecontroller = gamecontroller
+        //gamecontroller.register(this);
     }
 
 
