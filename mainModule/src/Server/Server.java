@@ -1,6 +1,5 @@
 package Server;
 
-import Game.Move;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,6 +29,7 @@ public class Server extends Observable implements Runnable {
         private volatile boolean wait = false;
         private static Server server = new Server();
         private String playerName;
+        private boolean quit = false;
 
 
         private Server() {}
@@ -42,7 +42,7 @@ public class Server extends Observable implements Runnable {
         public void run() {
             synchronized (lock) {
                 try {
-                    while (true) {
+                    while (!quit) {
                         if (wait){
                             lock.wait();
                         }
@@ -206,6 +206,8 @@ public class Server extends Observable implements Runnable {
         }
 
         public String getPlayerName(){return playerName;}
+
+        public void quit() { this.quit = true; }
 
 
 }

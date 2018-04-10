@@ -33,7 +33,6 @@ public class LobbyObservable extends Observable implements Runnable {
                 Thread.sleep(5000);
             } catch (Exception e) {
                 running = false;
-                e.printStackTrace();
             }
         }
     }
