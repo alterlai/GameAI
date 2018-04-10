@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -99,10 +100,12 @@ public class GameBoardHandler implements Initializable, Observer {
         Game game = (Game) arg;
         Move move = game.getMoveHistory().pop();
         Button geselecteerdeBtn = (Button) GameB.lookup("#" + move.getPos());
-        System.out.println(geselecteerdeBtn);
-        System.out.println(String.valueOf(move.getPlayer().getMark()));
-        geselecteerdeBtn.setText("test");
-        System.out.println(geselecteerdeBtn);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                geselecteerdeBtn.setText(String.valueOf(move.getPlayer().getMark()));
+            }
+        });
     }
 
 
