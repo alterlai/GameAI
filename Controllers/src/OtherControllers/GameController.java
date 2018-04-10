@@ -39,8 +39,8 @@ public class GameController implements GameControllerInterface {
     }
 
     public void initView() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        Parent gameView =loader.load(getClass().getResource("/GUI/GameBoard.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/GameBoard.fxml"));
+        Parent gameView =loader.load();
         ViewController viewController = ViewController.getInstance();
         viewController.addView("gameView", gameView);
         viewController.activate("gameView");
@@ -48,8 +48,8 @@ public class GameController implements GameControllerInterface {
 
         // Get view handler.
         FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/GUI/GameBoard.fxml"));
-        loader2.load();
-        GameBoardHandler gameBoardHandler = loader2.getController();
+        //loader.load();
+        GameBoardHandler gameBoardHandler = loader.getController();
         gameBoardHandler.observe(game);
     }
 
