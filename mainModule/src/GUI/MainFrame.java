@@ -25,6 +25,7 @@ public class MainFrame extends Application {
         primaryStage.setResizable(false);
 
         Parent homeView = FXMLLoader.load(getClass().getResource("HomeScreen.fxml"));
+        //GameBoardHandler.setGameboard(8);
         Parent boardView = FXMLLoader.load(getClass().getResource("GameBoard.fxml"));
 
         this.mainScene = new Scene(homeView);
@@ -40,8 +41,10 @@ public class MainFrame extends Application {
         viewController.addView("homeView", homeView);
         viewController.addView("BoardView", boardView);
         viewController.activate("homeView");
+
         primaryStage.setScene(mainScene);
         primaryStage.show();
+
     }
 
 }

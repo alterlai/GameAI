@@ -12,28 +12,25 @@ import javafx.stage.Stage;
 
 
 public class GameBoardView extends Application {
-    @FXML
-    private ListView ListV;
 
-     static int BoardSize = 3;
+
+//     static int BoardSize = 3;
 
     Scene mainScene;
     ViewController viewController;
 
 
-    public void setGameboard(int grote){
-        this.BoardSize = grote;
+//    public void setGameboard(int grote){
+//        this.BoardSize = grote;
+//
+//    }
+//
+//    public static int getGameboard(){
+//
+//        return (BoardSize);
+//    }
 
-    }
 
-    public static int getGameboard(){
-
-        return (BoardSize);
-    }
-
-    public void updateListview(String item){
-        ListV.getItems().add(item);
-    }
 
 
 
@@ -62,7 +59,6 @@ public class GameBoardView extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.show();
-        //updateListview("test");
 
     }
 

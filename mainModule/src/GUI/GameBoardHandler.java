@@ -30,11 +30,24 @@ public class GameBoardHandler implements Initializable, Observer {
     @FXML
     private ListView ListV;
 
+
+    static int BoardSize = 3;
+
+
+    public static void setGameboard(int grote){
+        BoardSize = grote;
+    }
+
+    public int getGameboard(){
+        return (BoardSize);
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        int X = GameBoardView.getGameboard();
-        int Y = GameBoardView.getGameboard();
+        int X = getGameboard();
+        int Y = getGameboard();
 
         if(X > 2 || Y> 2) {
             for(int newrow = 1; newrow <= X-3; newrow++) {
@@ -92,8 +105,10 @@ public class GameBoardHandler implements Initializable, Observer {
     public void updateMovehistory(){
         //ListV.setItems();
 
+    }
 
-
+    public void updateListview(String item){
+        ListV.getItems().add(item);
     }
 
 
