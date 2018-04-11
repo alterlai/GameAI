@@ -115,5 +115,17 @@ public class Board {
         }
         return Moves;
     }
+    public char[][] getCells() {
+        return this.xy;
+    }
+    public char[] getCells1D() {
+        char[] dimensionalpos = new char[3*3];
+        for (int x =0; x < 3; x++) {
+            for (int y =0; y < 3; y++) {
+                dimensionalpos[y * 3 + x] = xy[x][y];
+            }
+        }
+        return dimensionalpos;
+    }
     public int getSize() { return size; }
 }

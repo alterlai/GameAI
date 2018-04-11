@@ -1,8 +1,9 @@
 package BKEGame;
 
-import Game.Game;
+
 import Game.Move;
 import Game.Player;
+import Game.Game;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -21,12 +22,12 @@ public class Main implements Observer {
         Player p1 = new Player("p1", true);
         Player p2 = new Player("p2");
 
-        Game TTT = new TicTacToe(p1, p2);
+        TicTacToe TTT = new TicTacToe(p1, p2);
         TTT.registerView(this);
         Scanner s = new Scanner(System.in);
 
         while (true) {
-            Move m = TTT.findBestMove( p1);
+            Move m = TTT.findBestMove(p1);
             TTT.playMove(m);
 
             String move = s.nextLine();
@@ -47,10 +48,14 @@ public class Main implements Observer {
             ///TTT.playMove(pmove);
 
             //Playing moves based on 1 dimensional position.. made by server
-            TTT.playMove(new Move(4, p2));
-            TTT.playMove(new Move(5, p2));
-            TTT.playMove(new Move(6, p2));
-            TTT.playMove(new Move(7, p2));
+            //TTT.playMove(new Move(4, p2));
+            //TTT.playMove(new Move(5, p2));
+            //TTT.playMove(new Move(6, p2));
+            //TTT.playMove(new Move(7, p2));
+            char[] xy = TTT.getBoard().getCells1D();
+            for (int i = 0; i < (9); i++){
+                System.out.println("Pos " + i + ": " + xy[i]);
+            }
         }
     }
 
