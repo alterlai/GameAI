@@ -1,14 +1,16 @@
+package BKEGame;
 
-import game.Move;
-import game.Player;
+
+import Game.Game;
+import Game.Player;
+import Game.Move;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Stack;
 
 public class TicTacToe extends Observable implements Game {
 
-    private Board board;
+    private TicTacToeBoard board;
 
     private Player player1;
     private Player player2;
@@ -16,7 +18,7 @@ public class TicTacToe extends Observable implements Game {
     /**
      * ArrayList that keeps track of successfully executed moves
      */
-    private Stack<Move> moveHistory;
+    private ArrayList<Move> moveHistory;
 
     /**
      * Remembers which player is maximizing and which player is minimizing during the minimax algorithm.
@@ -30,8 +32,8 @@ public class TicTacToe extends Observable implements Game {
      * @param player2
      */
     public TicTacToe(Player player1, Player player2) {
-        board = new Board();
-        moveHistory = new Stack<Move>();
+        board = new TicTacToeBoard(3);
+        moveHistory = new ArrayList<Move>();
 
         this.player1 = player1;
         this.player2 = player2;
@@ -64,13 +66,13 @@ public class TicTacToe extends Observable implements Game {
         Move currentBestMove = null;
 
         for (Move move : Moves) {
-            Board newState = new Board(board);
+            TicTacToeBoard newState = new TicTacToeBoard(board);
             newState.playMove(move);
             int moveScore = getFinalScore(newState, !Maxer, 0, minimizing, maximizing);
-                if (moveScore > currentBestScore) {
-                    currentBestScore = moveScore;
-                    currentBestMove = move;
-                }
+            if (moveScore > currentBestScore) {
+                currentBestScore = moveScore;
+                currentBestMove = move;
+            }
         }
 
         return currentBestMove;
@@ -85,7 +87,7 @@ public class TicTacToe extends Observable implements Game {
      * @return
      */
 
-    public int getFinalScore(Board currentState, Boolean Maxer, int count, Player player, Player opponent) {
+    public int getFinalScore(TicTacToeBoard currentState, Boolean Maxer, int count, Player player, Player opponent) {
         count++;
 
         count = 0; //count caused the a.i. to start out with the wrong move (1, 1) -> fix this
@@ -112,27 +114,27 @@ public class TicTacToe extends Observable implements Game {
         }
 
         for (Move move : Moves) {
-            Board newState = new Board(currentState);
+            TicTacToeBoard newState = new TicTacToeBoard(currentState);
             newState.playMove(move);
 
             int MoveScore = getFinalScore(newState, !Maxer, count, opponent, player);
-                if (Maxer) {
-                    if (MoveScore > bestValue) {
-                        bestValue = MoveScore - count;
-                    }
-                }
-                else {
-                    if (MoveScore < bestValue) {
-                        bestValue = count + MoveScore;
-                    }
+            if (Maxer) {
+                if (MoveScore > bestValue) {
+                    bestValue = MoveScore - count;
                 }
             }
-            return bestValue;
+            else {
+                if (MoveScore < bestValue) {
+                    bestValue = count + MoveScore;
+                }
+            }
+        }
+        return bestValue;
 
     }
 
     public Move createMove(int x, int y, Player player) { return new Move(x, y, board.getSize(), player); }
-    public Boolean isValid(Move move) {return board.isValid(move);}
+    public Boolean isValid(Move move) {move.makePlayable(board.getSize()); return board.isValid(move);}
 
     /**
      * Plays a certain move. Only accessed through controller which means that these moves have been played on the server and are "valid"
@@ -141,6 +143,7 @@ public class TicTacToe extends Observable implements Game {
     public void playMove(Move move) {
         board.playMove(move);
         moveHistory.add(move);
+        board.print();
         setChanged();
         notifyObservers(this); //Should have a security proxy.
     }
@@ -148,21 +151,20 @@ public class TicTacToe extends Observable implements Game {
     public void registerView (Observer view) {addObserver(view);
     }
 
-    /**
-     * Getter for the moveHistory stack
-     * @return moveHistory stack
-     */
-    public Stack<Move> getMoveHistory() {
-        return moveHistory;
-    }
 
     /**
      * @return A copy of the current board state. Not a reference to the real board, risk of entities manipulating it from outside.
      */
-    @Override
-    public Board getBoard() {
-        return new Board(this.board);
-    }
 
+    @Override
+    public TicTacToeBoard getBoard() {
+        return new TicTacToeBoard(this.board);
+    }
+    @Override
+    public ArrayList<Move> getMoveHistory() {
+        return moveHistory;
+    }
+    public Player getPlayer1() {return this.player1;}
+    public Player getPlayer2() {return this.player2;}
 
 }

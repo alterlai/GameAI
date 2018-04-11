@@ -1,28 +1,24 @@
+package BKEGame;
 
-import game.Move;
-import game.Player;
+import Game.AbstractBoard;
+import Game.Move;
+import Game.Player;
 import java.util.ArrayList;
-import java.util.Observable;
 
 /**
- *Board model and Tic Tac Toe logic
+ *BKEGame.TicTacToeBoard model and Tic Tac Toe logic
  */
 
-public class Board {
+public class TicTacToeBoard extends AbstractBoard {
 
-    private Integer size = 3;
-    private char[][] xy = new char[size][size];
 
-    public Board() {
-        xy[0][0] = ' '; xy[1][0] = ' '; xy[2][0] = ' ';
-        xy[0][1] = ' '; xy[1][1] = ' '; xy[2][1] = ' ';
-        xy[0][2] = ' '; xy[1][2] = ' '; xy[2][2] = ' ';
+
+    public TicTacToeBoard(int size) {
+        super(size);
     }
 
-    public Board(Board old) { //To prevent passing by reference, or something like that..
-        for(int i=0; i<3; i++)
-            for(int j=0; j<3; j++)
-                xy[i][j] = old.xy[i][j];
+    public TicTacToeBoard(AbstractBoard old) { //To prevent passing by reference, or something like that..
+        super(old);
     }
 
     public Boolean Win(Boolean Maxer, Player player, Player opponent){
@@ -85,14 +81,7 @@ public class Board {
         }
         return true;
     }
-    public void print() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(" | " + xy[j][i] + " | ");
-            }
-            System.out.println("\n");
-        }
-    }
+
     public Boolean isValid(Move move) {
         if (xy[move.getX()][move.getY()] == ' ') {
             return true;
@@ -106,8 +95,8 @@ public class Board {
   
     public ArrayList<Move> getValidMoves(Player player) {
         ArrayList Moves = new ArrayList();
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
+        for (int x = 0; x < this.size; x++) {
+            for (int y = 0; y < this.size; y++) {
                 if (xy[x][y] == ' ' & xy[x][y] == ' ') {
                     Moves.add(new Move(x, y, this.size, player));
                 }
@@ -115,5 +104,6 @@ public class Board {
         }
         return Moves;
     }
-    public int getSize() { return size; }
+
+
 }

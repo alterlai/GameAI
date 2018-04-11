@@ -4,9 +4,11 @@ import Server.Server;
 import Server.ConfigHandler;
 import Server.LobbyObservable;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,7 +18,6 @@ public class SettingsViewHandler implements ViewActionHandler {
     @FXML private TextField port;
     @FXML private TextField nickname;
     @FXML private Button cancel;
-    private ConfigHandler config;
     private Server server = Server.getInstance();
     private LobbyObservable lobby = LobbyObservable.getInstance();
 
@@ -24,16 +25,15 @@ public class SettingsViewHandler implements ViewActionHandler {
 
     @FXML
     public void initialize() {
-        config = ConfigHandler.getInstance();
-        serverip.setText(config.getIp());
-        port.setText(config.getPort());
-        nickname.setText(config.getNickname());
+        Server server = Server.getInstance();
+        serverip.setText(server.getServerIp());
+        port.setText("" +server.getServerPort());
+        nickname.setText(server.getPlayerName());
     }
 
     @FXML
     private void apply() {
         boolean success = false;    // Check if the new settings are correct.
-        config.saveConfig(serverip.getText(), port.getText(), nickname.getText());
         // Regenerate new server connection
         try {
             String ipString = serverip.getText();
@@ -45,27 +45,40 @@ public class SettingsViewHandler implements ViewActionHandler {
             server.login(nickname.getText());
             success = true;
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Unable to connect to server");
-            alert.setHeaderText(null);
-            alert.setContentText("Unable to connect to new server");
-            alert.showAndWait();
-            System.err.println("Unable to disconnect. The client was probably not connected to a server.");
+            showErrorPopup("Unable to connect to new server");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch(NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Unable to connect to server");
-            alert.setHeaderText(null);
-            alert.setContentText("Invalid port number!");
-            alert.showAndWait();
+            showErrorPopup("Invalid port number");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if (success){
-            lobby.setPlayerName(nickname.getText());
+            server.saveConfig();
+            //lobby.setPlayerName(nickname.getText());
+
+            // Update variables in lobby view.
+            FXMLLoader loader = new FXMLLoader();
+            //Pane lobby = loader.load(getClass().getResource("HomeScreen.fxml").openStream());
+            //LobbyViewHandler lobbyViewHandler = loader.getController();
+            //lobbyViewHandler.update(null, null);
+
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();
+
+
         }
     }
+
+    private void showErrorPopup(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Unable to connect to server");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
     @FXML
     private void close() {

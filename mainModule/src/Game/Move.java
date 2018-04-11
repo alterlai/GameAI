@@ -1,9 +1,9 @@
-package game;
+package Game;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Move {
+public class Move implements Comparable<Move> {
     private Integer x;
     private Integer y;
     private Integer pos;
@@ -84,6 +84,7 @@ public class Move {
         set2DParameters(height);
     }
 
+
     public int getX(){
         return x;
     }
@@ -96,8 +97,11 @@ public class Move {
     public int getPos(){return pos;}
 
 
-
-
-
-
+    @Override
+    public int compareTo(Move move) {
+        if (this.x == move.getX() && this.y == move.getY() && this.player.getMark() == move.getPlayer().getMark()) {
+            return 1;
+        }
+        return 0;
+    }
 }

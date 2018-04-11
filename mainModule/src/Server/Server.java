@@ -1,14 +1,13 @@
 package Server;
 
-import game.*;
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
-
+import Game.Move;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Observable;
 
     /**
@@ -24,16 +23,27 @@ public class Server extends Observable implements Runnable {
         private String serverIp = "localhost";
         private int serverPort = 7789;
         private Socket socket;
-        private volatile boolean connected;
+        private volatile boolean connected = false;
         private BufferedReader dataIn;
         private PrintWriter dataOut;
         private final Object lock = new Object();
         private volatile boolean wait = false;
         private static Server server = new Server();
         private String playerName;
+        private boolean quit = false;
 
 
-        private Server() {}
+        private Server() {
+            ConfigHandler config = ConfigHandler.getInstance();
+            serverIp = config.getIp();
+            try {
+                serverPort = Integer.parseInt(config.getPort());
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid port number in config. replacing with default port");
+                serverPort = 7789;
+            }
+            playerName = config.getNickname();
+        }
 
         static public Server getInstance(){
             return server;
@@ -43,7 +53,7 @@ public class Server extends Observable implements Runnable {
         public void run() {
             synchronized (lock) {
                 try {
-                    while (true) {
+                    while (!quit) {
                         if (wait){
                             lock.wait();
                         }
@@ -69,22 +79,34 @@ public class Server extends Observable implements Runnable {
             connected = true;
         }
 
-        public boolean login(String name) throws IOException {
-            playerName = name;
-            dataOut.println("login " + playerName);
-            if(dataIn.readLine().equals("OK")){
+        public void login(String playerName) throws Exception {
+            this.playerName = playerName;
+            System.out.println(this.playerName);
+            LobbyObservable.setPlayerName(playerName);
+            wait = true;
+            synchronized (lock){
 
-                return true;
+                dataOut.println("login " + playerName);
+                MessageHandler.waitForOk(dataIn);
+                wait = false;
+                lock.notify();
             }
-            return false;
         }
 
-        public boolean disconnect() throws IOException, InterruptedException {
-            if (isConnected()) {
+        public boolean disconnect() throws InterruptedException {
+            //if (isConnected()) {
+            wait = true;
+            synchronized (lock){
                 dataOut.println("bye");
                 Thread.sleep(200);
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 connected = false;
+                wait = false;
+                lock.notify();
             }
             return connected;
         }
@@ -92,7 +114,6 @@ public class Server extends Observable implements Runnable {
         public ArrayList<String> getGameList() throws Exception {
             wait = true;
             ArrayList<String> list =new ArrayList<String>();
-
             synchronized (lock){
                 dataOut.println("get gamelist");
                 MessageHandler.waitForOk(dataIn);
@@ -120,21 +141,36 @@ public class Server extends Observable implements Runnable {
         }
 
         public boolean subscribe(String game) throws Exception {
-            dataOut.println("subscribe " + game);
-            MessageHandler.waitForOk(dataIn);
-            return true;
+            wait = true;
+            synchronized (lock) {
+                dataOut.println("subscribe " + game);
+                MessageHandler.waitForOk(dataIn);
+                wait = false;
+                lock.notify();
+                return true;
+            }
         }
 
-        public void move(Move move) throws Exception {
-            int pos = move.getPos();
-            dataOut.println("move " + pos);
-            MessageHandler.waitForOk(dataIn);
-            dataIn.readLine();
+        public void doMove(Move move) throws Exception {
+            wait = true;
+            synchronized (lock){
+                int pos = move.getPos();
+                dataOut.println("move " + pos);
+                MessageHandler.waitForOk(dataIn);
+                wait = false;
+                lock.notify();
+            }
         }
 
         public void challenge(String speler, String game) throws Exception {
-            dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
-            MessageHandler.waitForOk(dataIn);
+            wait = true;
+            synchronized (lock){
+                dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
+                MessageHandler.waitForOk(dataIn);
+                wait = false;
+                lock.notify();
+            }
+
         }
 
         public void forfeit() throws IOException {
@@ -155,8 +191,18 @@ public class Server extends Observable implements Runnable {
         }
 
         public void acceptChallenge(Challenge challenge) throws Exception {
-            dataOut.println("challenge accept " + challenge.getChallengeNumber());
-            MessageHandler.waitForOk(dataIn);
+            wait = true;
+            synchronized (lock){
+                dataOut.println("challenge accept " + challenge.getChallengeNumber());
+                MessageHandler.waitForOk(dataIn);
+                wait = false;
+                lock.notify();
+            }
+        }
+
+        public void saveConfig() {
+            ConfigHandler config = ConfigHandler.getInstance();
+            config.saveConfig(serverIp, ""+serverPort, playerName);
         }
 
         public void commandStatus() {
@@ -184,6 +230,8 @@ public class Server extends Observable implements Runnable {
         }
 
         public String getPlayerName(){return playerName;}
+
+        public void quit() { this.quit = true; }
 
 
 }

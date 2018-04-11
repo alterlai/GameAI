@@ -7,6 +7,7 @@ public class MessageHandler implements MessageHandlerInterface {
     private static boolean lastCommandAnswer = false;
 
     public static void handleMessage(String message) throws Exception {
+       System.out.println(message);
         if(message.startsWith("SVR GAME")) {
             GameMessageHandler.handleMessage(message);
         }
@@ -18,6 +19,7 @@ public class MessageHandler implements MessageHandlerInterface {
             System.out.println("I lost a OK");
         }
         else{
+            System.out.println(message);
             throw new Exception("unkown message");
         }
     }

@@ -8,7 +8,8 @@ public class LobbyObservable extends Observable implements Runnable {
     private ArrayList<String> playerList = new ArrayList<String>();
     private static LobbyObservable lobby = new LobbyObservable();
     Server server = Server.getInstance();
-    private String playerName;
+    private static volatile String playerName;
+    private boolean running;
 
 
     private LobbyObservable(){
@@ -20,7 +21,8 @@ public class LobbyObservable extends Observable implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        running = true;
+        while (running) {
             try {
                 ArrayList <String> tempPlayerList = server.getPlayerlist();
                 tempPlayerList.remove(playerName);
@@ -32,6 +34,7 @@ public class LobbyObservable extends Observable implements Runnable {
                 Thread.sleep(5000);
             } catch (Exception e) {
                 e.printStackTrace();
+                running = false;
             }
         }
     }
@@ -71,7 +74,9 @@ public class LobbyObservable extends Observable implements Runnable {
         return playerList;
     }
 
-    public void setPlayerName(String playerName){
-        this.playerName = playerName;
+    public static void setPlayerName(String playerName){
+        LobbyObservable.playerName = playerName;
     }
+
+    public void stop(){running = false;}
 }
