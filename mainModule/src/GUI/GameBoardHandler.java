@@ -1,5 +1,6 @@
 package GUI;
 
+import BKEGame.Board;
 import OtherControllers.GameController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -98,6 +99,8 @@ public class GameBoardHandler implements Initializable, Observer {
     @Override
     public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
         Game game = (Game) arg;
+        Board board = game.getBoard();
+        //for (char[] c : ){}
         Move move = game.getMoveHistory().pop();
         Button selectedButton = (Button) GameB.lookup("#" + move.getPos());
         Platform.runLater(new Runnable() {
