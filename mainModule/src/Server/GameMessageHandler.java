@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameMessageHandler implements MessageHandlerInterface {
+    private static boolean isAI = false;
 
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME CHALLENGE {")) {
