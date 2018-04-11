@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Observable;
 
     /**
@@ -78,28 +79,36 @@ public class Server extends Observable implements Runnable {
             connected = true;
         }
 
-        public boolean login(String playerName) throws IOException {
+        public void login(String playerName) throws Exception {
             this.playerName = playerName;
+            System.out.println(this.playerName);
+            LobbyObservable.setPlayerName(playerName);
             wait = true;
             synchronized (lock){
+
                 dataOut.println("login " + playerName);
-                if(dataIn.readLine().equals("OK")){
-                    wait = false;
-                    lock.notify();
-                    return true;
-                }
+                MessageHandler.waitForOk(dataIn);
                 wait = false;
                 lock.notify();
-                return false;
             }
         }
 
-        public boolean disconnect() throws IOException, InterruptedException {
-            if (isConnected()) {
+        public boolean disconnect() throws InterruptedException {
+            //if (isConnected()) {
+            wait = true;
+            synchronized (lock){
+                System.out.println("ben ik hier");
                 dataOut.println("bye");
                 Thread.sleep(200);
-                socket.close();
+                try {
+                    socket.close();
+                    System.out.println("doei server");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 connected = false;
+                wait = false;
+                lock.notify();
             }
             return connected;
         }

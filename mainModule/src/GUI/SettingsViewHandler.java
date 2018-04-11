@@ -51,10 +51,12 @@ public class SettingsViewHandler implements ViewActionHandler {
         } catch(NumberFormatException e) {
             showErrorPopup("Invalid port number");
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if (success){
             server.saveConfig();
-            lobby.setPlayerName(nickname.getText());
+            //lobby.setPlayerName(nickname.getText());
 
             // Update variables in lobby view.
             FXMLLoader loader = new FXMLLoader();

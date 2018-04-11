@@ -8,7 +8,7 @@ public class LobbyObservable extends Observable implements Runnable {
     private ArrayList<String> playerList = new ArrayList<String>();
     private static LobbyObservable lobby = new LobbyObservable();
     Server server = Server.getInstance();
-    private String playerName;
+    private static volatile String playerName;
 
 
     private LobbyObservable(){
@@ -25,6 +25,7 @@ public class LobbyObservable extends Observable implements Runnable {
             try {
                 ArrayList <String> tempPlayerList = server.getPlayerlist();
                 tempPlayerList.remove(playerName);
+                System.out.println(playerName);
                 if (!tempPlayerList.equals(playerList)) {
                     playerList = tempPlayerList;
                     setChanged();
@@ -73,7 +74,8 @@ public class LobbyObservable extends Observable implements Runnable {
         return playerList;
     }
 
-    public void setPlayerName(String playerName){
-        this.playerName = playerName;
+    public static void setPlayerName(String playerName){
+        LobbyObservable.playerName = playerName;
+        System.out.println(LobbyObservable.playerName);
     }
 }

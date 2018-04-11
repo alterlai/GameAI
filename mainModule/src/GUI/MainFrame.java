@@ -38,10 +38,7 @@ public class MainFrame extends Application {
             Server server = Server.getInstance();
             try {
                 server.disconnect();
-                server.quit();
-            } catch (IOException e1) {
-                System.err.println("Error disconnecting");
-                e1.printStackTrace();
+                server.quit();//TODO lobby quit
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
