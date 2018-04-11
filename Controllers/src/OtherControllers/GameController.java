@@ -45,11 +45,10 @@ public class GameController implements GameControllerInterface {
         ViewController viewController = ViewController.getInstance();
         viewController.addView("gameView", gameView);
         viewController.activate("gameView");
+        viewController.removeView("homeView");
 
 
         // Get view handler.
-        FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/GUI/GameBoard.fxml"));
-        //loader.load();
         GameBoardHandler gameBoardHandler = loader.getController();
         gameBoardHandler.setController(this);
     }
