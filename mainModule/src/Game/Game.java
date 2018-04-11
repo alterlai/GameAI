@@ -1,4 +1,5 @@
-package BKEGame;
+package Game;
+import BKEGame.AbstractBoard;
 import Game.Move;
 import Game.Player;
 

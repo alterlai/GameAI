@@ -1,7 +1,8 @@
 package Server;
 
+import Game.Player;
 import MainControllers.GameControllerInterface;
-import otherControllers.GameController;
+import OtherControllers.GameController;
 
 public class GameHandler {
     private GameControllerInterface gameController;
@@ -11,10 +12,8 @@ public class GameHandler {
 
     public static GameHandler getInstance(){return gameHandlerSingelton;}
 
-    public void initGameController(){
-        if(gameController == null){
-            gameController = new GameController();
-        }
+    public void initGameController(Player local, Player opponent, String nameGame){
+        gameController = new GameController(local, opponent, nameGame);
     };
 
     public GameControllerInterface getGameController() {

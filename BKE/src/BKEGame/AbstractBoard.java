@@ -47,6 +47,20 @@ public abstract class AbstractBoard {
 
     public abstract ArrayList<Move> getValidMoves(Player player);
 
+    public char[][] getCells() {
+        return this.xy;
+    }
+
+    public char[] getCells1D() {
+        char[] dimensionalpos = new char[this.size*this.size];
+        for (int x =0; x < this.size; x++) {
+            for (int y =0; y < this.size; y++) {
+                dimensionalpos[y * this.size + x] = xy[x][y];
+            }
+        }
+        return dimensionalpos;
+    }
+
     public int getSize() { return this.size; }
 
 

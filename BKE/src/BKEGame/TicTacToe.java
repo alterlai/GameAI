@@ -1,6 +1,7 @@
 package BKEGame;
 
 
+import Game.Game;
 import Game.Player;
 import Game.Move;
 import java.util.ArrayList;
@@ -133,7 +134,7 @@ public class TicTacToe extends Observable implements Game {
     }
 
     public Move createMove(int x, int y, Player player) { return new Move(x, y, board.getSize(), player); }
-    public Boolean isValid(Move move) {return board.isValid(move);}
+    public Boolean isValid(Move move) {move.makePlayable(board.getSize()); return board.isValid(move);}
 
     /**
      * Plays a certain move. Only accessed through controller which means that these moves have been played on the server and are "valid"

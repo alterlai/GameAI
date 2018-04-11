@@ -1,5 +1,8 @@
 package GUI;
 
+import BKEGame.AbstractBoard;
+import OtherControllers.GameController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,7 +15,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 
+import Game.Game;
+import Game.Move;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -30,6 +36,7 @@ public class GameBoardHandler implements Initializable, Observer {
     @FXML
     private ListView ListV;
 
+    private GameController gamecontroller;
 
     static int BoardSize = 3;
 
@@ -45,7 +52,6 @@ public class GameBoardHandler implements Initializable, Observer {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         int X = getGameboard();
         int Y = getGameboard();
 
@@ -70,34 +76,39 @@ public class GameBoardHandler implements Initializable, Observer {
             movenode(ForfeitB, GameB.getColumnConstraints().size());
         }
 
-        for(int x = 1; x <= X; x++) {
-            for(int y = 1; y <= Y; y++){
-                int nummer = ((x-1) * X)  +  y;
-                Button btn = new Button( " " + nummer);
+        for(int y = 0; y < Y; y++) {
+            for(int x = 0; x < X; x++){
+                int nummer = ((y) * X)  +  x;
+                Button btn = new Button( " ");
                 btn.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
                 btn.setId(String.valueOf(nummer));
 
                 btn.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        System.out.println(btn.getId());
-                        btn.setText("clicked");
+                        gamecontroller.registerMove(nummer);
                     }
                 });
-
-                GameB.add(btn,x-1,y-1);
+                System.out.println(btn);
+                GameB.add(btn,x,y);
             }
         }
-
         updateMovehistory();
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-
-        Button GeselecteerdeBtn = (Button) GameB.lookup("#" + arg);
-        GeselecteerdeBtn.setText("X");
-
+    public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
+        Game game = (Game) arg;
+        AbstractBoard board = game.getBoard();
+        //for (char[] c : ){}
+        Move move = game.getMoveHistory().get(game.getMoveHistory().size() - 1);
+        Button selectedButton = (Button) GameB.lookup("#" + move.getPos());
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                selectedButton.setText(String.valueOf(move.getPlayer().getMark()));
+            }
+        });
     }
 
 
@@ -125,5 +136,8 @@ public class GameBoardHandler implements Initializable, Observer {
         System.out.println("Player forfeit.");
     }
 
-
+    public void setController(GameController controller) {
+        this.gamecontroller = controller;
+        controller.registerView(this);
+    }
 }

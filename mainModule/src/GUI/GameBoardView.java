@@ -20,17 +20,6 @@ public class GameBoardView extends Application {
     ViewController viewController;
 
 
-//    public void setGameboard(int grote){
-//        this.BoardSize = grote;
-//
-//    }
-//
-//    public static int getGameboard(){
-//
-//        return (BoardSize);
-//    }
-
-
 
 
 

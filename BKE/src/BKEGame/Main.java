@@ -1,9 +1,12 @@
 package BKEGame;
 
+
 import Game.Move;
 import Game.Player;
+import Game.Game;
 
 import java.util.ArrayList;
+
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -22,11 +25,13 @@ public class Main implements Observer {
         Player p1 = new Player("p1", true);
         Player p2 = new Player("p2");
 
+
         Game gamu = new Othello(p1, p2);
         gamu.registerView(this);
         Scanner s = new Scanner(System.in);
     /*
         while (true) {
+
             Move m = gamu.findBestMove(p1);
             gamu.playMove(m);
 
@@ -42,17 +47,31 @@ public class Main implements Observer {
             }
             else { System.out.println("Move not valid.."); break;}
 
+
             //Playing move based on 2 dimensional position.. made by BKEGame.Game objects or in the controller..
             //Move pmove = ((BKEGame.TicTacToe) gamu).createMove(x, y,  p2); //deze hoort in gamu
+
 
             ///gamu.playMove(pmove);
 
             //Playing moves based on 1 dimensional position.. made by server
 
 
+
         }*/
 
-    }
+
+            //TTT.playMove(new Move(4, p2));
+            //TTT.playMove(new Move(5, p2));
+            //TTT.playMove(new Move(6, p2));
+            //TTT.playMove(new Move(7, p2));
+            char[] xy = gamu.getBoard().getCells1D();
+            for (int i = 0; i < (9); i++){
+                System.out.println("Pos " + i + ": " + xy[i]);
+            }
+        }
+
+
 
     //Testing observer relationship..
     @Override
