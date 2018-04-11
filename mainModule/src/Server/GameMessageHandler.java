@@ -1,5 +1,6 @@
 package Server;
 
+import GUI.ViewController;
 import Game.Move;
 import Game.Player;
 import MainControllers.GameControllerInterface;
@@ -39,14 +40,17 @@ public class GameMessageHandler implements MessageHandlerInterface {
         }
         else if (message.startsWith("SVR GAME WIN")){
             System.out.println("I win!!!");
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else if (message.startsWith("SVR GAME LOSS")){
             System.out.println("I lose :(");
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else if (message.startsWith("SVR GAME DRAW")){
             System.out.println("I'm more even then the other guy");
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else{

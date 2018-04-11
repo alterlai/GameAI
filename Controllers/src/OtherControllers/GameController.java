@@ -5,6 +5,7 @@ import BKEGame.TicTacToe;
 import GUI.*;
 import Game.Move;
 import Game.Player;
+import Server.LobbyObservable;
 
 import java.io.IOException;
 import java.util.Observer;
@@ -45,7 +46,7 @@ public class GameController implements GameControllerInterface {
         ViewController viewController = ViewController.getInstance();
         viewController.addView("gameView", gameView);
         viewController.activate("gameView");
-        viewController.removeView("homeView");
+        //viewController.removeView("homeView");
 
 
         // Get view handler.
@@ -94,7 +95,9 @@ public class GameController implements GameControllerInterface {
     //}
 
     public void endGame(){
-
+        ViewController.getInstance().activate("homeView");
+        ViewController.getInstance().removeView("gameView");
+        new Thread(LobbyObservable.getInstance()).start();
     }
     public void registerView(Observer view) { //heh
         game.registerView(view);

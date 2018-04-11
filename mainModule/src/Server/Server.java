@@ -23,7 +23,7 @@ public class Server extends Observable implements Runnable {
         private String serverIp = "localhost";
         private int serverPort = 7789;
         private Socket socket;
-        private volatile boolean connected;
+        private volatile boolean connected = false;
         private BufferedReader dataIn;
         private PrintWriter dataOut;
         private final Object lock = new Object();
