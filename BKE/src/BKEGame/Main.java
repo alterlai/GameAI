@@ -4,6 +4,9 @@ package BKEGame;
 import Game.Move;
 import Game.Player;
 import Game.Game;
+
+import java.util.ArrayList;
+
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -22,13 +25,15 @@ public class Main implements Observer {
         Player p1 = new Player("p1", true);
         Player p2 = new Player("p2");
 
-        TicTacToe TTT = new TicTacToe(p1, p2);
-        TTT.registerView(this);
-        Scanner s = new Scanner(System.in);
 
+        Game gamu = new Othello(p1, p2);
+        gamu.registerView(this);
+        Scanner s = new Scanner(System.in);
+    /*
         while (true) {
-            Move m = TTT.findBestMove(p1);
-            TTT.playMove(m);
+
+            Move m = gamu.findBestMove(p1);
+            gamu.playMove(m);
 
             String move = s.nextLine();
             String[] split = move.split("");
@@ -36,28 +41,37 @@ public class Main implements Observer {
             int y = new Integer(split[1]);
 
 
-            Move pmove =  TTT.createMove(x, y, p2);
-            if (TTT.isValid(pmove)) {
-                TTT.playMove(pmove);
+            Move pmove =  gamu.createMove(x, y, p2);
+            if (gamu.isValid(pmove)) {
+                gamu.playMove(pmove);
             }
             else { System.out.println("Move not valid.."); break;}
 
-            //Playing move based on 2 dimensional position.. made by Game.Game objects or in the controller..
-            //Move pmove = ((BKEGame.TicTacToe) TTT).createMove(x, y,  p2); //deze hoort in ttt
 
-            ///TTT.playMove(pmove);
+            //Playing move based on 2 dimensional position.. made by BKEGame.Game objects or in the controller..
+            //Move pmove = ((BKEGame.TicTacToe) gamu).createMove(x, y,  p2); //deze hoort in gamu
+
+
+            ///gamu.playMove(pmove);
 
             //Playing moves based on 1 dimensional position.. made by server
+
+
+
+        }*/
+
+
             //TTT.playMove(new Move(4, p2));
             //TTT.playMove(new Move(5, p2));
             //TTT.playMove(new Move(6, p2));
             //TTT.playMove(new Move(7, p2));
-            char[] xy = TTT.getBoard().getCells1D();
+            char[] xy = gamu.getBoard().getCells1D();
             for (int i = 0; i < (9); i++){
                 System.out.println("Pos " + i + ": " + xy[i]);
             }
         }
-    }
+
+
 
     //Testing observer relationship..
     @Override

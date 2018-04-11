@@ -18,7 +18,6 @@ public class SettingsViewHandler implements ViewActionHandler {
     @FXML private TextField port;
     @FXML private TextField nickname;
     @FXML private Button cancel;
-    private ConfigHandler config;
     private Server server = Server.getInstance();
     private LobbyObservable lobby = LobbyObservable.getInstance();
 
@@ -26,16 +25,15 @@ public class SettingsViewHandler implements ViewActionHandler {
 
     @FXML
     public void initialize() {
-        config = ConfigHandler.getInstance();
-        serverip.setText(config.getIp());
-        port.setText(config.getPort());
-        nickname.setText(config.getNickname());
+        Server server = Server.getInstance();
+        serverip.setText(server.getServerIp());
+        port.setText("" +server.getServerPort());
+        nickname.setText(server.getPlayerName());
     }
 
     @FXML
     private void apply() {
         boolean success = false;    // Check if the new settings are correct.
-        config.saveConfig(serverip.getText(), port.getText(), nickname.getText());
         // Regenerate new server connection
         try {
             String ipString = serverip.getText();
@@ -48,37 +46,29 @@ public class SettingsViewHandler implements ViewActionHandler {
             success = true;
         } catch (IOException e) {
             showErrorPopup("Unable to connect to new server");
-            System.err.println("Unable to disconnect. The client was probably not connected to a server.");
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }catch(IllegalArgumentException e) {
+        } catch(NumberFormatException e) {
             showErrorPopup("Invalid port number");
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         if (success){
-            lobby.setPlayerName(nickname.getText());
+            server.saveConfig();
+            //lobby.setPlayerName(nickname.getText());
 
             // Update variables in lobby view.
             FXMLLoader loader = new FXMLLoader();
-            try {
-                Pane lobby = loader.load(getClass().getResource("HomeScreen.fxml").openStream());
-                LobbyViewHandler lobbyViewHandler = (LobbyViewHandler) loader.getController();
-                lobbyViewHandler.update(null, null);
-            } catch (IOException e) {
-                System.err.println("Failed to load HomeScreen.fxml steam");
-                e.printStackTrace();
-            }
+            //Pane lobby = loader.load(getClass().getResource("HomeScreen.fxml").openStream());
+            //LobbyViewHandler lobbyViewHandler = loader.getController();
+            //lobbyViewHandler.update(null, null);
 
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();
-        }
-    }
 
-    @FXML
-    private void close() {
-        Stage stage = (Stage) cancel.getScene().getWindow();
-        stage.close();
+
+        }
     }
 
     private void showErrorPopup(String message) {
@@ -87,5 +77,12 @@ public class SettingsViewHandler implements ViewActionHandler {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+
+    @FXML
+    private void close() {
+        Stage stage = (Stage) cancel.getScene().getWindow();
+        stage.close();
     }
 }

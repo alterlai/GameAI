@@ -1,6 +1,6 @@
 package GUI;
 
-import BKEGame.Board;
+import Game.AbstractBoard;
 import OtherControllers.GameController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -106,9 +106,9 @@ public class GameBoardHandler implements Initializable, Observer {
     @Override
     public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
         Game game = (Game) arg;
-        Board board = game.getBoard();
+        AbstractBoard board = game.getBoard();
         //for (char[] c : ){}
-        Move move = game.getMoveHistory().peek();
+        Move move = game.getMoveHistory().get(game.getMoveHistory().size()-1);
         Button selectedButton = (Button) GameB.lookup("#" + move.getPos());
         Platform.runLater(new Runnable() {
             @Override
@@ -160,6 +160,6 @@ public class GameBoardHandler implements Initializable, Observer {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-        ViewController.getInstance().activate("homeView");
+        //ViewController.getInstance().activate("homeView");
     }
 }

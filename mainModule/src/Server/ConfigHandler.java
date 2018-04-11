@@ -5,7 +5,7 @@ import java.util.Properties;
 
 public class ConfigHandler {
 
-    private String filename = "\\mainModule\\src\\Resources\\config.properties";
+    private String filename = "config.properties";
     private Properties properties;
     private static ConfigHandler self = new ConfigHandler();
     private String ip;
@@ -15,7 +15,12 @@ public class ConfigHandler {
     private ConfigHandler () {
         properties = new Properties();
 
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Resources/config.properties");
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(filename);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         if (inputStream != null) {
             try {
@@ -37,12 +42,15 @@ public class ConfigHandler {
     private void createNewConfig() {
         // NOT WORKING CURRENTLY
         try {
-            PrintWriter writer = new PrintWriter("Resources\\config.properties");
-            writer.println("IP=localhost");
-            writer.println("PORT=7789");
-            writer.println("NICKNAME=NewUser");
-            writer.close();
-        } catch (FileNotFoundException e) {
+            Properties properties = new Properties();
+            properties.setProperty("IP", "localhost");
+            properties.setProperty("PORT","7789");
+            properties.setProperty("NICKNAME","NewUser");
+
+            File file = new File(filename);
+            FileOutputStream fileOut = new FileOutputStream(file);
+            properties.store(fileOut, null);
+        } catch (IOException e) {
             System.err.println("Unable to create config file");
             e.printStackTrace();
         }
@@ -56,7 +64,7 @@ public class ConfigHandler {
      */
     public void saveConfig(String ip, String port, String nickname) {
         try {
-            FileOutputStream output = new FileOutputStream(System.getProperty("user.dir")+filename);
+            FileOutputStream output = new FileOutputStream(filename);
             properties.setProperty("IP", ip);
             properties.setProperty("PORT", port);
             properties.setProperty("NICKNAME", nickname);

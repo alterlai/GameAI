@@ -1,17 +1,16 @@
 package Game;
-import BKEGame.Board;
-import Game.Move;
-import Game.Player;
+
+import java.util.ArrayList;
 import java.util.Observer;
-import java.util.Stack;
+
 
 public interface Game {
     void registerView(Observer view);
     void playMove(Move move);
 
-    Stack<Move> getMoveHistory();
+    ArrayList<Move> getMoveHistory();
 
-    Board getBoard();
+    AbstractBoard getBoard();
     Move findBestMove(Player player);
 
     Move createMove(int x, int y, Player player);

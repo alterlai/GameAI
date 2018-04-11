@@ -40,8 +40,10 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         //Create server
         server = Server.getInstance();
         try {
-            server.connect();
-            server.login("hans");
+            if(!server.isConnected()){
+                server.connect();
+                server.login(server.getPlayerName());
+            }
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Unable to connect");
@@ -50,6 +52,8 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
             alert.showAndWait();
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if (server.isConnected()) {
             // Create lobby
@@ -57,7 +61,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             serverThread.start();
             lobby = LobbyObservable.getInstance();
             lobby.addObserver(this);
-            lobby.setPlayerName(server.getPlayerName());
+            //lobby.setPlayerName(server.getPlayerName());
             Thread thread = new Thread(lobby);
             thread.start();
             try {

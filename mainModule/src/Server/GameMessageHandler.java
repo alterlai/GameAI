@@ -1,5 +1,6 @@
 package Server;
 
+import GUI.ViewController;
 import Game.Move;
 import Game.Player;
 import MainControllers.GameControllerInterface;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameMessageHandler implements MessageHandlerInterface {
+    private static boolean isAI = false;
 
     private static GameControllerInterface gameController;
 
@@ -40,15 +42,20 @@ public class GameMessageHandler implements MessageHandlerInterface {
             return;
         }
         else if (message.startsWith("SVR GAME WIN")){
-            gameController.endGame(true);
+            //gameController.endGame(true);
+            System.out.println("I win!!!");
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else if (message.startsWith("SVR GAME LOSS")){
-            gameController.endGame(false);
+            System.out.println("I lose :(");
+            //gameController.endGame(false);
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else if (message.startsWith("SVR GAME DRAW")){
             System.out.println("I'm more even then the other guy");
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else{
@@ -73,9 +80,13 @@ public class GameMessageHandler implements MessageHandlerInterface {
     private static void processMove(String message){
         GameControllerInterface gameController = GameHandler.getInstance().getGameController();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(15, message.length() - 1).split(",")));
-        System.out.println(list);
         String playername = list.get(0).substring(9, list.get(0).length()-1);
         int move = Integer.parseInt(list.get(1).substring(8, list.get(1).length()-1));
+        if (list.get(2).substring(11, list.get(2).length()-1).equals("Illegal move")){
+            System.out.println(playername + " tried to cheat with Illegal move " + move);
+            return;
+        }
+
 
         if (playername.equals(gameController.getPlayer(1).getName())){
             gameController.moveSucces(new Move(move, gameController.getPlayer(1)));
@@ -86,11 +97,14 @@ public class GameMessageHandler implements MessageHandlerInterface {
     }
 
     private static void setupMatch(String message){
+        LobbyObservable.getInstance().stop();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(16, message.length() - 1).split(",")));
-        Player player1 = new Player(Server.getInstance().getPlayerName(), false);
+        Player player1 = new Player(Server.getInstance().getPlayerName(), isAI);
         Player player2 = new Player(list.get(2).substring(12, list.get(2).length()-1));
         String nameGame = list.get(1).substring(12, list.get(1).length()-1);
         GameHandler handler = GameHandler.getInstance();
         handler.initGameController(player1, player2, nameGame);
     }
+
+    public static void setisAI(Boolean isAI){GameMessageHandler.isAI = isAI;}
 }
