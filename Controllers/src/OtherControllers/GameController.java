@@ -6,6 +6,7 @@ import BKEGame.TicTacToe;
 import GUI.*;
 import Game.Move;
 import Game.Player;
+import Server.LobbyObservable;
 
 import java.io.IOException;
 import java.util.Observer;
@@ -19,7 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 public class GameController implements GameControllerInterface {
-    private GameInterface gameInterface;
+    private GameInterface game;
     private Server server;
     private ViewActionHandler view;
 
@@ -28,13 +29,13 @@ public class GameController implements GameControllerInterface {
     private GameBoardHandler gameBoardHandler;
 
 
-    public GameController(Player local, Player opponent, String nameGame){
+    public GameController(Player starter, Player opponent, String nameGame){
         this.server = Server.getInstance(); 
         if(nameGame.equals("Tic-tac-toe")) {
-            gameInterface = new TicTacToe(local, opponent);
+            game = new TicTacToe(starter, opponent);
         }
         else if (nameGame.equals("Reversi")) {
-            gameInterface = new Othello(local, opponent);
+            game = new Othello(starter, opponent);
         }
         try {
             initView();
@@ -49,24 +50,17 @@ public class GameController implements GameControllerInterface {
         ViewController viewController = ViewController.getInstance();
         viewController.addView("gameView", gameView);
         viewController.activate("gameView");
-        viewController.removeView("homeView");
+        //viewController.removeView("homeView");
 
 
         // Get view handler.
         GameBoardHandler gameBoardHandler = loader.getController();
-        gameBoardHandler.setController(this, gameInterface);
+        gameBoardHandler.setController(this, game);
+        gameBoardHandler.setPlayerNames(game.getPlayer1().getName(), game.getPlayer2().getName());
+
     }
 
-    /*public void init() {
-
-
-        }
-        else{
-        }
-    }*/
-
-
-    @Override
+    @Override //Deprecated
     public void init(Player local, Player opponent, String nameGame) {
 
     }
@@ -74,7 +68,7 @@ public class GameController implements GameControllerInterface {
     public Move getMove(Player player) throws InterruptedException {
 
         if (player.isAI()) {
-            return gameInterface.findBestMove(player);
+            return game.findBestMove(player);
         }
 
         selectedMove = null;
@@ -89,7 +83,7 @@ public class GameController implements GameControllerInterface {
     }
 
     public void moveSucces(Move move){
-        gameInterface.playMove(move);
+        game.playMove(move);
 
     }
 
@@ -97,16 +91,28 @@ public class GameController implements GameControllerInterface {
         //TODO server forfeit functionality
     }
 
-    public void endGame(){
-
+    /**
+     * Let the view show the end game message.
+     * @param //win
+     */
+    public void endGame(/*boolean win*/){
+        /*if (win) {
+            gameBoardHandler.showEndScreen("You have won! \nClick on OK to return to the lobby.");
+        } else {
+            gameBoardHandler.showEndScreen("You have lost!. \nClick on OK to return to the lobby.");
+        }*/
+        ViewController.getInstance().activate("homeView");
+        ViewController.getInstance().removeView("gameView");
+        new Thread(LobbyObservable.getInstance()).start();
     }
+
     public void registerView(Observer view) { //heh
-        gameInterface.registerView(view);
+        game.registerView(view);
     }
 
     public void registerMove(int pos){
         Move move = new Move(pos, new Player(Server.getInstance().getPlayerName())); //NO!
-        if (gameInterface.isValid(move)) {
+        if (game.isValid(move)) {
             selectedMove = move;
             moveLatch.countDown();
         }
@@ -115,10 +121,10 @@ public class GameController implements GameControllerInterface {
     public Player getPlayer(int number) {
         switch(number) {
             case 1:
-                return gameInterface.getPlayer1();
+                return game.getPlayer1();
 
             case 2:
-                return gameInterface.getPlayer2();
+                return game.getPlayer2();
 
         }
         return null;

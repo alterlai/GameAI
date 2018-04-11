@@ -1,14 +1,18 @@
 package Server;
 
+import GUI.ViewController;
 import Game.Move;
 import Game.Player;
 import MainControllers.GameControllerInterface;
+import OtherControllers.GameController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameMessageHandler implements MessageHandlerInterface {
     private static boolean isAI = false;
+
+    private static GameControllerInterface gameController;
 
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME CHALLENGE {")) {
@@ -28,7 +32,7 @@ public class GameMessageHandler implements MessageHandlerInterface {
         }
         else if (message.startsWith("SVR GAME YOURTURN")){
             System.out.println("It's my turn");
-            GameControllerInterface gameController = GameHandler.getInstance().getGameController();
+            gameController = GameHandler.getInstance().getGameController();
             Server.getInstance().doMove(gameController.getMove(gameController.getPlayer(1)));
             return;
         }
@@ -38,15 +42,20 @@ public class GameMessageHandler implements MessageHandlerInterface {
             return;
         }
         else if (message.startsWith("SVR GAME WIN")){
+            //gameController.endGame(true);
             System.out.println("I win!!!");
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else if (message.startsWith("SVR GAME LOSS")){
             System.out.println("I lose :(");
+            //gameController.endGame(false);
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else if (message.startsWith("SVR GAME DRAW")){
             System.out.println("I'm more even then the other guy");
+            GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else{
@@ -71,9 +80,13 @@ public class GameMessageHandler implements MessageHandlerInterface {
     private static void processMove(String message){
         GameControllerInterface gameController = GameHandler.getInstance().getGameController();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(15, message.length() - 1).split(",")));
-        System.out.println(list);
         String playername = list.get(0).substring(9, list.get(0).length()-1);
         int move = Integer.parseInt(list.get(1).substring(8, list.get(1).length()-1));
+        if (list.get(2).substring(11, list.get(2).length()-1).equals("Illegal move")){
+            System.out.println(playername + " tried to cheat with Illegal move " + move);
+            return;
+        }
+
 
         if (playername.equals(gameController.getPlayer(1).getName())){
             gameController.moveSucces(new Move(move, gameController.getPlayer(1)));

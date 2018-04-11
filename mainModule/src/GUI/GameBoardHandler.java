@@ -4,11 +4,14 @@ import Game.AbstractBoard;
 import Game.GameInterface;
 import OtherControllers.GameController;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.ColumnConstraints;
@@ -18,6 +21,7 @@ import javafx.scene.text.Text;
 
 import Game.Move;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -34,6 +38,9 @@ public class GameBoardHandler implements Initializable, Observer {
     private Text Player2T;
     @FXML
     private ListView ListV;
+
+    // List of strings to use in the listview of movehistory
+    private ArrayList<String> moveHistory = new ArrayList<>();
 
     private GameController gamecontroller;
 
@@ -74,6 +81,7 @@ public class GameBoardHandler implements Initializable, Observer {
             moveNode(Player2T, 0);
             moveNode(ListV, 1);
             moveNode(ForfeitB, GameB.getColumnConstraints().size());
+
         }
 
         for(int y = 0; y < Y; y++) {
@@ -93,16 +101,23 @@ public class GameBoardHandler implements Initializable, Observer {
                 GameB.add(btn,x,y);
             }
         }
-        updateMovehistory();
     }
 
     @Override
     public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
-        GameInterface gameInterface = (GameInterface) arg;
-        AbstractBoard board = gameInterface.getBoard();
+
+        GameInterface game= (GameInterface) arg;
+        AbstractBoard board = game.getBoard();
         drawGrid(board);
 
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                addToMoveHistory(game.getMoveHistory().get(game.getMoveHistory().size()-1));
+            }
+        });
     }
+
 
     public void drawGrid(AbstractBoard board) {
         char[] boardVals = board.getCells1D();
@@ -118,14 +133,16 @@ public class GameBoardHandler implements Initializable, Observer {
         }
     }
 
-    public void updateMovehistory(){
-        //ListV.setItems();
+/**
+ * Add a new move to the move history to show on screen.
+ * @param move
+ */
+private void addToMoveHistory(Move move) {
+        moveHistory.add(move.getPlayer().getName() + "moved X: " + move.getX() + " Y: " + move.getY());
+        ObservableList<String> observableMoveHistory = FXCollections.observableArrayList(moveHistory);
+        ListV.setItems(observableMoveHistory);
+        }
 
-    }
-
-    public void updateListview(String item){
-        ListV.getItems().add(item);
-    }
 
 
     private void moveNode(Node Node, int rij){
@@ -158,5 +175,20 @@ public class GameBoardHandler implements Initializable, Observer {
     @FXML
     private void Forfeit(){ //Deprecated -> will never be used. Please remove.
         System.out.println("Player forfeit.");
+    }
+
+
+    public void setPlayerNames(String player1, String player2) {
+        this.Player1T.setText("Player 1: " + player1);
+        this.Player2T.setText("Player 2: " + player2);
+    }
+
+    public void showEndScreen(String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game is done!");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+        //ViewController.getInstance().activate("homeView");
     }
 }
