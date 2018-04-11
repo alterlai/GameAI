@@ -146,4 +146,10 @@ public class GameBoardHandler implements Initializable, Observer {
         this.gamecontroller = controller;
         controller.registerView(this);
     }
+
+
+    public void setPlayerNames(String player1, String player2) {
+        this.Player1T.setText("Player 1: " + player1);
+        this.Player2T.setText("Player 2: " + player2);
+    }
 }

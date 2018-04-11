@@ -51,6 +51,7 @@ public class GameController implements GameControllerInterface {
         // Get view handler.
         GameBoardHandler gameBoardHandler = loader.getController();
         gameBoardHandler.setController(this);
+        gameBoardHandler.setPlayerNames(game.getPlayer1().getName(), game.getPlayer2().getName());
     }
 
     /*public void init() {
