@@ -1,7 +1,4 @@
 package Game;
-import BKEGame.AbstractBoard;
-import Game.Move;
-import Game.Player;
 
 import java.util.ArrayList;
 import java.util.Observer;

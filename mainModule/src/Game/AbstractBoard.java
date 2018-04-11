@@ -1,9 +1,6 @@
-package BKEGame;
+package Game;
 
 
-
-import Game.Player;
-import Game.Move;
 
 import java.util.ArrayList;
 

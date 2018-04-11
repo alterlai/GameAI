@@ -162,7 +162,7 @@ public class TicTacToe extends Observable implements Game {
     }
     @Override
     public ArrayList<Move> getMoveHistory() {
-        return null;
+        return moveHistory;
     }
     public Player getPlayer1() {return this.player1;}
     public Player getPlayer2() {return this.player2;}

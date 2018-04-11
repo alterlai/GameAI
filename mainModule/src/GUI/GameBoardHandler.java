@@ -1,6 +1,6 @@
 package GUI;
 
-import BKEGame.AbstractBoard;
+import Game.AbstractBoard;
 import OtherControllers.GameController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -101,7 +101,7 @@ public class GameBoardHandler implements Initializable, Observer {
         Game game = (Game) arg;
         AbstractBoard board = game.getBoard();
         //for (char[] c : ){}
-        Move move = game.getMoveHistory().get(game.getMoveHistory().size() - 1);
+        Move move = game.getMoveHistory().get(game.getMoveHistory().size()-1);
         Button selectedButton = (Button) GameB.lookup("#" + move.getPos());
         Platform.runLater(new Runnable() {
             @Override

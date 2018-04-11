@@ -1,11 +1,12 @@
 package BKEGame;
 
+import Game.AbstractBoard;
 import Game.Move;
 import Game.Player;
 import java.util.ArrayList;
 
 
-public class OthellloBoard extends AbstractBoard{
+public class OthellloBoard extends AbstractBoard {
 
     public OthellloBoard(int size) {
         super(size);

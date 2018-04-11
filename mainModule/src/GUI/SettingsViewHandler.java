@@ -60,14 +60,9 @@ public class SettingsViewHandler implements ViewActionHandler {
 
             // Update variables in lobby view.
             FXMLLoader loader = new FXMLLoader();
-            try {
-                Pane lobby = loader.load(getClass().getResource("HomeScreen.fxml").openStream());
-                LobbyViewHandler lobbyViewHandler = loader.getController();
-                lobbyViewHandler.update(null, null);
-            } catch (IOException e) {
-                System.err.println("Failed to load HomeScreen.fxml steam");
-                e.printStackTrace();
-            }
+            //Pane lobby = loader.load(getClass().getResource("HomeScreen.fxml").openStream());
+            //LobbyViewHandler lobbyViewHandler = loader.getController();
+            //lobbyViewHandler.update(null, null);
 
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();

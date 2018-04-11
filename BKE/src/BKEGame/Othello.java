@@ -6,6 +6,7 @@ import java.util.Observer;
 import Game.Player;
 import Game.Move;
 import Game.Game;
+import Game.AbstractBoard;
 
 public class Othello extends Observable implements Game {
 

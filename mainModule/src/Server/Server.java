@@ -58,6 +58,7 @@ public class Server extends Observable implements Runnable {
                             lock.wait();
                         }
                         while(dataIn.ready()){
+                            System.out.println("handle");
                             MessageHandler.handleMessage(dataIn.readLine());
                         }
                         Thread.sleep(10);
@@ -97,12 +98,10 @@ public class Server extends Observable implements Runnable {
             //if (isConnected()) {
             wait = true;
             synchronized (lock){
-                System.out.println("ben ik hier");
                 dataOut.println("bye");
                 Thread.sleep(200);
                 try {
                     socket.close();
-                    System.out.println("doei server");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -197,6 +196,8 @@ public class Server extends Observable implements Runnable {
             synchronized (lock){
                 dataOut.println("challenge accept " + challenge.getChallengeNumber());
                 MessageHandler.waitForOk(dataIn);
+                wait = false;
+                lock.notify();
             }
         }
 

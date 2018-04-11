@@ -1,5 +1,6 @@
 package BKEGame;
 
+import Game.AbstractBoard;
 import Game.Move;
 import Game.Player;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  *BKEGame.TicTacToeBoard model and Tic Tac Toe logic
  */
 
-public class TicTacToeBoard extends AbstractBoard{
+public class TicTacToeBoard extends AbstractBoard {
 
 
 
