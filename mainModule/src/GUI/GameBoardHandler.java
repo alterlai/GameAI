@@ -114,7 +114,7 @@ public class GameBoardHandler implements Initializable, Observer {
             @Override
             public void run() {
                 selectedButton.setText(String.valueOf(move.getPlayer().getMark()));
-                addToMoveHistory(game.getMoveHistory().peek());
+                addToMoveHistory(game.getMoveHistory().get(game.getMoveHistory().size()-1));
             }
         });
     }

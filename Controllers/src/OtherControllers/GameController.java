@@ -97,7 +97,7 @@ public class GameController implements GameControllerInterface {
 
     /**
      * Let the view show the end game message.
-     * @param win
+     * @param //win
      */
     public void endGame(/*boolean win*/){
         /*if (win) {
