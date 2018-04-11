@@ -1,6 +1,7 @@
 package GUI;
 
 import Game.AbstractBoard;
+import Game.GameInterface;
 import OtherControllers.GameController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -15,10 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 
-import Game.Game;
 import Game.Move;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -38,22 +37,23 @@ public class GameBoardHandler implements Initializable, Observer {
 
     private GameController gamecontroller;
 
-    static int BoardSize = 3;
-
-
-    public static void setGameboard(int grote){
-        BoardSize = grote;
-    }
-
-    public int getGameboard(){
-        return (BoardSize);
-    }
+    private int boardSize;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        int X = getGameboard();
-        int Y = getGameboard();
+
+    }
+    public void createDisplayElements() {
+        int X = this.boardSize;
+        int Y = this.boardSize;
+
+        ForfeitB.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                gamecontroller.forfeit();
+            }
+        });
 
         if(X > 2 || Y> 2) {
             for(int newrow = 1; newrow <= X-3; newrow++) {
@@ -70,23 +70,23 @@ public class GameBoardHandler implements Initializable, Observer {
                 GameB.getColumnConstraints().add(colum);
             }
 
-            movenode(Player1T, 0);
-            movenode(Player2T, 0);
-            movenode(ListV, 1);
-            movenode(ForfeitB, GameB.getColumnConstraints().size());
+            moveNode(Player1T, 0);
+            moveNode(Player2T, 0);
+            moveNode(ListV, 1);
+            moveNode(ForfeitB, GameB.getColumnConstraints().size());
         }
 
         for(int y = 0; y < Y; y++) {
             for(int x = 0; x < X; x++){
-                int nummer = ((y) * X)  +  x;
+                int pos = ((y) * X)  +  x;
                 Button btn = new Button( " ");
                 btn.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
-                btn.setId(String.valueOf(nummer));
+                btn.setId(String.valueOf(pos));
 
                 btn.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        gamecontroller.registerMove(nummer);
+                        gamecontroller.registerMove(pos);
                     }
                 });
                 System.out.println(btn);
@@ -98,20 +98,25 @@ public class GameBoardHandler implements Initializable, Observer {
 
     @Override
     public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
-        Game game = (Game) arg;
-        AbstractBoard board = game.getBoard();
-        //for (char[] c : ){}
-        Move move = game.getMoveHistory().get(game.getMoveHistory().size()-1);
-        Button selectedButton = (Button) GameB.lookup("#" + move.getPos());
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                selectedButton.setText(String.valueOf(move.getPlayer().getMark()));
-            }
-        });
+        GameInterface gameInterface = (GameInterface) arg;
+        AbstractBoard board = gameInterface.getBoard();
+        drawGrid(board);
+
     }
 
-
+    public void drawGrid(AbstractBoard board) {
+        char[] boardVals = board.getCells1D();
+        for (int i = 0; i < this.boardSize * this.boardSize; i++) {
+            Button selectedButton = (Button) GameB.lookup("#" + i);
+            final int pos = i;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    selectedButton.setText(Character.toString(boardVals[pos]));
+                }
+            });
+        }
+    }
 
     public void updateMovehistory(){
         //ListV.setItems();
@@ -123,21 +128,35 @@ public class GameBoardHandler implements Initializable, Observer {
     }
 
 
-    private void movenode(Node Node, int rij){
+    private void moveNode(Node Node, int rij){
         GameB.getChildren().remove(Node);
         GameB.add(Node,GameB.getRowConstraints().size(),rij);
     }
 
-    @FXML
-    private void Forfeit(){
-        //handlefor feit action
 
-        //GameController.foerfeit();
-        System.out.println("Player forfeit.");
-    }
 
-    public void setController(GameController controller) {
+    /**
+     * Sets reference to the controller and sets the model/observable related variables it needs to know (before the first notify() is called)
+     * @param controller
+     * @param game
+     */
+    public void setController(GameController controller, GameInterface game) {
         this.gamecontroller = controller;
         controller.registerView(this);
+
+        this.boardSize = game.getBoard().getSize();
+        Platform.runLater( new Runnable() {
+
+            @Override
+            public void run() { //Creates the GUI elements and fills the grid with relevant information. Done on the GUI thread
+                createDisplayElements();
+                System.out.println("Initialized");
+                drawGrid(game.getBoard());
+            }
+        });
+    }
+    @FXML
+    private void Forfeit(){ //Deprecated -> will never be used. Please remove.
+        System.out.println("Player forfeit.");
     }
 }

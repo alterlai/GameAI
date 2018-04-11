@@ -23,7 +23,7 @@ public class LobbyController{
 
 
     public void Challenge(String Tegenstander, String Game){
-        //view.challenge(Tegenstander, Game);
+        //view.challenge(Tegenstander, GameInterface);
     }
 
     public void ChallengePlayer(String Game, String PlayerName) throws Exception {

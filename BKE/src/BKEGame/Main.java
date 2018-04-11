@@ -1,11 +1,8 @@
 package BKEGame;
 
 
-import Game.Move;
+import Game.GameInterface;
 import Game.Player;
-import Game.Game;
-
-import java.util.ArrayList;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -26,7 +23,7 @@ public class Main implements Observer {
         Player p2 = new Player("p2");
 
 
-        Game gamu = new Othello(p1, p2);
+        GameInterface gamu = new Othello(p1, p2);
         gamu.registerView(this);
         Scanner s = new Scanner(System.in);
     /*
@@ -48,7 +45,7 @@ public class Main implements Observer {
             else { System.out.println("Move not valid.."); break;}
 
 
-            //Playing move based on 2 dimensional position.. made by BKEGame.Game objects or in the controller..
+            //Playing move based on 2 dimensional position.. made by BKEGame.GameInterface objects or in the controller..
             //Move pmove = ((BKEGame.TicTacToe) gamu).createMove(x, y,  p2); //deze hoort in gamu
 
 

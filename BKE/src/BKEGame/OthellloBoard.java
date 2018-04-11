@@ -12,12 +12,13 @@ public class OthellloBoard extends AbstractBoard {
         super(size);
 
         //set starting stones..
-        xy[3][3] = 'Z';
-        xy[4][3] = 'W';
-        xy[3][4] = 'W';
-        xy[4][4] = 'Z';
+        xy[3][3] = 'W';
+        xy[4][3] = 'Z';
+        xy[3][4] = 'Z';
+        xy[4][4] = 'W';
 
         //Test run..
+        /*
         print();
 
         Player temp = new Player("Han");
@@ -39,7 +40,7 @@ public class OthellloBoard extends AbstractBoard {
         playMove(new Move(2, 3, size, temp2));
         //playMove(new Move(6, 3, size, temp2));
         print();
-
+        */
     }
 
     public OthellloBoard(AbstractBoard old) { //Creates a copy, used when you don't want to pass the reference
@@ -47,7 +48,7 @@ public class OthellloBoard extends AbstractBoard {
     }
 
     /**
-     * Checks whether a move is valid or not. Should only be called from Game.createMove() -> wastes processing power.. Validates user input.
+     * Checks whether a move is valid or not. Should only be called from GameInterface.createMove() -> wastes processing power.. Validates user input.
      * @param move
      * @return
      */

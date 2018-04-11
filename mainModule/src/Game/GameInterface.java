@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Observer;
 
 
-public interface Game {
+public interface GameInterface {
     void registerView(Observer view);
     void playMove(Move move);
 

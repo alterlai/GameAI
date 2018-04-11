@@ -11,7 +11,7 @@ public class Move implements Comparable<Move> {
     private Player player;
 
     /**
-     * Called through Game.createMove(). Used when the 2 dimensional position is known.
+     * Called through GameInterface.createMove(). Used when the 2 dimensional position is known.
      * @param x
      * @param y
      * @param boardSize size of one side of the board. Used for casting 1d to 2d.

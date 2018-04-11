@@ -5,10 +5,10 @@ import java.util.Observable;
 import java.util.Observer;
 import Game.Player;
 import Game.Move;
-import Game.Game;
+import Game.GameInterface;
 import Game.AbstractBoard;
 
-public class Othello extends Observable implements Game {
+public class Othello extends Observable implements GameInterface {
 
     private OthellloBoard board;
 
@@ -145,6 +145,7 @@ public class Othello extends Observable implements Game {
 
     @Override
     public Boolean isValid(Move move) {
+        move.makePlayable(board.getSize());
         return this.board.isValid(move);
     }
 

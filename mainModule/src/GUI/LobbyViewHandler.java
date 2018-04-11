@@ -89,16 +89,16 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         String selectedGame = gameList.getSelectionModel().getSelectedItem();
         String selectedMode = gameModeList.getValue();
         if (selectedGame == null) {
-            //new Popup(stage, "Pleaes select a Game.");
+            //new Popup(stage, "Pleaes select a GameInterface.");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Unable to start Game.");
+            alert.setTitle("Unable to start GameInterface.");
             alert.setHeaderText(null);
-            alert.setContentText("Please select a Game to play.");
+            alert.setContentText("Please select a GameInterface to play.");
             alert.showAndWait();
         }
         else if (selectedMode == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Unable to start Game.");
+            alert.setTitle("Unable to start GameInterface.");
             alert.setHeaderText(null);
             alert.setContentText("Please select a gamemode to play.");
             alert.showAndWait();
@@ -108,9 +108,9 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
                 server.subscribe(selectedGame);
                 if (MessageHandler.lastMessageStatus()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Subscribed to Game.");
+                    alert.setTitle("Subscribed to GameInterface.");
                     alert.setHeaderText(null);
-                    alert.setContentText("You are now subscribed to the Game " + selectedGame + "\nYou will be notified when a Game is ready.");
+                    alert.setContentText("You are now subscribed to the GameInterface " + selectedGame + "\nYou will be notified when a GameInterface is ready.");
                     alert.showAndWait();
                 }
                 else {
@@ -118,9 +118,9 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
                 }
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Unable to start Game.");
+                alert.setTitle("Unable to start GameInterface.");
                 alert.setHeaderText(null);
-                alert.setContentText("Unable to subscribe to Game.");
+                alert.setContentText("Unable to subscribe to GameInterface.");
                 alert.showAndWait();
                 e.printStackTrace();
 
@@ -137,17 +137,17 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         //Check wether a player has been selected
         if(selectedPlayer == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Unable to start Game.");
+            alert.setTitle("Unable to start GameInterface.");
             alert.setHeaderText(null);
             alert.setContentText("Please select a player to challenge.");
             alert.showAndWait();
         }
-        // Check wether a Game has been selected to play
+        // Check wether a GameInterface has been selected to play
         else if(gameMode == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Unable to start Game.");
+            alert.setTitle("Unable to start GameInterface.");
             alert.setHeaderText(null);
-            alert.setContentText("Please select a Game to challenge a player");
+            alert.setContentText("Please select a GameInterface to challenge a player");
             alert.showAndWait();
         }
         else {
@@ -155,7 +155,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
                 server.challenge(selectedPlayer, gameMode);
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Unable to start Game.");
+                alert.setTitle("Unable to start GameInterface.");
                 alert.setHeaderText(null);
                 alert.setContentText("Something went wrong. Please try again.");
                 alert.showAndWait();
@@ -199,7 +199,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             Challenge challenge = challenges.get(i);
             challenges.remove(i); //Prevents the challenge being displayed twice if the observable notifies again while notificiation is still visible
 
-            String contentText = "User " + challenge.getPlayerName() + " has challenged you to a Game of " + challenge.getGame() +"!";
+            String contentText = "User " + challenge.getPlayerName() + " has challenged you to a GameInterface of " + challenge.getGame() +"!";
             ButtonType btnYes = new ButtonType("Accept", ButtonBar.ButtonData.YES);
             ButtonType btnNo = new ButtonType("Decline", ButtonBar.ButtonData.NO);
 

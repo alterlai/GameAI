@@ -1,6 +1,7 @@
 package OtherControllers;
 
-import Game.Game;
+import BKEGame.Othello;
+import Game.GameInterface;
 import BKEGame.TicTacToe;
 import GUI.*;
 import Game.Move;
@@ -18,7 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 public class GameController implements GameControllerInterface {
-    private Game game;
+    private GameInterface gameInterface;
     private Server server;
     private ViewActionHandler view;
 
@@ -28,9 +29,12 @@ public class GameController implements GameControllerInterface {
 
 
     public GameController(Player local, Player opponent, String nameGame){
-        this.server = Server.getInstance(); //Server should be singleton.
+        this.server = Server.getInstance(); 
         if(nameGame.equals("Tic-tac-toe")) {
-            game = new TicTacToe(local, opponent);
+            gameInterface = new TicTacToe(local, opponent);
+        }
+        else if (nameGame.equals("Reversi")) {
+            gameInterface = new Othello(local, opponent);
         }
         try {
             initView();
@@ -50,7 +54,7 @@ public class GameController implements GameControllerInterface {
 
         // Get view handler.
         GameBoardHandler gameBoardHandler = loader.getController();
-        gameBoardHandler.setController(this);
+        gameBoardHandler.setController(this, gameInterface);
     }
 
     /*public void init() {
@@ -70,7 +74,7 @@ public class GameController implements GameControllerInterface {
     public Move getMove(Player player) throws InterruptedException {
 
         if (player.isAI()) {
-            return game.findBestMove(player);
+            return gameInterface.findBestMove(player);
         }
 
         selectedMove = null;
@@ -85,24 +89,24 @@ public class GameController implements GameControllerInterface {
     }
 
     public void moveSucces(Move move){
-        game.playMove(move);
+        gameInterface.playMove(move);
 
     }
 
-    //public void forfeit(){
-    //    server.forfeit();
-    //}
+    public void forfeit(){
+        //TODO server forfeit functionality
+    }
 
     public void endGame(){
 
     }
     public void registerView(Observer view) { //heh
-        game.registerView(view);
+        gameInterface.registerView(view);
     }
 
     public void registerMove(int pos){
         Move move = new Move(pos, new Player(Server.getInstance().getPlayerName())); //NO!
-        if (game.isValid(move)) {
+        if (gameInterface.isValid(move)) {
             selectedMove = move;
             moveLatch.countDown();
         }
@@ -111,10 +115,10 @@ public class GameController implements GameControllerInterface {
     public Player getPlayer(int number) {
         switch(number) {
             case 1:
-                return game.getPlayer1();
+                return gameInterface.getPlayer1();
 
             case 2:
-                return game.getPlayer2();
+                return gameInterface.getPlayer2();
 
         }
         return null;

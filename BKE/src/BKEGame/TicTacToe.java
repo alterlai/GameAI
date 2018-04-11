@@ -1,14 +1,14 @@
 package BKEGame;
 
 
-import Game.Game;
+import Game.GameInterface;
 import Game.Player;
 import Game.Move;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class TicTacToe extends Observable implements Game {
+public class TicTacToe extends Observable implements GameInterface {
 
     private TicTacToeBoard board;
 
