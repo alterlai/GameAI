@@ -19,7 +19,7 @@ public class TicTacToe extends Observable implements Game {
     /**
      * ArrayList that keeps track of successfully executed moves
      */
-    private Stack<Move> moveHistory;
+    private ArrayList<Move> moveHistory;
 
     /**
      * Remembers which player is maximizing and which player is minimizing during the minimax algorithm.
@@ -34,7 +34,7 @@ public class TicTacToe extends Observable implements Game {
      */
     public TicTacToe(Player player1, Player player2) {
         board = new Board();
-        moveHistory = new Stack<Move>();
+        moveHistory = new ArrayList<Move>();
 
         this.player1 = player1;
         this.player2 = player2;
@@ -156,7 +156,7 @@ public class TicTacToe extends Observable implements Game {
      * Getter for the moveHistory stack
      * @return moveHistory stack
      */
-    public Stack<Move> getMoveHistory() {
+    public ArrayList<Move> getMoveHistory() {
         return moveHistory;
     }
 

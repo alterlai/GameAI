@@ -32,7 +32,17 @@ public class Server extends Observable implements Runnable {
         private boolean quit = false;
 
 
-        private Server() {}
+        private Server() {
+            ConfigHandler config = ConfigHandler.getInstance();
+            serverIp = config.getIp();
+            try {
+                serverPort = Integer.parseInt(config.getPort());
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid port number in config. replacing with default port");
+                serverPort = 7789;
+            }
+            playerName = config.getNickname();
+        }
 
         static public Server getInstance(){
             return server;
@@ -179,6 +189,11 @@ public class Server extends Observable implements Runnable {
                 dataOut.println("challenge accept " + challenge.getChallengeNumber());
                 MessageHandler.waitForOk(dataIn);
             }
+        }
+
+        public void saveConfig() {
+            ConfigHandler config = ConfigHandler.getInstance();
+            config.saveConfig(serverIp, ""+serverPort, playerName);
         }
 
         public void commandStatus() {
