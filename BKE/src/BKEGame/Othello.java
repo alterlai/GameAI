@@ -26,6 +26,10 @@ public class Othello extends Observable implements GameInterface {
     private Player maximizing;
     private Player minimizing;
 
+    //Temporary for testing purposes
+    public int calculations = 0;
+    public int evalcount = 0;
+
     public Othello(Player player1, Player player2) {
         board = new OthellloBoard(8);
         moveHistory = new ArrayList<Move>();
@@ -40,6 +44,9 @@ public class Othello extends Observable implements GameInterface {
 
     @Override
     public Move findBestMove(Player player) {
+        calculations = 0;
+        evalcount = 0;
+        long start = System.currentTimeMillis();
         System.out.println("checking!");
         if (player == player1) {
             maximizing = player1;
@@ -59,13 +66,19 @@ public class Othello extends Observable implements GameInterface {
         for (Move move : Moves) {
             OthellloBoard newState = new OthellloBoard(this.board);
             newState.playMove(move);
-            int moveScore = getFinalScore(newState, !Maxer, 3, minimizing, maximizing);
+            int moveScore = getFinalScore(newState, !Maxer, 4, minimizing, maximizing);
             if (moveScore > currentBestScore) {
                 currentBestScore = moveScore;
                 currentBestMove = move;
             }
         }
-
+        //System.out.println("Created " + calculations + " nodes for a tree with depth 3 which took " + (System.currentTimeMillis() - start) + " ms");
+        System.out.println("Gametree: \n -------");
+        System.out.println("    Depth: 5");
+        System.out.println("    Nodes: " + calculations);
+        System.out.println("    Leaves: " + evalcount);
+        System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
+        System.out.println("\n \n");
         return currentBestMove;
     }
 
@@ -78,7 +91,7 @@ public class Othello extends Observable implements GameInterface {
      */
 
     public int getFinalScore(OthellloBoard currentState, Boolean Maxer, int depth, Player player, Player opponent) {
-
+        this.calculations++;
         ArrayList<Move> Moves = currentState.getValidMoves(player);
 
         if (depth == 0) {
@@ -133,6 +146,7 @@ public class Othello extends Observable implements GameInterface {
 
     public int eval(OthellloBoard board, Player player) { //Player is a temporary parameter.
         //Todo, implement evaluation of board state. Maybe move this function to OthelloBoard.
+        evalcount++;
         return board.playerScore(player);
     }
 
@@ -177,7 +191,7 @@ public class Othello extends Observable implements GameInterface {
         move.makePlayable(board.getSize());
         board.playMove(move);
         moveHistory.add(move);
-        board.print();
+        //board.print();
         setChanged();
         notifyObservers(this); //Should have a security proxy.
     }
