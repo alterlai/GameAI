@@ -3,6 +3,8 @@ package GUI;
 import BKEGame.Board;
 import OtherControllers.GameController;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -35,6 +37,9 @@ public class GameBoardHandler implements Initializable, Observer {
     private Text Player2T;
     @FXML
     private ListView ListV;
+
+    // List of strings to use in the listview of movehistory
+    private ArrayList<String> moveHistory = new ArrayList<>();
 
     private GameController gamecontroller;
 
@@ -74,6 +79,8 @@ public class GameBoardHandler implements Initializable, Observer {
             movenode(Player2T, 0);
             movenode(ListV, 1);
             movenode(ForfeitB, GameB.getColumnConstraints().size());
+
+
         }
 
         for(int y = 0; y < Y; y++) {
@@ -93,7 +100,6 @@ public class GameBoardHandler implements Initializable, Observer {
                 GameB.add(btn,x,y);
             }
         }
-        updateMovehistory();
     }
 
     @Override
@@ -101,27 +107,27 @@ public class GameBoardHandler implements Initializable, Observer {
         Game game = (Game) arg;
         Board board = game.getBoard();
         //for (char[] c : ){}
-        Move move = game.getMoveHistory().pop();
+        Move move = game.getMoveHistory().peek();
         Button selectedButton = (Button) GameB.lookup("#" + move.getPos());
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 selectedButton.setText(String.valueOf(move.getPlayer().getMark()));
+                addToMoveHistory(game.getMoveHistory().peek());
             }
         });
     }
 
 
-
-    public void updateMovehistory(){
-        //ListV.setItems();
-
+    /**
+     * Add a new move to the move history to show on screen.
+     * @param move
+     */
+    private void addToMoveHistory(Move move) {
+        moveHistory.add(move.getPlayer().getName() + "moved X: " + move.getX() + " Y: " + move.getY());
+        ObservableList<String> observableMoveHistory = FXCollections.observableArrayList(moveHistory);
+        ListV.setItems(observableMoveHistory);
     }
-
-    public void updateListview(String item){
-        ListV.getItems().add(item);
-    }
-
 
     private void movenode(Node Node, int rij){
         GameB.getChildren().remove(Node);
