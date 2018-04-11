@@ -94,9 +94,18 @@ public class GameController implements GameControllerInterface {
     //    server.forfeit();
     //}
 
-    public void endGame(){
-
+    /**
+     * Let the view show the end game message.
+     * @param win
+     */
+    public void endGame(boolean win){
+        if (win) {
+            gameBoardHandler.showEndScreen("You have won! \nClick on OK to return to the lobby.");
+        } else {
+            gameBoardHandler.showEndScreen("You have lost!. \nClick on OK to return to the lobby.");
+        }
     }
+
     public void registerView(Observer view) { //heh
         game.registerView(view);
     }

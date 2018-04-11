@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.ColumnConstraints;
@@ -151,5 +152,14 @@ public class GameBoardHandler implements Initializable, Observer {
     public void setPlayerNames(String player1, String player2) {
         this.Player1T.setText("Player 1: " + player1);
         this.Player2T.setText("Player 2: " + player2);
+    }
+
+    public void showEndScreen(String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game is done!");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+        ViewController.getInstance().activate("homeView");
     }
 }
