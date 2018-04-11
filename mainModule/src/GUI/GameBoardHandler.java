@@ -123,11 +123,11 @@ public class GameBoardHandler implements Initializable, Observer {
         char[] boardVals = board.getCells1D();
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
             Button selectedButton = (Button) GameB.lookup("#" + i);
-            final int pos = i;
+            final String mark = Character.toString(boardVals[i]);
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    selectedButton.setText(Character.toString(boardVals[pos]));
+                    selectedButton.setText(mark);
                 }
             });
         }

@@ -12,10 +12,10 @@ public class OthellloBoard extends AbstractBoard {
         super(size);
 
         //set starting stones..
-        xy[3][3] = 'W';
-        xy[4][3] = 'Z';
-        xy[3][4] = 'Z';
-        xy[4][4] = 'W';
+        xy[3][3] = 'Z';
+        xy[4][3] = 'W';
+        xy[3][4] = 'W';
+        xy[4][4] = 'Z';
 
         //Test run..
         /*
@@ -61,19 +61,58 @@ public class OthellloBoard extends AbstractBoard {
         return false;
     }
 
+    /**
+     * Checks the current score of the player. Any empty squares are "given" to the winning player.
+     * @param player The player of which to calculate the score of
+     * @return int score - positive when winning, negative when losing, 0 when drawing.
+     */
+    public int playerScore(Player player) {
+        int score = 0;
+        char playerMark = player.getMark();
+        for (int x = 0; x < this.size; x++) {
+            for (int y = 0; y < this.size; y++) {
+                if (xy[x][y] == playerMark) {
+                    score++;
+                }
+                else if (xy[x][y] != ' ') {
+                    score--;
+                }
+            }
+        }
+        if (score > 0) { //Winner recieves all empty squares
+            for (int x = 0; x < this.size; x++) {
+                for (int y = 0; y < this.size; y++) {
+                    if (xy[x][y] == ' ') {
+                        score++;
+                    }
+                }
+            }
+        }
+        return score;
+    }
+
     public void playMove(Move move) {
         move.makePlayable(this.getSize());
         xy[move.getX()][move.getY()] = move.getPlayer().getMark();
         flipTiles(move);
     }
 
+    /**
+     * Checks whether a certain coordinate is withinin the boundaries of the board.
+     * @param x
+     * @param y
+     * @return true when the coordinate is found within the boundaries of the board.
+     */
     public Boolean inBound(int x, int y) {
-        if (x > 0 && x < this.size && y > 0 && y < this.size) {return true;}
+        if (x > -1 && x < this.size && y > - 1 && y < this.size) {return true;}
         return false;
     }
 
+    /**
+     * When a move is played, all incorrect marks that are found between the new correct mark and an existing correct mark have to be turned into correct marks - "flipped"
+     * @param move The move for which to flip the tiles
+     */
     public void flipTiles(Move move) {
-
         //Used to check each direction. E.g; at index 4 (xdir -> 0, ydir -> 1) the cells to flip in the path straight up are checked.
         final int xdir[] = {-1, -1, -1,  0, 0, 1, 1,  1};
         final int ydir[] = {-1,  0,  1, -1, 1, 1, 0, -1};
@@ -106,26 +145,57 @@ public class OthellloBoard extends AbstractBoard {
     public ArrayList<Move> getValidMoves(Player player) {
         ArrayList<Move> validMoves = new ArrayList<Move>();
 
-        for (int x = 0; x < size; x++){ //for column in xy
-            for (int y = 0; y < size; y++) {
-                if (xy[x][y] != ' ') {
-                    char cellMark = xy[x][y];
-                    //Check each direction
-                    if (xy[x + 1][y] == ' ' && player.getMark() != cellMark) {
-                        validMoves.add(new Move(x + 1, y, this.size, player));
-                    }
-                    if (xy[x - 1][y] == ' ' && player.getMark() != cellMark) {
-                        validMoves.add(new Move(x - 1, y, this.size, player));
-                    }
-                    if (xy[x][y + 1] == ' ' && player.getMark() != cellMark) {
-                        validMoves.add(new Move(x, y + 1, this.size, player));
-                    }
-                    if (xy[x][y - 1] == ' ' && player.getMark() != cellMark) {
-                        validMoves.add(new Move(x, y - 1, this.size, player));
-                    }
+        for (int x = 0; x < this.size; x++){
+            for (int y = 0; y < this.size; y++) {
+                if (xy[x][y] == player.getMark()) { //If the cell contains a mark belonging to the player, find all possible moves that would connect to this mark
+                    validMoves.addAll(validMovesFrom(x, y, player));
                 }
             }
         }
+       // System.out.println("Checked.." + validMoves.size() + " possible moves.");
         return validMoves;
+    }
+
+    /**
+     * Checks each direction from a certain cell (which should belong to 'player'). Returns all possible moves that would connect with this cell.
+     * @param xstart
+     * @param ystart
+     * @param player
+     * @return
+     */
+    public ArrayList<Move> validMovesFrom(int xstart, int ystart, Player player) {
+
+        ArrayList<Integer> inbetween = new ArrayList<Integer>();;
+        ArrayList<Move> valid = new ArrayList<Move>();
+
+        //Used to check each direction. E.g; at index 4 (xdir -> 0, ydir -> 1) the cells to flip in the path straight up are checked.
+        final int xdir[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+        final int ydir[] = {-1, 0, 1, -1, 1, 1, 0, -1};
+
+        char correctMark = player.getMark();
+
+        for (int i = 0; i < 8; i++) { //Outer for loop decides the direction to check
+            inbetween = new ArrayList<Integer>();
+            int x = xstart;
+            int y = ystart;
+            path:
+            for (int j = 0; j < this.size; j++) { //Inner for loop makes sure that every possible cell in path is checked.
+                x += xdir[i];
+                y += ydir[i];
+
+                if (inBound(x, y) && xy[x][y] != correctMark && xy[x][y] != ' ') { //Incorrect mark found in path
+                    inbetween.add(1);
+                }
+                else if (inBound(x, y) &&  xy[x][y] == ' ') { //Correct mark found, found a connection between two correct marks
+                    if (!inbetween.isEmpty()) { //If there are incorrect marks between the two connecting correct marks it is a valid move
+                        valid.add(new Move(x, y, this.size, player));
+                    }
+                    break path;
+                } else { //Path checking is broken off when it becomes clear that no flips are needed
+                    break path;
+                }
+            }
+        }
+        return valid;
     }
 }

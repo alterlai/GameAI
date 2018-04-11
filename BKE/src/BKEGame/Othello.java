@@ -33,13 +33,14 @@ public class Othello extends Observable implements GameInterface {
         this.player1 = player1;
         this.player2 = player2;
 
-        this.player1.setMark('Z');
-        this.player2.setMark('W');
+        this.player1.setMark('W');
+        this.player2.setMark('Z');
 
     }
 
     @Override
     public Move findBestMove(Player player) {
+        System.out.println("checking!");
         if (player == player1) {
             maximizing = player1;
             minimizing = player2;
@@ -58,7 +59,7 @@ public class Othello extends Observable implements GameInterface {
         for (Move move : Moves) {
             OthellloBoard newState = new OthellloBoard(this.board);
             newState.playMove(move);
-            int moveScore = getFinalScore(newState, !Maxer, 5, minimizing, maximizing);
+            int moveScore = getFinalScore(newState, !Maxer, 3, minimizing, maximizing);
             if (moveScore > currentBestScore) {
                 currentBestScore = moveScore;
                 currentBestMove = move;
@@ -81,7 +82,24 @@ public class Othello extends Observable implements GameInterface {
         ArrayList<Move> Moves = currentState.getValidMoves(player);
 
         if (depth == 0) {
-            return eval(currentState);
+            if (Maxer) {
+                return eval(currentState, player);
+            }
+            else {
+                return eval(currentState, opponent);
+
+            }
+        }
+        else if (Moves.isEmpty()) {
+            if (currentState.getValidMoves(opponent).isEmpty()) { //When a stalemate has been reached the game ends.
+                if (Maxer) {
+                    return eval(currentState, player);
+                }
+                else {
+                    return eval(currentState, opponent);
+
+                }
+            }
         }
 
         int bestValue;
@@ -113,9 +131,9 @@ public class Othello extends Observable implements GameInterface {
 
     }
 
-    public int eval(OthellloBoard board) {
+    public int eval(OthellloBoard board, Player player) { //Player is a temporary parameter.
         //Todo, implement evaluation of board state. Maybe move this function to OthelloBoard.
-        return 0;
+        return board.playerScore(player);
     }
 
     @Override

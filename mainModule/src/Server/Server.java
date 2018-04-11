@@ -31,7 +31,7 @@ public class Server extends Observable implements Runnable {
         private static Server server = new Server();
         private String playerName;
         private boolean quit = false;
-
+        public int localPlayer = 0; //TEMPORARY - fix needed. Tells messagehandler which player to request when getting move.
 
         private Server() {
             ConfigHandler config = ConfigHandler.getInstance();
