@@ -52,6 +52,7 @@ public class GameController implements GameControllerInterface {
         // Get view handler.
         GameBoardHandler gameBoardHandler = loader.getController();
         gameBoardHandler.setController(this);
+        gameBoardHandler.setPlayerNames(game.getPlayer1().getName(), game.getPlayer2().getName());
     }
 
     /*public void init() {
@@ -94,11 +95,21 @@ public class GameController implements GameControllerInterface {
     //    server.forfeit();
     //}
 
-    public void endGame(){
+    /**
+     * Let the view show the end game message.
+     * @param win
+     */
+    public void endGame(/*boolean win*/){
+        /*if (win) {
+            gameBoardHandler.showEndScreen("You have won! \nClick on OK to return to the lobby.");
+        } else {
+            gameBoardHandler.showEndScreen("You have lost!. \nClick on OK to return to the lobby.");
+        }*/
         ViewController.getInstance().activate("homeView");
         ViewController.getInstance().removeView("gameView");
         new Thread(LobbyObservable.getInstance()).start();
     }
+
     public void registerView(Observer view) { //heh
         game.registerView(view);
     }

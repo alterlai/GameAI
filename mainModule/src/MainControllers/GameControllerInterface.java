@@ -10,7 +10,7 @@ public interface GameControllerInterface {
 
     public void moveSucces(Move move);
 
-    public void endGame();
+    public void endGame(boolean win);
 
     public Player getPlayer(int number);
 }

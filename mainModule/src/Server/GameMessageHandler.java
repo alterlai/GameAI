@@ -4,12 +4,15 @@ import GUI.ViewController;
 import Game.Move;
 import Game.Player;
 import MainControllers.GameControllerInterface;
+import OtherControllers.GameController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameMessageHandler implements MessageHandlerInterface {
     private static boolean isAI = false;
+
+    private static GameControllerInterface gameController;
 
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME CHALLENGE {")) {
@@ -29,7 +32,7 @@ public class GameMessageHandler implements MessageHandlerInterface {
         }
         else if (message.startsWith("SVR GAME YOURTURN")){
             System.out.println("It's my turn");
-            GameControllerInterface gameController = GameHandler.getInstance().getGameController();
+            gameController = GameHandler.getInstance().getGameController();
             Server.getInstance().doMove(gameController.getMove(gameController.getPlayer(1)));
             return;
         }
@@ -39,12 +42,14 @@ public class GameMessageHandler implements MessageHandlerInterface {
             return;
         }
         else if (message.startsWith("SVR GAME WIN")){
+            //gameController.endGame(true);
             System.out.println("I win!!!");
             GameHandler.getInstance().getGameController().endGame();
             return;
         }
         else if (message.startsWith("SVR GAME LOSS")){
             System.out.println("I lose :(");
+            //gameController.endGame(false);
             GameHandler.getInstance().getGameController().endGame();
             return;
         }
