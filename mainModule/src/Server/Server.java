@@ -58,7 +58,6 @@ public class Server extends Observable implements Runnable {
                             lock.wait();
                         }
                         while(dataIn.ready()){
-                            System.out.println("handle");
                             MessageHandler.handleMessage(dataIn.readLine());
                         }
                         Thread.sleep(10);

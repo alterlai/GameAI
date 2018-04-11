@@ -71,9 +71,13 @@ public class GameMessageHandler implements MessageHandlerInterface {
     private static void processMove(String message){
         GameControllerInterface gameController = GameHandler.getInstance().getGameController();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(15, message.length() - 1).split(",")));
-        System.out.println(list);
         String playername = list.get(0).substring(9, list.get(0).length()-1);
         int move = Integer.parseInt(list.get(1).substring(8, list.get(1).length()-1));
+        if (list.get(2).substring(11, list.get(2).length()-1).equals("Illegal move")){
+            System.out.println(playername + " tried to cheat with Illegal move " + move);
+            return;
+        }
+
 
         if (playername.equals(gameController.getPlayer(1).getName())){
             gameController.moveSucces(new Move(move, gameController.getPlayer(1)));
