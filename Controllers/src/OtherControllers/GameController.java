@@ -34,9 +34,11 @@ public class GameController implements GameControllerInterface {
         this.server = Server.getInstance();
         if (starter.getName().equals(server.getPlayerName())){
             localPlayer = starter;
+            System.out.println("white power");
         }
         else{
             localPlayer = opponent;
+            System.out.println("I am black");
         }
         if(nameGame.equals("Tic-tac-toe")) {
             game = new TicTacToe(starter, opponent);
@@ -75,7 +77,12 @@ public class GameController implements GameControllerInterface {
     public Move getMove() throws InterruptedException {
 
         if (localPlayer.isAI()) {
-            return game.findBestMove(localPlayer);
+            System.out.println("ik doe een dikke move");
+            Move move = game.findBestMove(localPlayer);
+            if (move == null){
+                game.getBoard().print();
+            }
+            return move;
         }
 
         selectedMove = null;
