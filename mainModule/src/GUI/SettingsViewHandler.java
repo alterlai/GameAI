@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import javax.swing.text.View;
 import java.io.IOException;
 
 public class SettingsViewHandler implements ViewActionHandler {
@@ -25,6 +26,8 @@ public class SettingsViewHandler implements ViewActionHandler {
 
     @FXML
     public void initialize() {
+        // Register the handler.
+        ViewHandlers.getInstance().registerHandler("SettingsView", this);
         Server server = Server.getInstance();
         serverip.setText(server.getServerIp());
         port.setText("" +server.getServerPort());
@@ -59,12 +62,14 @@ public class SettingsViewHandler implements ViewActionHandler {
             //lobby.setPlayerName(nickname.getText());
 
             // Update variables in lobby view.
-            FXMLLoader loader = new FXMLLoader();
-            //Pane lobby = loader.load(getClass().getResource("HomeScreen.fxml").openStream());
-            //LobbyViewHandler lobbyViewHandler = loader.getController();
-            //lobbyViewHandler.update(null, null);
+            try {
+                LobbyViewHandler lobbyViewHandler = (LobbyViewHandler) ViewHandlers.getInstance().getHandler("LobbyView");
+                lobbyViewHandler.update(null, null);
+            } catch (HandlerNotRegisterdException e) {
+                System.err.println("unable to load lobby view");
+                e.printStackTrace();
+            }
 
-            new Thread(LobbyObservable.getInstance()).start();
 
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();

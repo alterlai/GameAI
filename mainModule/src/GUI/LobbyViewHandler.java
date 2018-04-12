@@ -25,7 +25,6 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     @FXML private ListView<String> playerList;
     @FXML private ListView<String> gameList;
-    @FXML private ComboBox<String> gameModeList;
     @FXML private ComboBox<String> challengeGameList;
     ArrayList<String> gamemodes;
     private Server server;
@@ -37,6 +36,9 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     @FXML
     public void initialize() {
+        // Register this controller to the viewHandlers.
+        ViewHandlers.getInstance().registerHandler("LobbyView", this);
+
         //Create server
         server = Server.getInstance();
         try {
@@ -70,12 +72,6 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            // Fill gamemodes list.
-            gamemodes = new ArrayList<>();
-            gamemodes.add("Player vs Player");
-            gamemodes.add("AI vs Player");
-            gameModeList.setItems(FXCollections.observableArrayList(gamemodes));
             try {
                 challengeGameList.setItems(FXCollections.observableArrayList(server.getGameList()));
             } catch (Exception e) {
@@ -90,20 +86,12 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
     @FXML
     private void handleStartEvent() {
         String selectedGame = gameList.getSelectionModel().getSelectedItem();
-        String selectedMode = gameModeList.getValue();
         if (selectedGame == null) {
             //new Popup(stage, "Pleaes select a GameInterface.");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Unable to start GameInterface.");
             alert.setHeaderText(null);
             alert.setContentText("Please select a GameInterface to play.");
-            alert.showAndWait();
-        }
-        else if (selectedMode == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Unable to start GameInterface.");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select a gamemode to play.");
             alert.showAndWait();
         }
         else {
@@ -192,11 +180,6 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         gameList.setItems(observableList);
     }
 
-    public void updateGameModeList(List<String> gameModeArrayList) {
-        ObservableList<String> observableList = FXCollections.observableArrayList(gameModeArrayList);
-        gameModeList.setItems(observableList);
-    }
-
     public void displayChallenges(List<Challenge> challenges) {
         for (int i = 0; i < challenges.size(); i++) { //Iterating through it normally so that we can remove elements during the loop. Chance of challenges reappearing despite being handled already otherwise..
             Challenge challenge = challenges.get(i);
@@ -226,9 +209,9 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                System.out.println("Ik was hier");
                 updatePlayerList(lobby.getPlayerList());
                 displayChallenges(lobby.getChallengesList());
-                updateGameModeList(gamemodes);
             }
         });
     }
