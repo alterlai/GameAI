@@ -64,6 +64,8 @@ public class SettingsViewHandler implements ViewActionHandler {
             //LobbyViewHandler lobbyViewHandler = loader.getController();
             //lobbyViewHandler.update(null, null);
 
+            new Thread(LobbyObservable.getInstance()).start();
+
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();
 
