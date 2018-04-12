@@ -1,12 +1,14 @@
 package GUI;
 
 import Server.Server;
+import Server.GameMessageHandler;
 import Server.ConfigHandler;
 import Server.LobbyObservable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -19,6 +21,7 @@ public class SettingsViewHandler implements ViewActionHandler {
     @FXML private TextField port;
     @FXML private TextField nickname;
     @FXML private Button cancel;
+    @FXML private CheckBox AICheckbox;
     private Server server = Server.getInstance();
     private LobbyObservable lobby = LobbyObservable.getInstance();
 
@@ -46,6 +49,7 @@ public class SettingsViewHandler implements ViewActionHandler {
             server.setServerPort(portInt);
             server.connect();
             server.login(nickname.getText());
+            GameMessageHandler.setisAI(AICheckbox.isSelected());
             success = true;
         } catch (IOException e) {
             showErrorPopup("Unable to connect to new server");
@@ -58,6 +62,8 @@ public class SettingsViewHandler implements ViewActionHandler {
             e.printStackTrace();
         }
         if (success){
+
+
             server.saveConfig();
             //lobby.setPlayerName(nickname.getText());
 
