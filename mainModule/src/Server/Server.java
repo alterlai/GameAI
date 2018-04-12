@@ -20,7 +20,7 @@ import java.util.Observable;
 
 public class Server extends Observable implements Runnable {
 
-        private String serverIp = "localhost";
+        private String serverIp = "145.37.164.126";
         private int serverPort = 7789;
         private Socket socket;
         private volatile boolean connected = false;
