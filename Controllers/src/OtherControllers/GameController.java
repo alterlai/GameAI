@@ -36,7 +36,7 @@ public class GameController implements GameControllerInterface {
             game = new TicTacToe(starter, opponent);
         }
         else if (nameGame.equals("Reversi")) {
-            game = new Othello(starter, opponent);
+            game = new Othello(starter, opponent, 0, 0); //TEMPORARY - REMOVE
         }
         try {
             initView();
