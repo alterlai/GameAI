@@ -67,7 +67,7 @@ public class Othello extends Observable implements GameInterface {
             OthellloBoard newState = new OthellloBoard(this.board);
             newState.playMove(move);
             int moveScore = getFinalScore(newState, !Maxer, 4, minimizing, maximizing);
-            if (moveScore > currentBestScore) {
+            if (moveScore >= currentBestScore) {
                 currentBestScore = moveScore;
                 currentBestMove = move;
             }

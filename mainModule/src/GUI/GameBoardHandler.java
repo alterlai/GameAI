@@ -121,15 +121,29 @@ public class GameBoardHandler implements Initializable, Observer {
 
     public void drawGrid(AbstractBoard board) {
         char[] boardVals = board.getCells1D();
+
+        ArrayList<testrun> tasks  = new ArrayList<>();
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
             Button selectedButton = (Button) GameB.lookup("#" + i);
             final String mark = Character.toString(boardVals[i]);
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    selectedButton.setText(mark);
-                }
-            });
+            tasks.add(new testrun(mark, selectedButton));
+        }
+        for (testrun r : tasks) {
+            Platform.runLater(r);
+        }
+    }
+
+    class testrun implements Runnable {
+        String mark;
+        Button button;
+        public testrun(String mark, Button button) {
+            this.mark = mark;
+            this.button = button;
+        }
+
+        @Override
+        public void run() {
+            button.setText(mark);
         }
     }
 

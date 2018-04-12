@@ -119,6 +119,7 @@ public class OthellloBoard extends AbstractBoard {
 
         char correctMark = move.getPlayer().getMark();
 
+        path:
         for ( int i = 0; i < 8; i++) { //Outer for loop decides the direction to check
             int x = move.getX();
             int y = move.getY();
@@ -134,6 +135,7 @@ public class OthellloBoard extends AbstractBoard {
                         for (Integer[] cell : flip) {
                             xy[cell[0]][cell[1]] = correctMark;
                         }
+                        break;
                     }
                     else { //Path checking is broken off when it becomes clear that no flips are needed
                         break;

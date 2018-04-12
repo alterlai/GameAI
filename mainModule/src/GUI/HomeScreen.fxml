@@ -26,12 +26,14 @@
                 <Label alignment="CENTER" prefHeight="17.0" prefWidth="205.0" text="Play Game" textAlignment="CENTER" GridPane.vgrow="ALWAYS" />
                 <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2" >
                     <children>
-                        <ComboBox fx:id="gameModeList" prefWidth="150.0" promptText="Game mode">
+                        <Button fx:id="play" mnemonicParsing="false" onAction="#handleStartEvent" prefWidth="2000.0" text="Play" VBox.vgrow="ALWAYS">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
                             <VBox.margin>
-                                <Insets bottom="20.0" top="20.0" />
+                                <Insets top="20.0" />
                             </VBox.margin>
-                        </ComboBox>
-                        <Button fx:id="play" mnemonicParsing="false" onAction="#handleStartEvent" prefWidth="2000.0" text="Play" VBox.vgrow="ALWAYS" />
+                        </Button>
                         <Button fx:id="settings" onAction="#openSettings" mnemonicParsing="false" prefHeight="25.0" prefWidth="239.0" text="Settings">
                             <opaqueInsets>
                                 <Insets />
