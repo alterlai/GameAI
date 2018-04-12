@@ -123,15 +123,20 @@ public class GameBoardHandler implements Initializable, Observer {
     public void drawGrid(AbstractBoard board) {
         char[] boardVals = board.getCells1D();
 
+        try{// temp fix please remove if your capable 
         ArrayList<testrun> tasks  = new ArrayList<>();
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
-            Button selectedButton = (Button) GameB.lookup("#" + i);
-            final String mark = Character.toString(boardVals[i]);
-            tasks.add(new testrun(mark, selectedButton));
+                Button selectedButton = (Button) GameB.lookup("#" + i);
+                final String mark = Character.toString(boardVals[i]);
+                tasks.add(new testrun(mark, selectedButton));
         }
         for (testrun r : tasks) {
             Platform.runLater(r);
+        }}
+        catch (IndexOutOfBoundsException e){
+            System.out.println(e);
         }
+
     }
 
     class testrun implements Runnable {

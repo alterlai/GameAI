@@ -78,7 +78,8 @@ public class GameController implements GameControllerInterface {
 
         if (localPlayer.isAI()) {
             System.out.println("ik doe een dikke move");
-            Move move = game.findBestMove(localPlayer);
+            Move move = game.getBoard().getValidMoves(localPlayer).get(0);
+            // /Move move = game.findBestMove(localPlayer);
             if (move == null){
                 game.getBoard().print();
             }
