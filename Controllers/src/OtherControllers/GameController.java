@@ -77,9 +77,8 @@ public class GameController implements GameControllerInterface {
     public Move getMove() throws InterruptedException {
 
         if (localPlayer.isAI()) {
-            System.out.println("ik doe een dikke move");
-            Move move = game.getBoard().getValidMoves(localPlayer).get(0);
-            // /Move move = game.findBestMove(localPlayer);
+            //Move move = game.getBoard().getValidMoves(localPlayer).get(0);
+            Move move = game.findBestMove(localPlayer);
             if (move == null){
                 game.getBoard().print();
             }
@@ -116,6 +115,11 @@ public class GameController implements GameControllerInterface {
         } else {
             gameBoardHandler.showEndScreen("You have lost!. \nClick on OK to return to the lobby.");
         }*/
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ViewController.getInstance().activate("homeView");
         ViewController.getInstance().removeView("gameView");
         new Thread(LobbyObservable.getInstance()).start();
