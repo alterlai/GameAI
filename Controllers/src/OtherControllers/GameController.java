@@ -27,10 +27,17 @@ public class GameController implements GameControllerInterface {
     private CountDownLatch moveLatch;
     private Move selectedMove;
     private GameBoardHandler gameBoardHandler;
+    private Player localPlayer;
 
 
     public GameController(Player starter, Player opponent, String nameGame){
-        this.server = Server.getInstance(); 
+        this.server = Server.getInstance();
+        if (starter.getName().equals(server.getPlayerName())){
+            localPlayer = starter;
+        }
+        else{
+            localPlayer = opponent;
+        }
         if(nameGame.equals("Tic-tac-toe")) {
             game = new TicTacToe(starter, opponent);
         }
@@ -65,10 +72,10 @@ public class GameController implements GameControllerInterface {
 
     }
 
-    public Move getMove(Player player) throws InterruptedException {
+    public Move getMove() throws InterruptedException {
 
-        if (player.isAI()) {
-            return game.findBestMove(player);
+        if (localPlayer.isAI()) {
+            return game.findBestMove(localPlayer);
         }
 
         selectedMove = null;
