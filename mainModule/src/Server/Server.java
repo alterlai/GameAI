@@ -94,21 +94,22 @@ public class Server extends Observable implements Runnable {
         }
 
         public boolean disconnect() throws InterruptedException {
-            //if (isConnected()) {
-            wait = true;
-            synchronized (lock){
-                dataOut.println("bye");
-                Thread.sleep(200);
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (isConnected()) {
+                wait = true;
+                synchronized (lock) {
+                    dataOut.println("bye");
+                    Thread.sleep(200);
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    connected = false;
+                    wait = false;
+                    lock.notify();
                 }
-                connected = false;
-                wait = false;
-                lock.notify();
             }
-            return connected;
+                return connected;
         }
 
         public ArrayList<String> getGameList() throws Exception {
