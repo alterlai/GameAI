@@ -101,8 +101,9 @@ public class Othello extends Observable implements GameInterface {
                 break;
             }
         }
+        es.shutdown();
+        es.awaitTermination(10, TimeUnit.SECONDS);
 
-        //System.out.println("Created " + calculations + " nodes for a tree with depth 3 which took " + (System.currentTimeMillis() - start) + " ms");
         System.out.println("Gametree: \n -------");
         System.out.println("    Depth: 5");
         System.out.println("    Nodes: " + calculations);
