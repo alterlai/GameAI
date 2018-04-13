@@ -35,6 +35,7 @@ public class SettingsViewHandler implements ViewActionHandler {
         serverip.setText(server.getServerIp());
         port.setText("" +server.getServerPort());
         nickname.setText(server.getPlayerName());
+        AICheckbox.setSelected(GameMessageHandler.getisAI());
     }
 
     @FXML

@@ -117,4 +117,5 @@ public class GameMessageHandler implements MessageHandlerInterface {
     }
 
     public static void setisAI(Boolean isAI){GameMessageHandler.isAI = isAI;}
+    public static boolean getisAI(){return GameMessageHandler.isAI;}
 }
