@@ -20,20 +20,16 @@ public class OthellloBoard extends AbstractBoard {
         //Test run..
         /*
         print();
-
         Player temp = new Player("Han");
         temp.setMark('Z');
-
         Player temp2 = new Player("Han");
         temp2.setMark('W');
-
         ArrayList<Move> moves = getValidMoves(temp);
         for (Move move : moves) {
             System.out.println(isValid(move));
             //xy[move.getX()][move.getY()] = 'U';
             System.out.println(move.getX() + ", " + move.getY());
         }
-
         playMove(new Move(2, 4, size, temp));
         playMove(new Move(2, 5, size, temp2));
         playMove(new Move(5, 3, size, temp));
@@ -118,7 +114,7 @@ public class OthellloBoard extends AbstractBoard {
         final int ydir[] = {-1,  0,  1, -1, 1, 1, 0, -1};
 
         char correctMark = move.getPlayer().getMark();
-        path:
+
         for ( int i = 0; i < 8; i++) { //Outer for loop decides the direction to check
             int x = move.getX();
             int y = move.getY();
@@ -127,17 +123,17 @@ public class OthellloBoard extends AbstractBoard {
             for (int j = 0; j < size; j++) { //Inner for loop makes sure that every possible cell in path is checked.
                 x += xdir[i];
                 y += ydir[i];
-                    if (inBound(x, y) && xy[x][y] != correctMark && xy[x][y]!= ' ') { //Would need flipping if correctMark is found later on in the path
-                        flip.add(new Integer[]{x, y});
-                    }
-                    else if (inBound(x, y) && xy[x][y] == correctMark) { //Correct mark found - "sandwhich" identified - flip all the cells inbetween.
-                        for (Integer[] cell : flip) {
-                            xy[cell[0]][cell[1]] = correctMark;
-                        } break;
-                    }
-                    else { //Path checking is broken off when it becomes clear that no flips are needed
-                        break;
-                    }
+                if (inBound(x, y) && xy[x][y] != correctMark && xy[x][y]!= ' ') { //Would need flipping if correctMark is found later on in the path
+                    flip.add(new Integer[]{x, y});
+                }
+                else if (inBound(x, y) && xy[x][y] == correctMark) { //Correct mark found - "sandwhich" identified - flip all the cells inbetween.
+                    for (Integer[] cell : flip) {
+                        xy[cell[0]][cell[1]] = correctMark;
+                    } break;
+                }
+                else { //Path checking is broken off when it becomes clear that no flips are needed
+                    break;
+                }
             }
         }
     }
@@ -152,7 +148,6 @@ public class OthellloBoard extends AbstractBoard {
                 }
             }
         }
-       // System.out.println("Checked.." + validMoves.size() + " possible moves.");
         return validMoves;
     }
 
@@ -197,5 +192,35 @@ public class OthellloBoard extends AbstractBoard {
             }
         }
         return valid;
+    }
+
+    public int evalBoard(Player player) {
+        int cornerscore = 15;
+        int sidescore = 10;
+        int normalscore = 5;
+
+        int score = 0;
+        char mark = player.getMark();
+
+
+        for (int x = 0; x < this.size; x++) {
+            for (int y = 0; y < this.size; y++) {
+                char f = xy[x][y];
+                if ((x == 0 | x == 7) && f == mark) {
+                    if (y == 0 | y == 7) { //corner stone
+                        score += cornerscore;
+                    }
+                }
+                else if ((x == 0 | y == 0) && f == mark) {
+                    score += sidescore;
+                }
+                else if (f == mark) {
+                    score += normalscore;
+                }
+            }
+
+        }
+        return score;
+
     }
 }

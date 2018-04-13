@@ -98,7 +98,6 @@ public class GameBoardHandler implements Initializable, Observer {
                         gamecontroller.registerMove(pos);
                     }
                 });
-                System.out.println(btn);
                 GameB.add(btn,x,y);
             }
         }

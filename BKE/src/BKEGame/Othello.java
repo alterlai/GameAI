@@ -52,7 +52,7 @@ public class Othello extends Observable implements GameInterface {
         calculations = 0;
         evalcount = 0;
         long start = System.currentTimeMillis();
-        System.out.println("checking!");
+
         if (player == player1) {
             maximizing = player1;
             minimizing = player2;
@@ -64,7 +64,6 @@ public class Othello extends Observable implements GameInterface {
         Boolean Maxer = true;
 
         ArrayList<Move> Moves = board.getValidMoves(player);
-        System.out.println(Moves.size());
 
         int currentBestScore = Integer.MIN_VALUE;
         Move currentBestMove = null;
@@ -77,7 +76,7 @@ public class Othello extends Observable implements GameInterface {
             scoreCalculator c = new scoreCalculator(move, newState, !Maxer, 4, minimizing, maximizing);
             Calculations.add(c);
         }
-        ExecutorService es = Executors.newFixedThreadPool(8);
+        ExecutorService es = Executors.newFixedThreadPool(4);
         ArrayList<Thread> running = new ArrayList<>();
         for (Callable t : Calculations) {
             Futures.add(es.submit(t));
@@ -91,12 +90,11 @@ public class Othello extends Observable implements GameInterface {
                 Object[] obj = (Object[]) o;
                 scores[i] = (Integer)obj[1];
                 int moveScore = scores[i];
-                if (moveScore > currentBestScore) {
+                if (moveScore >= currentBestScore) {
                     currentBestScore = moveScore;
                     currentBestMove = (Move) obj[0];
                 }
                 i++;
-
             }
             catch(Exception e) {
                 break;
@@ -105,14 +103,16 @@ public class Othello extends Observable implements GameInterface {
         es.shutdown();
         es.awaitTermination(10, TimeUnit.SECONDS);
 
-
+/**
         System.out.println("Gametree: \n -------");
         System.out.println("    Depth: 5");
         System.out.println("    Nodes: " + calculations);
         System.out.println("    Leaves: " + evalcount);
         System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
         System.out.println("\n \n");
+ **/
         return currentBestMove;
+
     }
 
 
@@ -198,7 +198,7 @@ class scoreCalculator implements Callable<Object[]> {
     public int eval(OthellloBoard board, Player player) { //Player is a temporary parameter.
         //Todo, implement evaluation of board state. Maybe move this function to OthelloBoard.
         evalcount++;
-        return board.playerScore(player);
+        return board.evalBoard(player);
     }
     public int getScore() { return score;}
     /**

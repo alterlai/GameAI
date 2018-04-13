@@ -31,27 +31,24 @@ public class Main implements Observer {
         Scanner s = new Scanner(System.in);
 
 
+        long start = System.currentTimeMillis();
         boolean cont = true;
         while (cont) {
-            //gamu.playMove(new Move(29, p1));
             int t = 0;
             Move move = gamu.findBestMove(p1);
             if (move != null) {
                 gamu.playMove(move);
             }
-            else { t++;System.out.println("Can't move.. 1");}
-            gamu.getBoard().print();
+            else { t++;}
 
             Move move2 = gamu.findBestMove(p2);
             if (move2 != null) {
                 gamu.playMove(move2);
             }
-            else {t++; System.out.println("Can't move.. 2");}
+            else {t++;}
             if (t == 2) { cont = false;}
-
-            gamu.getBoard().print();
-
         }
+        System.out.println(System.currentTimeMillis() - start + " ms.");
     }
 
 
