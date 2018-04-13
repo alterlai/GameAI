@@ -11,6 +11,7 @@ import Server.LobbyObservable;
 import java.io.IOException;
 import java.util.Observer;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import MainControllers.GameControllerInterface;
@@ -75,7 +76,11 @@ public class GameController implements GameControllerInterface {
     public Move getMove() throws InterruptedException {
 
         if (localPlayer.isAI()) {
-            return game.findBestMove(localPlayer);
+            try {
+                return game.findBestMove(localPlayer);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
 
         selectedMove = null;
