@@ -118,7 +118,7 @@ public class OthellloBoard extends AbstractBoard {
         final int ydir[] = {-1,  0,  1, -1, 1, 1, 0, -1};
 
         char correctMark = move.getPlayer().getMark();
-
+        path:
         for ( int i = 0; i < 8; i++) { //Outer for loop decides the direction to check
             int x = move.getX();
             int y = move.getY();
@@ -133,7 +133,7 @@ public class OthellloBoard extends AbstractBoard {
                     else if (inBound(x, y) && xy[x][y] == correctMark) { //Correct mark found - "sandwhich" identified - flip all the cells inbetween.
                         for (Integer[] cell : flip) {
                             xy[cell[0]][cell[1]] = correctMark;
-                        }
+                        } break;
                     }
                     else { //Path checking is broken off when it becomes clear that no flips are needed
                         break;

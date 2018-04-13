@@ -35,9 +35,11 @@ public class GameController implements GameControllerInterface {
         this.server = Server.getInstance();
         if (starter.getName().equals(server.getPlayerName())){
             localPlayer = starter;
+            System.out.println("white power");
         }
         else{
             localPlayer = opponent;
+            System.out.println("I am black");
         }
         if(nameGame.equals("Tic-tac-toe")) {
             game = new TicTacToe(starter, opponent);

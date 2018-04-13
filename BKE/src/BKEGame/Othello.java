@@ -64,6 +64,7 @@ public class Othello extends Observable implements GameInterface {
         Boolean Maxer = true;
 
         ArrayList<Move> Moves = board.getValidMoves(player);
+        System.out.println(Moves.size());
 
         int currentBestScore = Integer.MIN_VALUE;
         Move currentBestMove = null;
@@ -103,6 +104,7 @@ public class Othello extends Observable implements GameInterface {
         }
         es.shutdown();
         es.awaitTermination(10, TimeUnit.SECONDS);
+
 
         System.out.println("Gametree: \n -------");
         System.out.println("    Depth: 5");
