@@ -3,6 +3,7 @@ import Server.Server;
 import Server.Challenge;
 import Server.LobbyObservable;
 import Server.MessageHandler;
+import Server.GameMessageHandler;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -186,16 +187,28 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             challenges.remove(i); //Prevents the challenge being displayed twice if the observable notifies again while notificiation is still visible
 
             String contentText = "User " + challenge.getPlayerName() + " has challenged you to a GameInterface of " + challenge.getGame() +"!";
-            ButtonType btnYes = new ButtonType("Accept", ButtonBar.ButtonData.YES);
-            ButtonType btnNo = new ButtonType("Decline", ButtonBar.ButtonData.NO);
+            ButtonType btnPlayer = new ButtonType("Play as Player", ButtonBar.ButtonData.RIGHT);
+            ButtonType btnAI = new ButtonType("Play as AI", ButtonBar.ButtonData.HELP);
+            ButtonType btnNo = new ButtonType("Decline", ButtonBar.ButtonData.LEFT);
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, contentText, btnNo, btnYes);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, contentText, btnPlayer, btnNo,  btnAI);
             alert.setTitle("Challenge!");
             alert.setHeaderText(null);
             Optional<ButtonType> result = alert.showAndWait();
 
-            if (result.get().getButtonData() == ButtonBar.ButtonData.YES) {
+            // User clicked Play as AI
+            if (result.get().getButtonData() == ButtonBar.ButtonData.HELP) {
                 try {
+                    GameMessageHandler.setisAI(true);
+                    server.acceptChallenge(challenge);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            // Clicked play as Player
+            if (result.get().getButtonData() == ButtonBar.ButtonData.RIGHT) {
+                try {
+                    GameMessageHandler.setisAI(false);
                     server.acceptChallenge(challenge);
                 } catch (Exception e) {
                     e.printStackTrace();

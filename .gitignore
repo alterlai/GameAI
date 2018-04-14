@@ -31,3 +31,5 @@ mainModule/src/resources/config.properties
 out/production/mainModule/resources/config.properties
 out/production/mainModule/GUI/GameBoard.fxml
 *.properties
+mainModule/src/META-INF/MANIFEST.MF
+*.MF
