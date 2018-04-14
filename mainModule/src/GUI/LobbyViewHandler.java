@@ -18,8 +18,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class LobbyViewHandler implements ViewActionHandler, Observer{
@@ -178,6 +176,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     public void updateGameList(List<String> gameArrayList) {
         ObservableList<String> observableList = FXCollections.observableArrayList(gameArrayList);
+        challengeGameList.setItems(observableList);
         gameList.setItems(observableList);
     }
 
@@ -219,6 +218,11 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     @Override
     public void update(Observable o, Object arg) {
+        try {
+            updateGameList(server.getGameList());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

@@ -32,16 +32,20 @@ public class ConfigHandler {
         }
         else {
             System.err.println("config.properties file not found! Creating new config file");
-            createNewConfig();
+            properties = createNewConfig();
         }
 
         nickname = properties.getProperty("NICKNAME");
         port = properties.getProperty("PORT");
         ip = properties.getProperty("IP");
         isAI = Boolean.parseBoolean(properties.getProperty("ISAI"));
+
+        System.out.println("Following found in config");
+        System.out.println(nickname);
+        System.out.println(port);
     }
 
-    private void createNewConfig() {
+    private Properties createNewConfig() {
         // NOT WORKING CURRENTLY
         try {
             Properties properties = new Properties();
@@ -53,10 +57,12 @@ public class ConfigHandler {
             File file = new File(filename);
             FileOutputStream fileOut = new FileOutputStream(file);
             properties.store(fileOut, null);
+            return properties;
         } catch (IOException e) {
             System.err.println("Unable to create config file");
             e.printStackTrace();
         }
+        return null;
     }
 
     /**

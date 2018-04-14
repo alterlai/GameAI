@@ -63,17 +63,15 @@ public class SettingsViewHandler implements ViewActionHandler {
             e.printStackTrace();
         }
         if (success){
-
-
-            server.saveConfig();
-            //lobby.setPlayerName(nickname.getText());
-
             // Update variables in lobby view.
             try {
-                LobbyViewHandler lobbyViewHandler = (LobbyViewHandler) ViewHandlers.getInstance().getHandler("LobbyView");
-                lobbyViewHandler.update(null, null);
+                server.saveConfig();
+                new Thread(LobbyObservable.getInstance()).start();      // Start a new Lobby with new references.
+                LobbyViewHandler lobbyView = (LobbyViewHandler) ViewHandlers.getInstance().getHandler("LobbyView");
+                lobbyView.update(null, null);
+
             } catch (HandlerNotRegisterdException e) {
-                System.err.println("unable to load lobby view");
+                System.err.println("Lobby view has not been loaded.");
                 e.printStackTrace();
             }
 
