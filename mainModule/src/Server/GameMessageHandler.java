@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameMessageHandler implements MessageHandlerInterface {
-    private static boolean isAI = false;
 
     private static GameControllerInterface gameController;
 
@@ -99,7 +98,7 @@ public class GameMessageHandler implements MessageHandlerInterface {
     private static void setupMatch(String message){
         LobbyObservable.getInstance().stop();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(16, message.length() - 1).split(",")));
-        Player player1 = new Player(Server.getInstance().getPlayerName(), isAI /*isAI*/);
+        Player player1 = new Player(Server.getInstance().getPlayerName(), Server.getInstance().getIsAI() /*isAI*/);
         Player player2 = new Player(list.get(2).substring(12, list.get(2).length()-1));
         String nameGame = list.get(1).substring(12, list.get(1).length()-1);
         GameHandler handler = GameHandler.getInstance();
@@ -115,7 +114,4 @@ public class GameMessageHandler implements MessageHandlerInterface {
         }
 
     }
-
-    public static void setisAI(Boolean isAI){GameMessageHandler.isAI = isAI;}
-    public static boolean getisAI(){return GameMessageHandler.isAI;}
 }

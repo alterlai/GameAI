@@ -199,7 +199,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             // User clicked Play as AI
             if (result.get().getButtonData() == ButtonBar.ButtonData.HELP) {
                 try {
-                    GameMessageHandler.setisAI(true);
+                    server.setIsAI(true);
                     server.acceptChallenge(challenge);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -208,7 +208,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             // Clicked play as Player
             if (result.get().getButtonData() == ButtonBar.ButtonData.RIGHT) {
                 try {
-                    GameMessageHandler.setisAI(false);
+                    server.setIsAI(false);
                     server.acceptChallenge(challenge);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -222,7 +222,6 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Ik was hier");
                 updatePlayerList(lobby.getPlayerList());
                 displayChallenges(lobby.getChallengesList());
             }

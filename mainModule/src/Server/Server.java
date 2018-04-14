@@ -31,6 +31,7 @@ public class Server extends Observable implements Runnable {
         private static Server server = new Server();
         private String playerName;
         private boolean quit = false;
+        private boolean isAI;
         public int localPlayer = 0; //TEMPORARY - fix needed. Tells messagehandler which player to request when getting move.
 
         private Server() {
@@ -43,6 +44,7 @@ public class Server extends Observable implements Runnable {
                 serverPort = 7789;
             }
             playerName = config.getNickname();
+            isAI = config.getIsAI();
         }
 
         static public Server getInstance(){
@@ -203,7 +205,7 @@ public class Server extends Observable implements Runnable {
 
         public void saveConfig() {
             ConfigHandler config = ConfigHandler.getInstance();
-            config.saveConfig(serverIp, ""+serverPort, playerName);
+            config.saveConfig(serverIp, ""+serverPort, playerName, isAI);
         }
 
         public void commandStatus() {
@@ -213,6 +215,8 @@ public class Server extends Observable implements Runnable {
         public boolean isConnected() {
             return connected;
         }
+
+        public void setIsAI(boolean isAI) { this.isAI = isAI; }
 
         public String getServerIp() {
             return serverIp;
@@ -231,6 +235,8 @@ public class Server extends Observable implements Runnable {
         }
 
         public String getPlayerName(){return playerName;}
+
+        public boolean getIsAI() { return isAI; }
 
         public void quit() { this.quit = true; }
 

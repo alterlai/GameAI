@@ -11,6 +11,7 @@ public class ConfigHandler {
     private String ip;
     private String port;
     private String nickname;
+    private boolean isAI;
 
     private ConfigHandler () {
         properties = new Properties();
@@ -37,6 +38,7 @@ public class ConfigHandler {
         nickname = properties.getProperty("NICKNAME");
         port = properties.getProperty("PORT");
         ip = properties.getProperty("IP");
+        isAI = Boolean.parseBoolean(properties.getProperty("ISAI"));
     }
 
     private void createNewConfig() {
@@ -46,6 +48,7 @@ public class ConfigHandler {
             properties.setProperty("IP", "localhost");
             properties.setProperty("PORT","7789");
             properties.setProperty("NICKNAME","NewUser");
+            properties.setProperty("ISAI", "false");
 
             File file = new File(filename);
             FileOutputStream fileOut = new FileOutputStream(file);
@@ -62,12 +65,16 @@ public class ConfigHandler {
      * @param port
      * @param nickname
      */
-    public void saveConfig(String ip, String port, String nickname) {
+    public void saveConfig(String ip, String port, String nickname, boolean isAI) {
+        String tempstring = "";
+        if (isAI) tempstring = "true"; else tempstring = "false";   // Handle boolean input
         try {
+            Properties properties = new Properties();
             FileOutputStream output = new FileOutputStream(filename);
             properties.setProperty("IP", ip);
             properties.setProperty("PORT", port);
             properties.setProperty("NICKNAME", nickname);
+            properties.setProperty("ISAI", tempstring);
             properties.store(output, null);
         } catch (IOException e) {
             System.err.println("Unable to save config file");
@@ -92,4 +99,6 @@ public class ConfigHandler {
     public String getNickname() {
         return nickname;
     }
+
+    public boolean getIsAI() { return this.isAI; }
 }

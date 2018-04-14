@@ -35,7 +35,7 @@ public class SettingsViewHandler implements ViewActionHandler {
         serverip.setText(server.getServerIp());
         port.setText("" +server.getServerPort());
         nickname.setText(server.getPlayerName());
-        AICheckbox.setSelected(GameMessageHandler.getisAI());
+        AICheckbox.setSelected(server.getIsAI());
     }
 
     @FXML
@@ -50,7 +50,7 @@ public class SettingsViewHandler implements ViewActionHandler {
             server.setServerPort(portInt);
             server.connect();
             server.login(nickname.getText());
-            GameMessageHandler.setisAI(AICheckbox.isSelected());
+            server.setIsAI(AICheckbox.isSelected());
             success = true;
         } catch (IOException e) {
             showErrorPopup("Unable to connect to new server");
