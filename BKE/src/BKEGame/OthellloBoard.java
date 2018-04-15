@@ -211,7 +211,7 @@ public class OthellloBoard extends AbstractBoard {
                         score += cornerscore;
                     }
                 }
-                else if ((x == 0 | y == 0) && f == mark) {
+                else if ((x == 0 | y == 0 || x == 7 || y == 7) && f == mark) {
                     score += sidescore;
                 }
                 else if (f == mark) {
