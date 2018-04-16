@@ -73,10 +73,9 @@ public class Othello extends Observable implements GameInterface {
         for (Move move : Moves) {
             OthellloBoard newState = new OthellloBoard(this.board);
             newState.playMove(move);
-            scoreCalculator c = new scoreCalculator(move, newState, !Maxer, 4, minimizing, maximizing);
+            scoreCalculator c = new scoreCalculator(move, newState, !Maxer, 5, minimizing, maximizing);
             Calculations.add(c);
         }
-        ExecutorService es = Executors.newFixedThreadPool(4);
         ArrayList<Thread> running = new ArrayList<>();
         for (Callable t : Calculations) {
             Futures.add(es.submit(t));
