@@ -151,7 +151,7 @@ public class GameBoardHandler implements Initializable, Observer {
 
         @Override
         public void run() {
-            pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/10), color));
+            pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/8), color));
            // button.setText(mark);
         }
     }
