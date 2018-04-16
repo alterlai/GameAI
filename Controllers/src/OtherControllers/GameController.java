@@ -20,26 +20,32 @@ import Server.Server;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
+/**
+ * Game controller. Takes care of the communication between the server, view and the game.
+ */
 public class GameController implements GameControllerInterface {
     private GameInterface game;
     private Server server;
-    private ViewActionHandler view;
 
-    private CountDownLatch moveLatch;
-    private Move selectedMove;
-    private GameBoardHandler gameBoardHandler;
-    private Player localPlayer;
+    private CountDownLatch moveLatch; //Used for registering player input
+    private Move selectedMove; //Last move that the player has selected
 
+    private GameBoardHandler gameBoardHandler; //Handler of the gameboard view
+    private Player localPlayer; //The non-remote player
 
+    /**
+     * Initializes the game controller. Sets up a game and initalizes the views.
+     * @param starter starting Player
+     * @param opponent not-starting Player
+     * @param nameGame game that is going to be played
+     */
     public GameController(Player starter, Player opponent, String nameGame){
         this.server = Server.getInstance();
         if (starter.getName().equals(server.getPlayerName())){
             localPlayer = starter;
-            System.out.println("white power");
         }
         else{
             localPlayer = opponent;
-            System.out.println("I am black");
         }
         if(nameGame.equals("Tic-tac-toe")) {
             game = new TicTacToe(starter, opponent);
@@ -54,6 +60,10 @@ public class GameController implements GameControllerInterface {
         }
     }
 
+    /**
+     * Initializes the game board view
+     * @throws IOException
+     */
     public void initView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/GameBoard.fxml"));
         Parent gameView =loader.load();
@@ -76,11 +86,11 @@ public class GameController implements GameControllerInterface {
 
     }
 
-    @Override //Deprecated
-    public void init(Player local, Player opponent, String nameGame) {
-
-    }
-
+    /**
+     * Retrieves a move from the local player, either AI or not-AI
+     * @return legal move that the local player is going to play
+     * @throws InterruptedException
+     */
     public Move getMove() throws InterruptedException {
 
         if (localPlayer.isAI()) {
@@ -94,17 +104,16 @@ public class GameController implements GameControllerInterface {
         selectedMove = null;
         moveLatch = new CountDownLatch(1);
         moveLatch.await(10, TimeUnit.SECONDS);
-        if (selectedMove == null) {
-            //Handling of no input, server makes you lose..
-
-        }
         return selectedMove;
 
     }
 
+    /**
+     * Called when the server confirms that a move has been succesfully played, moves from local and remote players. Plays the move on the local model.
+     * @param move
+     */
     public void moveSucces(Move move){
         game.playMove(move);
-
     }
 
     public void forfeit(){
@@ -112,8 +121,8 @@ public class GameController implements GameControllerInterface {
     }
 
     /**
-     * Let the view show the end game message.
-     * @param //win
+     * Makes the view show the end game message.
+     * @param
      */
     public void endGame(int status){
         try {
@@ -132,10 +141,18 @@ public class GameController implements GameControllerInterface {
         new Thread(LobbyObservable.getInstance()).start();
     }
 
-    public void registerView(Observer view) { //heh
+    /**
+     * Subscribes the observing view to the observable game
+     * @param view
+     */
+    public void registerView(Observer view) {
         game.registerView(view);
     }
 
+    /**
+     * Registers user input, called from pane action handlers. If it's legit it saves it until it's requested by the server object.
+     * @param pos one dimensional position of the clicked cell
+     */
     public void registerMove(int pos){
         Move move = new Move(pos, new Player(Server.getInstance().getPlayerName())); //NO!
         if (game.isValid(move)) {
@@ -144,6 +161,10 @@ public class GameController implements GameControllerInterface {
         }
     }
 
+    /**
+     * @param number player number
+     * @return the requested player associated with the in-progress game
+     */
     public Player getPlayer(int number) {
         switch(number) {
             case 1:
