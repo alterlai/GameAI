@@ -196,9 +196,9 @@ public class OthellloBoard extends AbstractBoard {
     }
 
     public int evalBoard(Player player) {
-        int cornerscore = 30;
-        int sidescore = 15;
-        int normalscore = 5;
+        int cornerscore = 3;
+        int sidescore = 2;
+        int normalscore = 1;
 
         int score = 0;
         char mark = player.getMark();

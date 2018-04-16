@@ -35,7 +35,7 @@ public class GameController implements GameControllerInterface {
         this.server = Server.getInstance();
         if (starter.getName().equals(server.getPlayerName())){
             localPlayer = starter;
-            System.out.println("white power");
+            System.out.println("white");
         }
         else{
             localPlayer = opponent;

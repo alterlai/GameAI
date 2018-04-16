@@ -32,8 +32,8 @@ public class Othello extends Observable implements GameInterface {
     private Player minimizing;
 
     private int moveCount = 0;
-    private final static int earlyGame = 15;
-    private final static int midGame = 45;
+    private final static int earlyGame = 20;
+    private final static int midGame = 48;
 
     private final static int earlyDepth = 5;
     private final static int midDepth = 4;
@@ -88,9 +88,11 @@ public class Othello extends Observable implements GameInterface {
             if (moveCount > earlyGame) {
                 searchDepth = midDepth;
             }
-            else if (moveCount > midGame) {
+            if (moveCount > midGame) {
                 searchDepth = lateDepth;
             }
+
+            System.out.println(searchDepth + " " + moveCount);
 
             scoreCalculator c = new scoreCalculator(move, newState, !Maxer, searchDepth, minimizing, maximizing);
 
@@ -123,24 +125,14 @@ public class Othello extends Observable implements GameInterface {
         es.shutdown();
         es.awaitTermination(10, TimeUnit.SECONDS);
 
-        System.out.println(moveCount);
-/**
-<<<<<<< HEAD
- System.out.println("Gametree: \n -------");
- System.out.println("    Depth: 5");
- System.out.println("    Nodes: " + calculations);
- System.out.println("    Leaves: " + evalcount);
- System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
- System.out.println("\n \n");
-=======
+        /** System.out.println(moveCount);
         System.out.println("Gametree: \n -------");
-        System.out.println("    Depth: 5");
+        System.out.println("    Depth: " + );
         System.out.println("    Nodes: " + calculations);
-        System.out.println("    Leaves: " + evalcount);**/
-       //System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
-       /** System.out.println("\n \n");
->>>>>>> fbfc8aed67dad746117069079792702649c8a608
- **/
+        System.out.println("    Leaves: " + evalcount);
+        System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
+        System.out.println("\n \n"); **/
+
         return currentBestMove;
 
     }
