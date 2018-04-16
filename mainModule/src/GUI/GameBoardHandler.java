@@ -129,22 +129,26 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         ArrayList<paneUpdater> tasks  = new ArrayList<>();
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
             Pane selectedCell = (Pane) GameB.lookup("#" + i);
-            final String mark = Character.toString(boardVals[i]);
+            char mark = boardVals[i];
             switch (mark){
-                case "W":
+                case 'W':
                     tasks.add(new paneUpdater(Color.WHITE, selectedCell, "Circle"));
                     break;
-                case "Z":
+                case 'Z':
                     tasks.add(new paneUpdater(Color.BLACK, selectedCell, "Circle"));
                     break;
-                case "X":
+                case 'X':
                     tasks.add(new paneUpdater(Color.BLACK, selectedCell, "Cross"));
                     break;
-                case "O":
+                case 'O':
                     tasks.add(new paneUpdater(Color.WHITE, selectedCell, "Hcircle"));
                     break;
-                case "L": //Legit move
+                case 'L': //Legit move
                     tasks.add(new paneUpdater(Color.RED, selectedCell, "Circle"));
+                    break;
+                case ' ':
+                    tasks.add(new paneUpdater(selectedCell));
+                    break;
 
             }
 
@@ -159,7 +163,9 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         Pane pane;
         Color color;
 
-
+        public paneUpdater(Pane pane) {
+            this.pane = pane;
+        }
         public paneUpdater(Color color, Pane pane, String mark) {
             this.mark = mark;
             this.pane = pane;

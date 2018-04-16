@@ -65,6 +65,7 @@ public class Othello extends Observable implements GameInterface {
         else {
             turn = player1;
         }
+        System.out.println("Turn: " + turn);
     }
     /**
      * @param player The player that is making the move
