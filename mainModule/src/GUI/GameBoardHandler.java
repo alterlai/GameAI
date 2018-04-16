@@ -181,7 +181,6 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
                     Line lineY = new Line(0 + size,pane.getHeight() - size, pane.getWidth() - size,0 + size);
                     lineY.setStrokeWidth(size);
                     pane.getChildren().addAll(lineX,lineY);
-                    //pane.getChildren().add(lineY);
                     break;
                 case "Hcircle":
                     //draw a hollow circle
@@ -190,7 +189,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
                     break;
 
             }
-                   }
+        }
     }
 
     /**
