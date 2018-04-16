@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Move implements Comparable<Move> {
-    private Integer x;
-    private Integer y;
-    private Integer pos;
+    private Integer x; //x-coordinate
+    private Integer y; //y-coordinate
+    private Integer pos; //1 dimensional representation of player position
 
-    private Player player;
+    private Player player; //Player that is playing this move
 
     /**
      * Called through GameInterface.createMove(). Used when the 2 dimensional position is known.
@@ -85,15 +85,9 @@ public class Move implements Comparable<Move> {
     }
 
 
-    public int getX(){
-        return x;
-    }
-    public int getY() {
-        return y;
-    }
-    public Player getPlayer() {
-        return player;
-    }
+    public int getX(){ return x; }
+    public int getY() { return y; }
+    public Player getPlayer() { return player; }
     public int getPos(){return pos;}
 
 
