@@ -176,8 +176,10 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     public void updateGameList(List<String> gameArrayList) {
         ObservableList<String> observableList = FXCollections.observableArrayList(gameArrayList);
-        challengeGameList.setItems(observableList);
-        gameList.setItems(observableList);
+        Platform.runLater(() -> {
+            challengeGameList.setItems(observableList);
+            gameList.setItems(observableList);
+        });
     }
 
     public void displayChallenges(List<Challenge> challenges) {
