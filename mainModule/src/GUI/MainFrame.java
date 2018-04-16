@@ -20,6 +20,11 @@ public class MainFrame extends Application {
     Scene mainScene;
     ViewController viewController;
 
+    /**
+     * Entry point to the Application. Starts the User Interface.
+     * @param primaryStage main stage.
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Set title bar

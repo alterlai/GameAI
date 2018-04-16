@@ -25,8 +25,14 @@ public class SettingsViewHandler implements ViewActionHandler {
     private Server server = Server.getInstance();
     private LobbyObservable lobby = LobbyObservable.getInstance();
 
+    /**
+     * Empty constructor to satisfy FXML controller requirements.
+     */
     public SettingsViewHandler() { }
 
+    /**
+     * Populate input fields with current values.
+     */
     @FXML
     public void initialize() {
         // Register the handler.
@@ -38,6 +44,9 @@ public class SettingsViewHandler implements ViewActionHandler {
         AICheckbox.setSelected(server.getIsAI());
     }
 
+    /**
+     * Handle apply button.
+     */
     @FXML
     private void apply() {
         boolean success = false;    // Check if the new settings are correct.
@@ -83,6 +92,10 @@ public class SettingsViewHandler implements ViewActionHandler {
         }
     }
 
+    /**
+     * Show error popup on the screen.
+     * @param message message being displayed.
+     */
     private void showErrorPopup(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Unable to connect to server");
@@ -92,6 +105,9 @@ public class SettingsViewHandler implements ViewActionHandler {
     }
 
 
+    /**
+     * Handle close event.
+     */
     @FXML
     private void close() {
         Stage stage = (Stage) cancel.getScene().getWindow();

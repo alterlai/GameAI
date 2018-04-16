@@ -31,8 +31,14 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     private Semaphore challengeLock = new Semaphore(1);
 
+    /**
+     * Empty constructor to satisfy FXML controller requirements.
+     */
     public LobbyViewHandler(){}
 
+    /**
+     * Initialize the LobbyViewHandler.
+     */
     @FXML
     public void initialize() {
         // Register this controller to the viewHandlers.
@@ -63,7 +69,6 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             Thread serverThread = new Thread(server);
             serverThread.start();
 
-            //lobby.setPlayerName(server.getPlayerName());
             Thread thread = new Thread(lobby);
             thread.start();
             try {
@@ -119,7 +124,9 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     }
 
-    // Handle challenge button
+    /**
+     *  Handle challenge button.
+     */
     @FXML
     private void challenge() {
         String selectedPlayer = playerList.getSelectionModel().getSelectedItem();
@@ -154,6 +161,9 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         }
     }
 
+    /**
+     * Handle open settings button.
+     */
     @FXML
     private void openSettings() {
         Parent root;
@@ -169,17 +179,29 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         }
     }
 
+    /**
+     * Update the playerlist.
+     * @param playerArrayList List of strings with all players.
+     */
     public void updatePlayerList(List<String> playerArrayList) {
         ObservableList<String> observableList = FXCollections.observableArrayList(playerArrayList);
         playerList.setItems(observableList);
     }
 
+    /**
+     * update game list.
+     * @param gameArrayList List of Strings of all games to be played.
+     */
     public void updateGameList(List<String> gameArrayList) {
         ObservableList<String> observableList = FXCollections.observableArrayList(gameArrayList);
         challengeGameList.setItems(observableList);
         gameList.setItems(observableList);
     }
 
+    /**
+     * Display all challenges the player has received.
+     * @param challenges List of challenges.
+     */
     public void displayChallenges(List<Challenge> challenges) {
         for (int i = 0; i < challenges.size(); i++) { //Iterating through it normally so that we can remove elements during the loop. Chance of challenges reappearing despite being handled already otherwise..
             Challenge challenge = challenges.get(i);
@@ -216,6 +238,11 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         }
     }
 
+    /**
+     * Update the playerlist and challenges.
+     * @param o Observable object
+     * @param arg Arguments.
+     */
     @Override
     public void update(Observable o, Object arg) {
         try {

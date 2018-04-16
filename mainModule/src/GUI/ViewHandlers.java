@@ -42,6 +42,11 @@ public class ViewHandlers {
         }
     }
 
+    /**
+     * Register a handler
+     * @param name  Name of the handler.
+     * @param handler Handler to be registered.
+     */
     public void registerHandler(String name, ViewActionHandler handler) {
         handlers.put(name, handler);
     }
