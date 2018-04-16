@@ -32,7 +32,7 @@ public class Othello extends Observable implements GameInterface {
     private int moveCount = 0; //Move count used to determine phase of game.
 
     private final static int earlyGame = 15; //Amount of moves up to this are considered to be early game
-    private final static int midGame = 45; //Amount of moves up to this are considered to be mid game
+    private final static int midGame = 50; //Amount of moves up to this are considered to be mid game
 
     private final static int earlyDepth = 5; //Search depth for early game phase
     private final static int midDepth = 4; //Search depth for mid game phase
@@ -93,8 +93,6 @@ public class Othello extends Observable implements GameInterface {
             if (moveCount > midGame) {
                 searchDepth = lateDepth;
             }
-
-            System.out.println(searchDepth + " " + moveCount);
 
             scoreCalculator c = new scoreCalculator(move, newState, !Maxer, searchDepth, minimizing, maximizing);
             Calculations.add(c);

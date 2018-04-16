@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Observable;
 
     /**
@@ -27,12 +26,11 @@ public class Server extends Observable implements Runnable {
         private BufferedReader dataIn;
         private PrintWriter dataOut;
         private final Object lock = new Object();
-        private volatile boolean wait = false;
+        private volatile boolean waitForMyCommand = false;
         private static Server server = new Server();
         private String playerName;
         private boolean quit = false;
         private boolean isAI;
-        public int localPlayer = 0; //TEMPORARY - fix needed. Tells messagehandler which player to request when getting move.
 
         private Server() {
             ConfigHandler config = ConfigHandler.getInstance();
@@ -56,7 +54,7 @@ public class Server extends Observable implements Runnable {
             synchronized (lock) {
                 try {
                     while (!quit) {
-                        if (wait){
+                        if (waitForMyCommand){
                             lock.wait();
                         }
                         while(dataIn.ready()){
@@ -85,19 +83,19 @@ public class Server extends Observable implements Runnable {
             this.playerName = playerName;
             System.out.println(this.playerName);
             LobbyObservable.setPlayerName(playerName);
-            wait = true;
+            waitForMyCommand = true;
             synchronized (lock){
 
                 dataOut.println("login " + playerName);
                 MessageHandler.waitForOk(dataIn);
-                wait = false;
+                waitForMyCommand = false;
                 lock.notify();
             }
         }
 
         public boolean disconnect() throws InterruptedException {
             if (isConnected()) {
-                wait = true;
+                waitForMyCommand = true;
                 synchronized (lock) {
                     dataOut.println("bye");
                     Thread.sleep(200);
@@ -107,7 +105,7 @@ public class Server extends Observable implements Runnable {
                         e.printStackTrace();
                     }
                     connected = false;
-                    wait = false;
+                    waitForMyCommand = false;
                     lock.notify();
                 }
             }
@@ -115,21 +113,21 @@ public class Server extends Observable implements Runnable {
         }
 
         public ArrayList<String> getGameList() throws Exception {
-            wait = true;
+            waitForMyCommand = true;
             ArrayList<String> list =new ArrayList<String>();
             synchronized (lock){
                 dataOut.println("get gamelist");
                 MessageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
                 list = ListHandler.handleGamelist(data);
-                wait = false;
+                waitForMyCommand = false;
                 lock.notify();
                 return list;
             }
         }
 
         public ArrayList<String> getPlayerlist() throws Exception {
-            wait = true;
+            waitForMyCommand = true;
             ArrayList<String> list =new ArrayList<String>();
 
             synchronized (lock) {
@@ -137,51 +135,51 @@ public class Server extends Observable implements Runnable {
                 MessageHandler.waitForOk(dataIn);
                 String data = dataIn.readLine();
                 list = ListHandler.handlePlayerList(data);
-                wait = false;
+                waitForMyCommand = false;
                 lock.notify();
                 return list;
             }
         }
 
         public boolean subscribe(String game) throws Exception {
-            wait = true;
+            waitForMyCommand = true;
             synchronized (lock) {
                 dataOut.println("subscribe " + game);
                 MessageHandler.waitForOk(dataIn);
-                wait = false;
+                waitForMyCommand = false;
                 lock.notify();
                 return true;
             }
         }
 
         public void doMove(Move move) throws Exception {
-            wait = true;
+            waitForMyCommand = true;
             synchronized (lock){
                 int pos = move.getPos();
                 dataOut.println("move " + pos);
                 MessageHandler.waitForOk(dataIn);
-                wait = false;
+                waitForMyCommand = false;
                 lock.notify();
             }
         }
 
         public void challenge(String speler, String game) throws Exception {
-            wait = true;
+            waitForMyCommand = true;
             synchronized (lock){
                 dataOut.println("challenge " + "\"" + speler + "\"" + " " +  "\"" + game +  "\"");
                 MessageHandler.waitForOk(dataIn);
-                wait = false;
+                waitForMyCommand = false;
                 lock.notify();
             }
 
         }
 
         public void forfeit() throws IOException {
-            wait = true;
+            waitForMyCommand = true;
             synchronized (lock) {
                 dataOut.println("forfeit");
                 dataIn.readLine();
-                wait = false;
+                waitForMyCommand = false;
                 lock.notify();
             }
         }
@@ -194,11 +192,11 @@ public class Server extends Observable implements Runnable {
         }
 
         public void acceptChallenge(Challenge challenge) throws Exception {
-            wait = true;
+            waitForMyCommand = true;
             synchronized (lock){
                 dataOut.println("challenge accept " + challenge.getChallengeNumber());
                 MessageHandler.waitForOk(dataIn);
-                wait = false;
+                waitForMyCommand = false;
                 lock.notify();
             }
         }
