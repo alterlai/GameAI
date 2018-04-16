@@ -81,7 +81,6 @@ public class Server extends Observable implements Runnable {
 
         public void login(String playerName) throws Exception {
             this.playerName = playerName;
-            System.out.println(this.playerName);
             LobbyObservable.setPlayerName(playerName);
             waitForMyCommand = true;
             synchronized (lock){

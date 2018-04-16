@@ -16,49 +16,40 @@ public class GameMessageHandler implements MessageHandlerInterface {
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME CHALLENGE {")) {
             handleChallengeMessage(message);
-            System.out.println("I am challenged");
             return;
         }
         else if(message.startsWith("SVR GAME CHALLENGE CANCELLED")){
             handleChallengeCancel(message);
-            System.out.println("I am no longer challenged");
             return;
         }
         else if(message.startsWith("SVR GAME MATCH")){
-            System.out.println("I got a match!!!");
             setupMatch(message);
             return;
         }
         else if (message.startsWith("SVR GAME YOURTURN")){
-            System.out.println("It's my turn");
             gameController = GameHandler.getInstance().getGameController();
             Server.getInstance().doMove(gameController.getMove());
             return;
         }
         else if (message.startsWith("SVR GAME MOVE")){
-            System.out.println("This was a move");
             processMove(message);
             return;
         }
         else if (message.startsWith("SVR GAME WIN")){
-            //gameController.endGame(true);
-            System.out.println("I win!!!");
             GameHandler.getInstance().getGameController().endGame(1);
             return;
         }
         else if (message.startsWith("SVR GAME LOSS")){
-            System.out.println("I lose :(");
-            //gameController.endGame(false);
             GameHandler.getInstance().getGameController().endGame(-1);
             return;
         }
         else if (message.startsWith("SVR GAME DRAW")){
-            System.out.println("I'm more even then the other guy");
             GameHandler.getInstance().getGameController().endGame(0);
             return;
         }
         else{
-            throw new Exception("unkown message");
+            //throw new Exception("unkown message");
+            return;
         }
     }
 
@@ -109,7 +100,6 @@ public class GameMessageHandler implements MessageHandlerInterface {
             handler.initGameController(local, remote, nameGame);
         }
         else {
-            System.out.println("PLAYERTOMOVE: \""+ Server.getInstance().getPlayerName() +"\" ");
             handler.initGameController(remote, local, nameGame);
         }
 

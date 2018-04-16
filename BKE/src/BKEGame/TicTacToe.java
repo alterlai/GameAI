@@ -143,7 +143,6 @@ public class TicTacToe extends Observable implements GameInterface {
     public void playMove(Move move) {
         board.playMove(move);
         moveHistory.add(move);
-        board.print();
         setChanged();
         notifyObservers(this); //Should have a security proxy.
     }
