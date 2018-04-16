@@ -91,6 +91,10 @@ public abstract class AbstractBoard {
         return dimensionalpos;
     }
 
+    public void setLegal(Move move) {
+        this.xy[move.getX()][move.getY()] = 'L';
+    }
+
     public int getSize() { return this.size; }
 
 

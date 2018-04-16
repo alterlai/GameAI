@@ -11,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 
 public class GameBoardHandler implements Initializable, Observer, ViewActionHandler {
 
@@ -113,7 +111,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
     public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
 
         GameInterface game= (GameInterface) arg;
-        AbstractBoard board = game.getBoard();
+        AbstractBoard board = game.getLegalMoveBoard();
         drawGrid(board);
 
         Platform.runLater(new Runnable() {
@@ -129,36 +127,48 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
     public void drawGrid(AbstractBoard board) {
         char[] boardVals = board.getCells1D();
 
-        ArrayList<testrun> tasks  = new ArrayList<>();
+
+        ArrayList<paneUpdater> tasks  = new ArrayList<>();
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
             Pane selectedCell = (Pane) GameB.lookup("#" + i);
-            final String mark = Character.toString(boardVals[i]);
+            char mark = boardVals[i];
             switch (mark){
-                case "W":
-                    tasks.add(new testrun(Color.WHITE, selectedCell, "Circle"));
+                case 'W':
+                    tasks.add(new paneUpdater(Color.WHITE, selectedCell, "Circle"));
                     break;
-                case "Z":
-                    tasks.add(new testrun(Color.BLACK, selectedCell, "Circle"));
+                case 'Z':
+                    tasks.add(new paneUpdater(Color.BLACK, selectedCell, "Circle"));
                     break;
-                case "X":
-                    tasks.add(new testrun(Color.BLACK, selectedCell, "Cross"));
+                case 'X':
+                    tasks.add(new paneUpdater(Color.BLACK, selectedCell, "Cross"));
                     break;
-                case "O":
-                    tasks.add(new testrun(Color.WHITE, selectedCell, "Hcircle"));
+                case 'O':
+                    tasks.add(new paneUpdater(Color.WHITE, selectedCell, "Hcircle"));
                     break;
+                case 'L': //Legit move
+                    tasks.add(new paneUpdater(Color.RED, selectedCell, "Circle"));
+                    break;
+                case ' ':
+                    tasks.add(new paneUpdater(selectedCell));
+                    break;
+
             }
 
         }
-        for (testrun r : tasks) {
+        for (paneUpdater r : tasks) {
             Platform.runLater(r);
         }
     }
 
-    class testrun implements Runnable {
-        String mark;
+    class paneUpdater implements Runnable {
+        String mark = "none";
         Pane pane;
         Color color;
-        public testrun(Color color, Pane pane,String mark) {
+
+        public paneUpdater(Pane pane) {
+            this.pane = pane;
+        }
+        public paneUpdater(Color color, Pane pane, String mark) {
             this.mark = mark;
             this.pane = pane;
             this.color = color;
@@ -189,7 +199,6 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
                     pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/7), color));
                     pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/4), Color.GREEN));
                     break;
-
             }
         }
     }

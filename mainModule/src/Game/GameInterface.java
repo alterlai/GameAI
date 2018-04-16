@@ -55,6 +55,8 @@ public interface GameInterface {
      */
     Boolean isValid(Move move);
 
+    public AbstractBoard getLegalMoveBoard();
+
     Player getPlayer1();
     Player getPlayer2();
 }
