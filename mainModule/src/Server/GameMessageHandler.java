@@ -9,10 +9,22 @@ import OtherControllers.GameController;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * <H1> GameMessageHandler</H1>
+ * Handles all messages starting with SVR GAME
+ * @author Rudolf Klijnhout
+ * @version 1.0
+ * @since 16-04-2018
+ **/
 public class GameMessageHandler implements MessageHandlerInterface {
 
     private static GameControllerInterface gameController;
 
+    /**
+     * This method handles the game server messages
+     * @param message The server message
+     * @throws Exception
+     */
     public static void handleMessage(String message) throws Exception {
         if(message.startsWith("SVR GAME CHALLENGE {")) {
             handleChallengeMessage(message);
@@ -48,11 +60,14 @@ public class GameMessageHandler implements MessageHandlerInterface {
             return;
         }
         else{
-            //throw new Exception("unkown message");
             return;
         }
     }
 
+    /**
+     * This method is used to handle a incoming challenge
+     * @param message String Server message
+     */
     private static void handleChallengeMessage(String message) {
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(20, message.length() - 1).split(",")));
         String playerName = list.get(0);
@@ -63,10 +78,18 @@ public class GameMessageHandler implements MessageHandlerInterface {
         LobbyObservable.getInstance().addChallenge(new Challenge(playerName, game, challengeNumber));
     }
 
+    /**
+     * This method is to handle a canceled message
+     * @param message String Server message
+     */
     private static void handleChallengeCancel(String message){
         LobbyObservable.getInstance().removeChallenge(Integer.parseInt(message.substring(48, message.length()-2)));
     }
 
+    /**
+     * This method is used to process a move returned by the server
+     * @param message String Server message
+     */
     private static void processMove(String message){
         GameControllerInterface gameController = GameHandler.getInstance().getGameController();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(15, message.length() - 1).split(",")));
@@ -86,6 +109,10 @@ public class GameMessageHandler implements MessageHandlerInterface {
         }
     }
 
+    /**
+     * This method is used to handle the new match message
+     * @param message String server message
+     */
     private static void setupMatch(String message){
         LobbyObservable.getInstance().stop();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(16, message.length() - 1).split(",")));

@@ -3,6 +3,13 @@ package Server;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * <H1> ListHandler</H1>
+ * Handles all lists
+ * @author Rudolf Klijnhout
+ * @version 1.0
+ * @since 16-04-2018
+ **/
 public class ListHandler {
 
     public static ArrayList<String> handlePlayerList(String data){
