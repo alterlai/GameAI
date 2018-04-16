@@ -14,9 +14,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import Game.Move;
@@ -38,6 +38,8 @@ public class GameBoardHandler implements Initializable, Observer {
     private Text Player2T;
     @FXML
     private ListView ListV;
+    @FXML
+    private  HBox GameHBox;
 
     // List of strings to use in the listview of movehistory
     private ArrayList<String> moveHistory = new ArrayList<>();
@@ -63,42 +65,38 @@ public class GameBoardHandler implements Initializable, Observer {
         });
 
         if(X > 2 || Y> 2) {
-            for(int newrow = 1; newrow <= X-3; newrow++) {
+            for(int newrow = 1; newrow <= X-4; newrow++) {
                 GameB.setPrefHeight( GameB.getPrefHeight() + 100);
+                ListV.setPrefHeight( ListV.getPrefHeight() + 100);
                 RowConstraints row = new RowConstraints();
                 row.setPrefHeight(100);
                 GameB.getRowConstraints().add(row);
             }
 
-            for(int newcol = 1; newcol <= Y-3; newcol++) {
+            for(int newcol = 1; newcol <= Y-4; newcol++) {
                 GameB.setPrefWidth( GameB.getPrefWidth() + 100);
+
                 ColumnConstraints colum = new ColumnConstraints();
                 colum.setPrefWidth(100);
                 GameB.getColumnConstraints().add(colum);
             }
-
-            moveNode(Player1T, 0);
-            moveNode(Player2T, 0);
-            moveNode(ListV, 1);
-            moveNode(ForfeitB, GameB.getColumnConstraints().size());
-
         }
-
+        ListV.setPrefHeight( ListV.getPrefHeight() + 100);
+        GameHBox.setPrefSize(800, 800);
         for(int y = 0; y < Y; y++) {
             for(int x = 0; x < X; x++){
                 int pos = ((y) * X)  +  x;
-                Button btn = new Button( " ");
-                btn.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
-                btn.setId(String.valueOf(pos));
+                Pane cell = new Pane();
+                cell.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+                cell.setId(String.valueOf(pos));
+                cell.setStyle("-fx-border-color: black; -fx-background-color: green;");
 
-                btn.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        gamecontroller.registerMove(pos);
-                    }
+                cell.setOnMouseClicked(event -> {
+
+                    //cell.getChildren().add(new Circle(cell.getWidth()/2,cell.getHeight()/2, (cell.getHeight()/2) - 5, Color.BLACK));
+                    gamecontroller.registerMove(pos);
                 });
-                System.out.println(btn);
-                GameB.add(btn,x,y);
+                GameB.add(cell,x,y);
             }
         }
     }
@@ -124,9 +122,9 @@ public class GameBoardHandler implements Initializable, Observer {
 
         ArrayList<testrun> tasks  = new ArrayList<>();
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
-            Button selectedButton = (Button) GameB.lookup("#" + i);
+            Pane selectedCell = (Pane) GameB.lookup("#" + i);
             final String mark = Character.toString(boardVals[i]);
-            tasks.add(new testrun(mark, selectedButton));
+            tasks.add(new testrun(mark, selectedCell));
         }
         for (testrun r : tasks) {
             Platform.runLater(r);
@@ -135,36 +133,38 @@ public class GameBoardHandler implements Initializable, Observer {
 
     class testrun implements Runnable {
         String mark;
-        Button button;
-        public testrun(String mark, Button button) {
+        Pane pane;
+        public testrun(String mark, Pane pane) {
             this.mark = mark;
-            this.button = button;
+            this.pane = pane;
         }
 
         @Override
         public void run() {
-            button.setText(mark);
+            System.out.println("deze mark: " + mark);
+            if(mark == "Z"){
+                pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - 5, Color.BLACK));
+
+            }
+            else if(mark == "W") {
+                pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - 5, Color.WHITE));
+            }
+            else if(mark == "l"){
+                pane.setStyle("-fx-border-color: black; -fx-background-color: blue;");
+            }
+           // button.setText(mark);
         }
     }
 
-/**
- * Add a new move to the move history to show on screen.
- * @param move
- */
-private void addToMoveHistory(Move move) {
+    /**
+     * Add a new move to the move history to show on screen.
+     * @param move
+     */
+    private void addToMoveHistory(Move move) {
         moveHistory.add(move.getPlayer().getName() + "moved X: " + move.getX() + " Y: " + move.getY());
         ObservableList<String> observableMoveHistory = FXCollections.observableArrayList(moveHistory);
         ListV.setItems(observableMoveHistory);
-        }
-
-
-
-    private void moveNode(Node Node, int rij){
-        GameB.getChildren().remove(Node);
-        GameB.add(Node,GameB.getRowConstraints().size(),rij);
     }
-
-
 
     /**
      * Sets reference to the controller and sets the model/observable related variables it needs to know (before the first notify() is called)
@@ -189,6 +189,7 @@ private void addToMoveHistory(Move move) {
     @FXML
     private void Forfeit(){ //Deprecated -> will never be used. Please remove.
         System.out.println("Player forfeit.");
+
     }
 
 
