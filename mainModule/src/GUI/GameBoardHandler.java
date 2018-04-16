@@ -18,6 +18,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 import Game.Move;
@@ -130,12 +131,21 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
             Pane selectedCell = (Pane) GameB.lookup("#" + i);
             final String mark = Character.toString(boardVals[i]);
-            if(mark.equals("W")) {
-                tasks.add(new testrun(Color.WHITE, selectedCell));
+            switch (mark){
+                case "W":
+                    tasks.add(new testrun(Color.WHITE, selectedCell, "Circle"));
+                    break;
+                case "Z":
+                    tasks.add(new testrun(Color.BLACK, selectedCell, "Circle"));
+                    break;
+                case "X":
+                    tasks.add(new testrun(Color.BLACK, selectedCell, "Cross"));
+                    break;
+                case "O":
+                    tasks.add(new testrun(Color.WHITE, selectedCell, "Hcircle"));
+                    break;
             }
-            else if(mark.equals("Z")){
-                tasks.add(new testrun(Color.BLACK, selectedCell));
-            }
+
         }
         for (testrun r : tasks) {
             Platform.runLater(r);
@@ -146,7 +156,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         String mark;
         Pane pane;
         Color color;
-        public testrun(Color color, Pane pane) {
+        public testrun(Color color, Pane pane,String mark) {
             this.mark = mark;
             this.pane = pane;
             this.color = color;
@@ -158,9 +168,29 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
             for (int circle = 0; circle < pane.getChildren().size(); circle++) {
                 pane.getChildren().remove(circle);
             }
-            pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/8), color));
-           // button.setText(mark);
-        }
+            switch(mark){
+                case "Circle":
+                    //draw a circle
+                    pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/8), color));
+                    break;
+                case "Cross":
+                    //draw a cross
+                    double size = pane.getHeight()/5.;
+                    Line lineX = new Line(0 + size,0 + size ,pane.getWidth() - size,pane.getHeight() - size);
+                    lineX.setStrokeWidth(size);
+                    Line lineY = new Line(0 + size,pane.getHeight() - size, pane.getWidth() - size,0 + size);
+                    lineY.setStrokeWidth(size);
+                    pane.getChildren().addAll(lineX,lineY);
+                    //pane.getChildren().add(lineY);
+                    break;
+                case "Hcircle":
+                    //draw a hollow circle
+                    pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/7), color));
+                    pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/4), Color.GREEN));
+                    break;
+
+            }
+                   }
     }
 
     /**
