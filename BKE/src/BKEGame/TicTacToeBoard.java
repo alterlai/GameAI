@@ -6,21 +6,35 @@ import Game.Player;
 import java.util.ArrayList;
 
 /**
- *BKEGame.TicTacToeBoard model and Tic Tac Toe logic
+ * Tic tac toe board and game logic
  */
 
 public class TicTacToeBoard extends AbstractBoard {
 
 
-
+    /**
+     * Creates and initaliazes a new Tic Tac Toe board.
+     * @param size length of one side of the board in cells
+     */
     public TicTacToeBoard(int size) {
         super(size);
     }
 
+    /**
+     * Overloaded constructor used when you want to create a copy of the board. Useful when you don't want to pass the reference.
+     * @param old the board of which to make a copy of.
+     */
     public TicTacToeBoard(AbstractBoard old) { //To prevent passing by reference, or something like that..
         super(old);
     }
 
+    /**
+     * Checks whether a certain player has won
+     * @param Maxer
+     * @param player
+     * @param opponent
+     * @return true if the player has won, false if not.
+     */
     public Boolean Win(Boolean Maxer, Player player, Player opponent){
         char Player = ' ';
         if (Maxer) {
@@ -71,6 +85,11 @@ public class TicTacToeBoard extends AbstractBoard {
 
         return false;
     }
+
+    /**
+     * Checks whether the game has reached a draw state.
+     * @return true when it is a draw, false when it's not.
+     */
     public Boolean Draw(){
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -82,17 +101,21 @@ public class TicTacToeBoard extends AbstractBoard {
         return true;
     }
 
+    @Override
     public Boolean isValid(Move move) {
         if (xy[move.getX()][move.getY()] == ' ') {
             return true;
         }
         return false;
     }
+
+    @Override
     public void playMove(Move move) {
         move.makePlayable(this.getSize());
         xy[move.getX()][move.getY()] = move.getPlayer().getMark();
     }
-  
+
+    @Override
     public ArrayList<Move> getValidMoves(Player player) {
         ArrayList Moves = new ArrayList();
         for (int x = 0; x < this.size; x++) {
@@ -104,6 +127,5 @@ public class TicTacToeBoard extends AbstractBoard {
         }
         return Moves;
     }
-
 
 }

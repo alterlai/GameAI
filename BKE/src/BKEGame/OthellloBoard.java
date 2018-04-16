@@ -8,6 +8,10 @@ import java.util.ArrayList;
 
 public class OthellloBoard extends AbstractBoard {
 
+    /**
+     * Creates and initaliazes a Othello new board.
+     * @param size length of one side of the board in cells
+     */
     public OthellloBoard(int size) {
         super(size);
 
@@ -26,11 +30,7 @@ public class OthellloBoard extends AbstractBoard {
         super(old);
     }
 
-    /**
-     * Checks whether a move is valid or not. Should only be called from GameInterface.createMove() -> wastes processing power.. Validates user input.
-     * @param move
-     * @return
-     */
+    @Override
     public Boolean isValid(Move move) {
         for (Move validMove : getValidMoves(move.getPlayer())) {
             if (move.compareTo(validMove) == 1) {
@@ -70,10 +70,7 @@ public class OthellloBoard extends AbstractBoard {
         return score;
     }
 
-    /**
-     * Plays the Move object. Updates the board.
-     * @param move the move to play
-     */
+    @Override
     public void playMove(Move move) {
         move.makePlayable(this.getSize());
         xy[move.getX()][move.getY()] = move.getPlayer().getMark();
@@ -126,11 +123,7 @@ public class OthellloBoard extends AbstractBoard {
         }
     }
 
-    /**
-     * Finds all the legal moves that the player can make in the current situation.
-     * @param player
-     * @return an ArrayList containing Move objects depicting moves that the player can legally play
-     */
+    @Override
     public ArrayList<Move> getValidMoves(Player player) {
         ArrayList<Move> validMoves = new ArrayList<Move>();
 
@@ -187,6 +180,11 @@ public class OthellloBoard extends AbstractBoard {
         return valid;
     }
 
+    /**
+     * Evaluates the current state of the board
+     * @param player perspective to evaluate from
+     * @return score of the board state as an int
+     */
     public int evalBoard(Player player) {
         int cornerscore = 30;
         int sidescore = 15;

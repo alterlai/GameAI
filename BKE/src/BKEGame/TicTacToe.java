@@ -148,22 +148,20 @@ public class TicTacToe extends Observable implements GameInterface {
         notifyObservers(this); //Should have a security proxy.
     }
 
-    public void registerView (Observer view) {addObserver(view);
-    }
+    public void registerView (Observer view) {addObserver(view); }
 
 
-    /**
-     * @return A copy of the current board state. Not a reference to the real board, risk of entities manipulating it from outside.
-     */
 
     @Override
     public TicTacToeBoard getBoard() {
         return new TicTacToeBoard(this.board);
     }
+
     @Override
     public ArrayList<Move> getMoveHistory() {
         return moveHistory;
     }
+
     public Player getPlayer1() {return this.player1;}
     public Player getPlayer2() {return this.player2;}
 
