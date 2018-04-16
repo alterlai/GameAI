@@ -14,12 +14,15 @@ import Game.GameInterface;
 import Game.AbstractBoard;
 import javafx.concurrent.Task;
 
-public class Othello extends Observable implements GameInterface {
+public class OthelloBFS extends Observable implements GameInterface {
 
     private OthellloBoard board;
 
     private Player player1;
     private Player player2;
+
+    private Tree tree = new Tree();
+    private boolean start = true;
 
     /**
      * ArrayList that keeps track of successfully executed moves
@@ -36,16 +39,20 @@ public class Othello extends Observable implements GameInterface {
     public int calculations = 0;
     public int evalcount = 0;
 
-    public Othello(Player player1, Player player2) {
+    public OthelloBFS(Player player1, Player player2) {
         board = new OthellloBoard(8);
         moveHistory = new ArrayList<Move>();
 
         this.player1 = player1;
         this.player2 = player2;
 
-        this.player1.setMark('W');
-        this.player2.setMark('Z');
+        this.player1.setMark('Z');
+        this.player2.setMark('W');
 
+        ArrayList<Move> moves = board.getValidMoves(player1);
+        for (Move move : moves){
+            tree.addRoot(new TreeNode(move));
+        }
     }
 
     @Override
@@ -64,6 +71,14 @@ public class Othello extends Observable implements GameInterface {
         }
         Boolean Maxer = true;
 
+        if(this.start){
+            this.start = false;
+            for (TreeNode node : tree.getStartroot()){
+                OthellloBoard newState = new OthellloBoard(this.board);
+                newState.playMove(node.getMove());
+            }
+        }
+
         ArrayList<Move> Moves = board.getValidMoves(player);
 
         int currentBestScore = Integer.MIN_VALUE;
@@ -74,7 +89,7 @@ public class Othello extends Observable implements GameInterface {
         for (Move move : Moves) {
             OthellloBoard newState = new OthellloBoard(this.board);
             newState.playMove(move);
-            scoreCalculator c = new scoreCalculator(move, newState, !Maxer, 5, minimizing, maximizing);
+            scoreCalculator c = new scoreCalculator(move, newState, !Maxer, 4, minimizing, maximizing);
             Calculations.add(c);
         }
         ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*2);
@@ -85,7 +100,6 @@ public class Othello extends Observable implements GameInterface {
 
         int[] scores = new int[Moves.size()];
         int i = 0;
-        currentBestScore = Integer.MIN_VALUE;
         for (Future f : Futures) {
             try {
                 Object o = f.get();
@@ -167,7 +181,7 @@ public class Othello extends Observable implements GameInterface {
     }
 }
 
-class scoreCalculator implements Callable<Object[]> {
+class scoreCalculator2 implements Callable<Object[]> {
     int calculations = 0;
     int evalcount = 0;
     int score;
@@ -179,7 +193,7 @@ class scoreCalculator implements Callable<Object[]> {
     Player opponent;
 
     Move belongsTo;
-    public scoreCalculator(Move belongsTo, OthellloBoard currentState, Boolean Maxer, int depth, Player player, Player opponent) {
+    public scoreCalculator2 (Move belongsTo, OthellloBoard currentState, Boolean Maxer, int depth, Player player, Player opponent) {
         this.currentState = currentState;
         this.Maxer = Maxer;
         this.depth = depth;

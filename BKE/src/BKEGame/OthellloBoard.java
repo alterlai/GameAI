@@ -195,7 +195,7 @@ public class OthellloBoard extends AbstractBoard {
     }
 
     public int evalBoard(Player player) {
-        int cornerscore = 15;
+        int cornerscore = 30;
         int sidescore = 10;
         int normalscore = 5;
 
