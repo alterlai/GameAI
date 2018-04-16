@@ -90,7 +90,7 @@ public class GameMessageHandler implements MessageHandlerInterface {
         LobbyObservable.getInstance().stop();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(16, message.length() - 1).split(",")));
 
-        Player local = new Player(Server.getInstance().getPlayerName(), Server.getInstance().getIsAI() /*isAI*/);
+        Player local = new Player(Server.getInstance().getPlayerName(), Server.getInstance().getIsAI());
         Player remote = new Player(list.get(2).substring(12, list.get(2).length()-1));
 
         String nameGame = list.get(1).substring(12, list.get(1).length()-1);
