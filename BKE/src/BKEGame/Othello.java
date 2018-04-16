@@ -31,6 +31,16 @@ public class Othello extends Observable implements GameInterface {
     private Player maximizing;
     private Player minimizing;
 
+    private int moveCount = 0;
+    private final static int earlyGame = 15;
+    private final static int midGame = 45;
+
+    private final static int earlyDepth = 5;
+    private final static int midDepth = 4;
+    private final static int lateDepth = 6;
+
+
+
     //Temporary for testing purposes
     public int calculations = 0;
     public int evalcount = 0;
@@ -73,10 +83,20 @@ public class Othello extends Observable implements GameInterface {
         for (Move move : Moves) {
             OthellloBoard newState = new OthellloBoard(this.board);
             newState.playMove(move);
-            scoreCalculator c = new scoreCalculator(move, newState, !Maxer, 4, minimizing, maximizing);
+
+            int searchDepth = earlyDepth;
+            if (moveCount > earlyGame) {
+                searchDepth = midDepth;
+            }
+            else if (moveCount > midGame) {
+                searchDepth = lateDepth;
+            }
+
+            scoreCalculator c = new scoreCalculator(move, newState, !Maxer, searchDepth, minimizing, maximizing);
+
             Calculations.add(c);
         }
-        ExecutorService es = Executors.newFixedThreadPool(4);
+        ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*2);
         ArrayList<Thread> running = new ArrayList<>();
         for (Callable t : Calculations) {
             Futures.add(es.submit(t));
@@ -103,13 +123,23 @@ public class Othello extends Observable implements GameInterface {
         es.shutdown();
         es.awaitTermination(10, TimeUnit.SECONDS);
 
+        System.out.println(moveCount);
 /**
+<<<<<<< HEAD
+ System.out.println("Gametree: \n -------");
+ System.out.println("    Depth: 5");
+ System.out.println("    Nodes: " + calculations);
+ System.out.println("    Leaves: " + evalcount);
+ System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
+ System.out.println("\n \n");
+=======
         System.out.println("Gametree: \n -------");
         System.out.println("    Depth: 5");
         System.out.println("    Nodes: " + calculations);
-        System.out.println("    Leaves: " + evalcount);
-        System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
-        System.out.println("\n \n");
+        System.out.println("    Leaves: " + evalcount);**/
+       //System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
+       /** System.out.println("\n \n");
+>>>>>>> fbfc8aed67dad746117069079792702649c8a608
  **/
         return currentBestMove;
 
@@ -160,7 +190,7 @@ public class Othello extends Observable implements GameInterface {
         move.makePlayable(board.getSize());
         board.playMove(move);
         moveHistory.add(move);
-        //board.print();
+        moveCount++;
         setChanged();
         notifyObservers(this); //Should have a security proxy.
     }
