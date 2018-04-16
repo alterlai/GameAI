@@ -3,8 +3,11 @@ package MainControllers;
 import Game.Move;
 import Game.Player;
 
+/**
+ * Defines the behaviour of the game controller. Allows for better decoupling, less dependency issues.
+ */
+
 public interface GameControllerInterface {
-    public void init(Player local, Player opponent, String nameGame);
 
     public Move getMove() throws InterruptedException;
 

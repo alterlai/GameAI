@@ -103,6 +103,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
                 });
 
                 GameB.add(cell,x,y);
+                Player1T.setUnderline(true);
 
             }
         }
@@ -118,6 +119,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                ShowPlayerTurn(game.getMoveHistory().get(game.getMoveHistory().size()-1));
                 addToMoveHistory(game.getMoveHistory().get(game.getMoveHistory().size()-1));
             }
         });
@@ -189,6 +191,19 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
                     break;
 
             }
+        }
+    }
+
+    private void ShowPlayerTurn(Move move){
+        if(Player2T.getText().contains(move.getPlayer().getName()))
+        {
+            Player1T.setUnderline(true);
+            Player2T.setUnderline(false);
+        }
+        else if(Player1T.getText().contains(move.getPlayer().getName()))
+        {
+            Player1T.setUnderline(false);
+            Player2T.setUnderline(true);
         }
     }
 

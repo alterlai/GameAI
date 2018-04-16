@@ -5,6 +5,10 @@ public class Player {
     private Boolean AI;
     private String name;
 
+    /**
+     * Creates a player object. "Player" input will not be automated.
+     * @param name
+     */
     public Player(String name) {
         this.name = name;
     }
@@ -19,22 +23,19 @@ public class Player {
     }
 
     /**
-     *
      * @return Returns true when the player object is making moves based on an algorithm and not on user input.
      */
     public Boolean isAI() {
         return this.AI;
     }
 
+
     /**
      * @param mark Used to distinguish who occupied a certain spot. Not set in constructor because Player() may be called outside of game modules.
      */
-    public void setMark(char mark) {
-        this.mark = mark;
-    }
+    public void setMark(char mark) { this.mark = mark; }
 
-    public char getMark() {
-        return mark;
-    }
+    public char getMark() { return mark; }
+
     public String getName() {return name;}
 }

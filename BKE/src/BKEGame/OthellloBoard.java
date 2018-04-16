@@ -8,46 +8,29 @@ import java.util.ArrayList;
 
 public class OthellloBoard extends AbstractBoard {
 
+    /**
+     * Creates and initaliazes a Othello new board.
+     * @param size length of one side of the board in cells
+     */
     public OthellloBoard(int size) {
         super(size);
 
-        //set starting stones..
+        //set starting stones
         xy[3][3] = 'Z';
         xy[4][3] = 'W';
         xy[3][4] = 'W';
         xy[4][4] = 'Z';
-
-        //Test run..
-        /*
-        print();
-        Player temp = new Player("Han");
-        temp.setMark('Z');
-        Player temp2 = new Player("Han");
-        temp2.setMark('W');
-        ArrayList<Move> moves = getValidMoves(temp);
-        for (Move move : moves) {
-            System.out.println(isValid(move));
-            //xy[move.getX()][move.getY()] = 'U';
-            System.out.println(move.getX() + ", " + move.getY());
-        }
-        playMove(new Move(2, 4, size, temp));
-        playMove(new Move(2, 5, size, temp2));
-        playMove(new Move(5, 3, size, temp));
-        playMove(new Move(2, 3, size, temp2));
-        //playMove(new Move(6, 3, size, temp2));
-        print();
-        */
-    }
-
-    public OthellloBoard(AbstractBoard old) { //Creates a copy, used when you don't want to pass the reference
-        super(old);
     }
 
     /**
-     * Checks whether a move is valid or not. Should only be called from GameInterface.createMove() -> wastes processing power.. Validates user input.
-     * @param move
-     * @return
+     * Overloaded constructor used when you want to create a copy of the board. Useful when you don't want to pass the reference.
+     * @param old the board of which to make a copy of.
      */
+    public OthellloBoard(AbstractBoard old) {
+        super(old);
+    }
+
+    @Override
     public Boolean isValid(Move move) {
         for (Move validMove : getValidMoves(move.getPlayer())) {
             if (move.compareTo(validMove) == 1) {
@@ -87,6 +70,7 @@ public class OthellloBoard extends AbstractBoard {
         return score;
     }
 
+    @Override
     public void playMove(Move move) {
         move.makePlayable(this.getSize());
         xy[move.getX()][move.getY()] = move.getPlayer().getMark();
@@ -139,6 +123,7 @@ public class OthellloBoard extends AbstractBoard {
         }
     }
 
+    @Override
     public ArrayList<Move> getValidMoves(Player player) {
         ArrayList<Move> validMoves = new ArrayList<Move>();
 
@@ -159,7 +144,7 @@ public class OthellloBoard extends AbstractBoard {
      * @param player
      * @return
      */
-    public ArrayList<Move> validMovesFrom(int xstart, int ystart, Player player) {
+    private ArrayList<Move> validMovesFrom(int xstart, int ystart, Player player) {
 
         ArrayList<Integer> inbetween = new ArrayList<Integer>();;
         ArrayList<Move> valid = new ArrayList<Move>();
@@ -195,6 +180,11 @@ public class OthellloBoard extends AbstractBoard {
         return valid;
     }
 
+    /**
+     * Evaluates the current state of the board
+     * @param player perspective to evaluate from
+     * @return score of the board state as an int
+     */
     public int evalBoard(Player player) {
         int cornerscore = 3;
         int sidescore = 2;
