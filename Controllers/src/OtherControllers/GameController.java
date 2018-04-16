@@ -1,6 +1,7 @@
 package OtherControllers;
 
-import Game.Game;
+import BKEGame.Othello;
+import Game.GameInterface;
 import BKEGame.TicTacToe;
 import GUI.*;
 import Game.Move;
@@ -10,6 +11,7 @@ import Server.LobbyObservable;
 import java.io.IOException;
 import java.util.Observer;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import MainControllers.GameControllerInterface;
@@ -19,19 +21,31 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 public class GameController implements GameControllerInterface {
-    private Game game;
+    private GameInterface game;
     private Server server;
     private ViewActionHandler view;
 
     private CountDownLatch moveLatch;
     private Move selectedMove;
     private GameBoardHandler gameBoardHandler;
+    private Player localPlayer;
 
 
-    public GameController(Player local, Player opponent, String nameGame){
-        this.server = Server.getInstance(); //Server should be singleton.
+    public GameController(Player starter, Player opponent, String nameGame){
+        this.server = Server.getInstance();
+        if (starter.getName().equals(server.getPlayerName())){
+            localPlayer = starter;
+            System.out.println("white power");
+        }
+        else{
+            localPlayer = opponent;
+            System.out.println("I am black");
+        }
         if(nameGame.equals("Tic-tac-toe")) {
-            game = new TicTacToe(local, opponent);
+            game = new TicTacToe(starter, opponent);
+        }
+        else if (nameGame.equals("Reversi")) {
+            game = new Othello(starter, opponent);
         }
         try {
             initView();
@@ -50,29 +64,31 @@ public class GameController implements GameControllerInterface {
 
 
         // Get view handler.
-        GameBoardHandler gameBoardHandler = loader.getController();
-        gameBoardHandler.setController(this);
+        GameBoardHandler gameBoardHandler = null;
+        try {
+            gameBoardHandler = (GameBoardHandler) ViewHandlers.getInstance().getHandler("GameBoardHandler");
+        } catch (HandlerNotRegisterdException e) {
+            e.printStackTrace();
+        }
+        //GameBoardHandler gameBoardHandler = loader.getController();
+        gameBoardHandler.setController(this, game);
         gameBoardHandler.setPlayerNames(game.getPlayer1().getName(), game.getPlayer2().getName());
+
     }
 
-    /*public void init() {
-
-
-        }
-        else{
-        }
-    }*/
-
-
-    @Override
+    @Override //Deprecated
     public void init(Player local, Player opponent, String nameGame) {
 
     }
 
-    public Move getMove(Player player) throws InterruptedException {
+    public Move getMove() throws InterruptedException {
 
-        if (player.isAI()) {
-            return game.findBestMove(player);
+        if (localPlayer.isAI()) {
+            try {
+                return game.findBestMove(localPlayer);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
 
         selectedMove = null;
@@ -91,22 +107,28 @@ public class GameController implements GameControllerInterface {
 
     }
 
-    //public void forfeit(){
-    //    server.forfeit();
-    //}
+    public void forfeit(){
+        //TODO server forfeit functionality
+    }
 
     /**
      * Let the view show the end game message.
      * @param //win
      */
-    public void endGame(/*boolean win*/){
-        /*if (win) {
-            gameBoardHandler.showEndScreen("You have won! \nClick on OK to return to the lobby.");
+    public void endGame(int status){
+        try {
+            gameBoardHandler = (GameBoardHandler)ViewHandlers.getInstance().getHandler("GameBoardHandler");
+        } catch (HandlerNotRegisterdException e) {
+            e.printStackTrace();
+        }
+        if (status == -1) {
+            gameBoardHandler.showEndScreen("You have lost! \nClick on OK to return to the lobby.");
+        } else if (status == 0 ) {
+            gameBoardHandler.showEndScreen("Draw. \nClick on OK to return to the lobby.");
         } else {
-            gameBoardHandler.showEndScreen("You have lost!. \nClick on OK to return to the lobby.");
-        }*/
-        ViewController.getInstance().activate("homeView");
-        ViewController.getInstance().removeView("gameView");
+            gameBoardHandler.showEndScreen("You have won! \nClick on OK to return to the lobby");
+        }
+
         new Thread(LobbyObservable.getInstance()).start();
     }
 

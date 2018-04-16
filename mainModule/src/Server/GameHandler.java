@@ -12,8 +12,8 @@ public class GameHandler {
 
     public static GameHandler getInstance(){return gameHandlerSingelton;}
 
-    public void initGameController(Player local, Player opponent, String nameGame){
-        gameController = new GameController(local, opponent, nameGame);
+    public void initGameController(Player starter, Player opponent, String nameGame){
+        gameController = new GameController(starter, opponent, nameGame);
     };
 
     public GameControllerInterface getGameController() {

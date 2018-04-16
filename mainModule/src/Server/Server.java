@@ -20,7 +20,7 @@ import java.util.Observable;
 
 public class Server extends Observable implements Runnable {
 
-        private String serverIp = "localhost";
+        private String serverIp = "145.37.164.126";
         private int serverPort = 7789;
         private Socket socket;
         private volatile boolean connected = false;
@@ -31,7 +31,8 @@ public class Server extends Observable implements Runnable {
         private static Server server = new Server();
         private String playerName;
         private boolean quit = false;
-
+        private boolean isAI;
+        public int localPlayer = 0; //TEMPORARY - fix needed. Tells messagehandler which player to request when getting move.
 
         private Server() {
             ConfigHandler config = ConfigHandler.getInstance();
@@ -43,6 +44,7 @@ public class Server extends Observable implements Runnable {
                 serverPort = 7789;
             }
             playerName = config.getNickname();
+            isAI = config.getIsAI();
         }
 
         static public Server getInstance(){
@@ -94,21 +96,22 @@ public class Server extends Observable implements Runnable {
         }
 
         public boolean disconnect() throws InterruptedException {
-            //if (isConnected()) {
-            wait = true;
-            synchronized (lock){
-                dataOut.println("bye");
-                Thread.sleep(200);
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (isConnected()) {
+                wait = true;
+                synchronized (lock) {
+                    dataOut.println("bye");
+                    Thread.sleep(200);
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    connected = false;
+                    wait = false;
+                    lock.notify();
                 }
-                connected = false;
-                wait = false;
-                lock.notify();
             }
-            return connected;
+                return connected;
         }
 
         public ArrayList<String> getGameList() throws Exception {
@@ -202,7 +205,7 @@ public class Server extends Observable implements Runnable {
 
         public void saveConfig() {
             ConfigHandler config = ConfigHandler.getInstance();
-            config.saveConfig(serverIp, ""+serverPort, playerName);
+            config.saveConfig(serverIp, ""+serverPort, playerName, isAI);
         }
 
         public void commandStatus() {
@@ -212,6 +215,8 @@ public class Server extends Observable implements Runnable {
         public boolean isConnected() {
             return connected;
         }
+
+        public void setIsAI(boolean isAI) { this.isAI = isAI; }
 
         public String getServerIp() {
             return serverIp;
@@ -230,6 +235,8 @@ public class Server extends Observable implements Runnable {
         }
 
         public String getPlayerName(){return playerName;}
+
+        public boolean getIsAI() { return isAI; }
 
         public void quit() { this.quit = true; }
 

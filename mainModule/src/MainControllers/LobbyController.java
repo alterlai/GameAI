@@ -23,7 +23,7 @@ public class LobbyController{
 
 
     public void Challenge(String Tegenstander, String Game){
-        //view.challenge(Tegenstander, Game);
+        //view.challenge(Tegenstander, GameInterface);
     }
 
     public void ChallengePlayer(String Game, String PlayerName) throws Exception {
@@ -33,6 +33,10 @@ public class LobbyController{
 
     public void acceptChallenge(){
         //server.acceptchallenge();
+    }
+
+    public void playAsAI() {
+        // Set server bit to play as AI.
     }
 
     public void SubscribeGame(String Game) throws Exception {

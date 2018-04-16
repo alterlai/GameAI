@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameMessageHandler implements MessageHandlerInterface {
-    private static boolean isAI = false;
 
     private static GameControllerInterface gameController;
 
@@ -33,7 +32,7 @@ public class GameMessageHandler implements MessageHandlerInterface {
         else if (message.startsWith("SVR GAME YOURTURN")){
             System.out.println("It's my turn");
             gameController = GameHandler.getInstance().getGameController();
-            Server.getInstance().doMove(gameController.getMove(gameController.getPlayer(1)));
+            Server.getInstance().doMove(gameController.getMove());
             return;
         }
         else if (message.startsWith("SVR GAME MOVE")){
@@ -44,18 +43,18 @@ public class GameMessageHandler implements MessageHandlerInterface {
         else if (message.startsWith("SVR GAME WIN")){
             //gameController.endGame(true);
             System.out.println("I win!!!");
-            GameHandler.getInstance().getGameController().endGame();
+            GameHandler.getInstance().getGameController().endGame(1);
             return;
         }
         else if (message.startsWith("SVR GAME LOSS")){
             System.out.println("I lose :(");
             //gameController.endGame(false);
-            GameHandler.getInstance().getGameController().endGame();
+            GameHandler.getInstance().getGameController().endGame(-1);
             return;
         }
         else if (message.startsWith("SVR GAME DRAW")){
             System.out.println("I'm more even then the other guy");
-            GameHandler.getInstance().getGameController().endGame();
+            GameHandler.getInstance().getGameController().endGame(0);
             return;
         }
         else{
@@ -99,12 +98,20 @@ public class GameMessageHandler implements MessageHandlerInterface {
     private static void setupMatch(String message){
         LobbyObservable.getInstance().stop();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(16, message.length() - 1).split(",")));
-        Player player1 = new Player(Server.getInstance().getPlayerName(), isAI);
-        Player player2 = new Player(list.get(2).substring(12, list.get(2).length()-1));
+
+        Player local = new Player(Server.getInstance().getPlayerName(), Server.getInstance().getIsAI() /*isAI*/);
+        Player remote = new Player(list.get(2).substring(12, list.get(2).length()-1));
+
         String nameGame = list.get(1).substring(12, list.get(1).length()-1);
         GameHandler handler = GameHandler.getInstance();
-        handler.initGameController(player1, player2, nameGame);
-    }
 
-    public static void setisAI(Boolean isAI){GameMessageHandler.isAI = isAI;}
+        if (message.contains("PLAYERTOMOVE: \""+ Server.getInstance().getPlayerName() +"\"")) {
+            handler.initGameController(local, remote, nameGame);
+        }
+        else {
+            System.out.println("PLAYERTOMOVE: \""+ Server.getInstance().getPlayerName() +"\" ");
+            handler.initGameController(remote, local, nameGame);
+        }
+
+    }
 }
