@@ -124,7 +124,12 @@ public class GameBoardHandler implements Initializable, Observer {
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
             Pane selectedCell = (Pane) GameB.lookup("#" + i);
             final String mark = Character.toString(boardVals[i]);
-            tasks.add(new testrun(mark, selectedCell));
+            if(mark.equals("W")) {
+                tasks.add(new testrun(Color.WHITE, selectedCell));
+            }
+            else if(mark.equals("Z")){
+                tasks.add(new testrun(Color.BLACK, selectedCell));
+            }
         }
         for (testrun r : tasks) {
             Platform.runLater(r);
@@ -134,24 +139,16 @@ public class GameBoardHandler implements Initializable, Observer {
     class testrun implements Runnable {
         String mark;
         Pane pane;
-        public testrun(String mark, Pane pane) {
+        Color color;
+        public testrun(Color color, Pane pane) {
             this.mark = mark;
             this.pane = pane;
+            this.color = color;
         }
 
         @Override
         public void run() {
-            System.out.println("deze mark: " + mark);
-            if(mark == "Z"){
-                pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - 5, Color.BLACK));
-
-            }
-            else if(mark == "W") {
-                pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - 5, Color.WHITE));
-            }
-            else if(mark == "l"){
-                pane.setStyle("-fx-border-color: black; -fx-background-color: blue;");
-            }
+            pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/10), color));
            // button.setText(mark);
         }
     }
