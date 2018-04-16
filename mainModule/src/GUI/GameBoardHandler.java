@@ -154,7 +154,10 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
 
         @Override
         public void run() {
-            pane.getChildren().removeAll();
+            //pane.getChildren().removeAll();
+            for (int circle = 0; circle < pane.getChildren().size(); circle++) {
+                pane.getChildren().remove(circle);
+            }
             pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/8), color));
            // button.setText(mark);
         }
