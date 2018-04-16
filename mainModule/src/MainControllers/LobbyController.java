@@ -5,16 +5,10 @@ import Server.Server;
 import java.io.IOException;
 
 public class LobbyController{
-    //Model model
     Server server;
-    //View view
+
 
     public LobbyController(){
-
-//        this.model = model;
-//        view =;
-//        view.createview();
-//        model.init();
         this.server = Server.getInstance();
         new Thread(server).start();
         server.run();

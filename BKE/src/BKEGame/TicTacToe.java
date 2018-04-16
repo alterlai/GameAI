@@ -1,6 +1,7 @@
 package BKEGame;
 
 
+import Game.AbstractBoard;
 import Game.GameInterface;
 import Game.Player;
 import Game.Move;
@@ -154,6 +155,11 @@ public class TicTacToe extends Observable implements GameInterface {
 
     @Override
     public TicTacToeBoard getBoard() {
+        return new TicTacToeBoard(this.board);
+    }
+
+    @Override
+    public AbstractBoard getLegalMoveBoard() {
         return new TicTacToeBoard(this.board);
     }
 

@@ -28,6 +28,8 @@ public class Othello extends Observable implements GameInterface {
     private Player maximizing;
     private Player minimizing;
 
+    private Player turn;
+
     private int moveCount = 0; //Move count used to determine phase of game.
 
     private final static int earlyGame = 15; //Amount of moves up to this are considered to be early game
@@ -53,8 +55,17 @@ public class Othello extends Observable implements GameInterface {
         this.player1.setMark('W'); //Starting player is 'white'
         this.player2.setMark('Z'); //Not-starting player is 'black';
 
+        turn = player1;
     }
 
+    public void changeTurn() {
+        if (turn == player1) {
+            turn = player2;
+        }
+        else {
+            turn = player1;
+        }
+    }
     /**
      * @param player The player that is making the move
      * @return the best move that the player can make in the current situation
@@ -134,6 +145,15 @@ public class Othello extends Observable implements GameInterface {
 
     public AbstractBoard getBoard() { return this.board; }
 
+    public AbstractBoard getLegalMoveBoard() {
+        ArrayList<Move> legalMoves = board.getValidMoves(turn);
+        AbstractBoard tempBoard = new OthellloBoard(this.board);
+        for (Move move : legalMoves) {
+            tempBoard.setLegal(move);
+        }
+        return tempBoard;
+    }
+
     @Override
     public Player getPlayer1() { return this.player1; }
 
@@ -157,6 +177,7 @@ public class Othello extends Observable implements GameInterface {
         board.playMove(move);
         moveHistory.add(move);
         moveCount++;
+        changeTurn();
         setChanged();
         notifyObservers(this); //Should have a security proxy.
     }
