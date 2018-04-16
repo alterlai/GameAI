@@ -1,5 +1,6 @@
 package Server;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Observable;
 /**
@@ -119,7 +120,10 @@ public class LobbyObservable extends Observable implements Runnable {
      * @return Arraylist of errors
      */
     public ArrayList<String> getErrorList(){
-        return errorList;
+        ArrayList<String> tempList = new ArrayList<>();
+        tempList = errorList;
+        errorList = new ArrayList<>();
+        return tempList;
     }
 
     /**
