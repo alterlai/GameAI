@@ -12,6 +12,7 @@ import java.util.Observable;
 public class LobbyObservable extends Observable implements Runnable {
     private ArrayList<Challenge> challengesList = new ArrayList<Challenge>();
     private ArrayList<String> playerList = new ArrayList<String>();
+    private ArrayList<String> errorList = new ArrayList<String>();
     private static LobbyObservable lobby = new LobbyObservable();
     Server server = Server.getInstance();
     private static volatile String playerName;
@@ -80,6 +81,16 @@ public class LobbyObservable extends Observable implements Runnable {
     }
 
     /**
+     * This method is used register a new error
+     * @param error String the error message
+     */
+    public void addError(String error){
+        errorList.add(error);
+        setChanged();
+        notifyObservers(this);
+    }
+
+    /**
      * Change the object state to changed
      */
     @Override
@@ -101,6 +112,14 @@ public class LobbyObservable extends Observable implements Runnable {
      */
     public ArrayList<Challenge> getChallengesList() {
         return challengesList;
+    }
+
+    /**
+     * This method is used to get the list of errors
+     * @return Arraylist of errors
+     */
+    public ArrayList<String> getErrorList(){
+        return errorList;
     }
 
     /**

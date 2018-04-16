@@ -14,7 +14,6 @@ public class ErrorMessageHandler implements MessageHandlerInterface {
      * @param message String the server message to handle
      */
     public static void handleMessage(String message) {
-        //TODO implement the error screen
-        System.out.println("message");
+        LobbyObservable.getInstance().addError(message);
     }
 }
