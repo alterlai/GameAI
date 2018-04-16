@@ -45,7 +45,7 @@
                         <Insets right="5.0" top="5.0" />
                      </VBox.margin>
                   </ListView>
-                  <Button fx:id="ForfeitB" mnemonicParsing="false" onAction="#Forfeit" prefHeight="33.0" prefWidth="295.0" text="Forfeit" textAlignment="CENTER">
+                  <Button fx:id="ForfeitB" mnemonicParsing="false" onMouseClicked="#forfeit" prefHeight="33.0" prefWidth="295.0" text="Forfeit" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>

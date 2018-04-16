@@ -3,6 +3,7 @@ package GUI;
 import Game.AbstractBoard;
 import Game.GameInterface;
 import OtherControllers.GameController;
+import Server.Server;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +21,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import Game.Move;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -187,7 +190,14 @@ public class GameBoardHandler implements Initializable, Observer {
         });
     }
     @FXML
-    private void Forfeit(){ //Deprecated -> will never be used. Please remove.
+    private void forfeit(){ //Deprecated -> will never be used. Please remove.
+        try {
+            Server.getInstance().forfeit();
+        } catch (IOException e) {
+            System.out.println("Error while forfeiting.");
+            e.printStackTrace();
+        }
+        ViewController.getInstance().activate("homeView");
         System.out.println("Player forfeit.");
 
     }
