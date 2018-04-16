@@ -64,7 +64,13 @@ public class GameController implements GameControllerInterface {
 
 
         // Get view handler.
-        GameBoardHandler gameBoardHandler = loader.getController();
+        GameBoardHandler gameBoardHandler = null;
+        try {
+            gameBoardHandler = (GameBoardHandler) ViewHandlers.getInstance().getHandler("GameBoardHandler");
+        } catch (HandlerNotRegisterdException e) {
+            e.printStackTrace();
+        }
+        //GameBoardHandler gameBoardHandler = loader.getController();
         gameBoardHandler.setController(this, game);
         gameBoardHandler.setPlayerNames(game.getPlayer1().getName(), game.getPlayer2().getName());
 
@@ -109,14 +115,20 @@ public class GameController implements GameControllerInterface {
      * Let the view show the end game message.
      * @param //win
      */
-    public void endGame(/*boolean win*/){
-        /*if (win) {
-            gameBoardHandler.showEndScreen("You have won! \nClick on OK to return to the lobby.");
+    public void endGame(int status){
+        try {
+            gameBoardHandler = (GameBoardHandler)ViewHandlers.getInstance().getHandler("GameBoardHandler");
+        } catch (HandlerNotRegisterdException e) {
+            e.printStackTrace();
+        }
+        if (status == -1) {
+            gameBoardHandler.showEndScreen("You have lost! \nClick on OK to return to the lobby.");
+        } else if (status == 0 ) {
+            gameBoardHandler.showEndScreen("Draw. \nClick on OK to return to the lobby.");
         } else {
-            gameBoardHandler.showEndScreen("You have lost!. \nClick on OK to return to the lobby.");
-        }*/
-        ViewController.getInstance().activate("homeView");
-        ViewController.getInstance().removeView("gameView");
+            gameBoardHandler.showEndScreen("You have won! \nClick on OK to return to the lobby");
+        }
+
         new Thread(LobbyObservable.getInstance()).start();
     }
 

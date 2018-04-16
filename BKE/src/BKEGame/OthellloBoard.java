@@ -115,6 +115,7 @@ public class OthellloBoard extends AbstractBoard {
 
         char correctMark = move.getPlayer().getMark();
 
+        path:
         for ( int i = 0; i < 8; i++) { //Outer for loop decides the direction to check
             int x = move.getX();
             int y = move.getY();

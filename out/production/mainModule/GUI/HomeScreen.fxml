@@ -26,12 +26,14 @@
                 <Label alignment="CENTER" prefHeight="17.0" prefWidth="205.0" text="Play Game" textAlignment="CENTER" GridPane.vgrow="ALWAYS" />
                 <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2" >
                     <children>
-                        <ComboBox fx:id="gameModeList" prefWidth="150.0" promptText="Game.Game mode">
+                        <Button fx:id="play" mnemonicParsing="false" onAction="#handleStartEvent" prefWidth="2000.0" text="Play" VBox.vgrow="ALWAYS">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
                             <VBox.margin>
-                                <Insets bottom="20.0" top="20.0" />
+                                <Insets top="20.0" />
                             </VBox.margin>
-                        </ComboBox>
-                        <Button fx:id="play" mnemonicParsing="false" onAction="#handleStartEvent" prefWidth="2000.0" text="Play" VBox.vgrow="ALWAYS" />
+                        </Button>
                         <Button fx:id="settings" onAction="#openSettings" mnemonicParsing="false" prefHeight="25.0" prefWidth="239.0" text="Settings">
                             <opaqueInsets>
                                 <Insets />
@@ -53,7 +55,7 @@
                     <children>
                         <AnchorPane prefHeight="41.0" prefWidth="355.0">
                             <children>
-                                <ComboBox fx:id="challengeGameList" layoutX="103.0" layoutY="5.0" prefHeight="25.0" prefWidth="251.0" promptText="Game.Game" />
+                                <ComboBox fx:id="challengeGameList" layoutX="103.0" layoutY="5.0" prefHeight="25.0" prefWidth="251.0" promptText="Game" />
                                 <Label layoutX="14.0" layoutY="6.0" text="Select a Game" />
                             </children>
                             <VBox.margin>
