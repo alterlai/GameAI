@@ -108,7 +108,7 @@ public class Othello extends Observable implements GameInterface {
         System.out.println("    Depth: 5");
         System.out.println("    Nodes: " + calculations);
         System.out.println("    Leaves: " + evalcount);**/
-        System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
+       //System.out.println("    Time: " + (System.currentTimeMillis() - start) + " ms");
        /** System.out.println("\n \n");
  **/
         return currentBestMove;
