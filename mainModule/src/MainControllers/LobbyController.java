@@ -35,6 +35,10 @@ public class LobbyController{
         //server.acceptchallenge();
     }
 
+    public void playAsAI() {
+        // Set server bit to play as AI.
+    }
+
     public void SubscribeGame(String Game) throws Exception {
         if(server.subscribe(Game)){
             //update view dat we in queue zitten

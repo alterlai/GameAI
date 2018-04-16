@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameMessageHandler implements MessageHandlerInterface {
-    private static boolean isAI = false;
 
     private static GameControllerInterface gameController;
 
@@ -44,18 +43,18 @@ public class GameMessageHandler implements MessageHandlerInterface {
         else if (message.startsWith("SVR GAME WIN")){
             //gameController.endGame(true);
             System.out.println("I win!!!");
-            GameHandler.getInstance().getGameController().endGame();
+            GameHandler.getInstance().getGameController().endGame(1);
             return;
         }
         else if (message.startsWith("SVR GAME LOSS")){
             System.out.println("I lose :(");
             //gameController.endGame(false);
-            GameHandler.getInstance().getGameController().endGame();
+            GameHandler.getInstance().getGameController().endGame(-1);
             return;
         }
         else if (message.startsWith("SVR GAME DRAW")){
             System.out.println("I'm more even then the other guy");
-            GameHandler.getInstance().getGameController().endGame();
+            GameHandler.getInstance().getGameController().endGame(0);
             return;
         }
         else{
@@ -99,8 +98,10 @@ public class GameMessageHandler implements MessageHandlerInterface {
     private static void setupMatch(String message){
         LobbyObservable.getInstance().stop();
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.substring(16, message.length() - 1).split(",")));
-        Player local = new Player(Server.getInstance().getPlayerName(), true /*isAI*/);
+
+        Player local = new Player(Server.getInstance().getPlayerName(), Server.getInstance().getIsAI() /*isAI*/);
         Player remote = new Player(list.get(2).substring(12, list.get(2).length()-1));
+
         String nameGame = list.get(1).substring(12, list.get(1).length()-1);
         GameHandler handler = GameHandler.getInstance();
 
@@ -113,6 +114,4 @@ public class GameMessageHandler implements MessageHandlerInterface {
         }
 
     }
-
-    public static void setisAI(Boolean isAI){GameMessageHandler.isAI = isAI;}
 }

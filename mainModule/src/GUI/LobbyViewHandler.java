@@ -3,6 +3,7 @@ import Server.Server;
 import Server.Challenge;
 import Server.LobbyObservable;
 import Server.MessageHandler;
+import Server.GameMessageHandler;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -17,15 +18,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     @FXML private ListView<String> playerList;
     @FXML private ListView<String> gameList;
-    @FXML private ComboBox<String> gameModeList;
     @FXML private ComboBox<String> challengeGameList;
     ArrayList<String> gamemodes;
     private Server server;
@@ -37,6 +35,9 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     @FXML
     public void initialize() {
+        // Register this controller to the viewHandlers.
+        ViewHandlers.getInstance().registerHandler("LobbyView", this);
+
         //Create server
         server = Server.getInstance();
         try {
@@ -55,12 +56,13 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        lobby = LobbyObservable.getInstance();
+        lobby.addObserver(this);
         if (server.isConnected()) {
             // Create lobby
             Thread serverThread = new Thread(server);
             serverThread.start();
-            lobby = LobbyObservable.getInstance();
-            lobby.addObserver(this);
+
             //lobby.setPlayerName(server.getPlayerName());
             Thread thread = new Thread(lobby);
             thread.start();
@@ -69,12 +71,6 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            // Fill gamemodes list.
-            gamemodes = new ArrayList<>();
-            gamemodes.add("Player vs Player");
-            gamemodes.add("AI vs Player");
-            gameModeList.setItems(FXCollections.observableArrayList(gamemodes));
             try {
                 challengeGameList.setItems(FXCollections.observableArrayList(server.getGameList()));
             } catch (Exception e) {
@@ -89,20 +85,12 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
     @FXML
     private void handleStartEvent() {
         String selectedGame = gameList.getSelectionModel().getSelectedItem();
-        String selectedMode = gameModeList.getValue();
         if (selectedGame == null) {
             //new Popup(stage, "Pleaes select a GameInterface.");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Unable to start GameInterface.");
             alert.setHeaderText(null);
             alert.setContentText("Please select a GameInterface to play.");
-            alert.showAndWait();
-        }
-        else if (selectedMode == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Unable to start GameInterface.");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select a gamemode to play.");
             alert.showAndWait();
         }
         else {
@@ -188,12 +176,10 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     public void updateGameList(List<String> gameArrayList) {
         ObservableList<String> observableList = FXCollections.observableArrayList(gameArrayList);
-        gameList.setItems(observableList);
-    }
-
-    public void updateGameModeList(List<String> gameModeArrayList) {
-        ObservableList<String> observableList = FXCollections.observableArrayList(gameModeArrayList);
-        gameModeList.setItems(observableList);
+        Platform.runLater(() -> {
+            challengeGameList.setItems(observableList);
+            gameList.setItems(observableList);
+        });
     }
 
     public void displayChallenges(List<Challenge> challenges) {
@@ -202,16 +188,28 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             challenges.remove(i); //Prevents the challenge being displayed twice if the observable notifies again while notificiation is still visible
 
             String contentText = "User " + challenge.getPlayerName() + " has challenged you to a GameInterface of " + challenge.getGame() +"!";
-            ButtonType btnYes = new ButtonType("Accept", ButtonBar.ButtonData.YES);
-            ButtonType btnNo = new ButtonType("Decline", ButtonBar.ButtonData.NO);
+            ButtonType btnPlayer = new ButtonType("Play as Player", ButtonBar.ButtonData.RIGHT);
+            ButtonType btnAI = new ButtonType("Play as AI", ButtonBar.ButtonData.HELP);
+            ButtonType btnNo = new ButtonType("Decline", ButtonBar.ButtonData.LEFT);
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, contentText, btnNo, btnYes);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, contentText, btnPlayer, btnNo,  btnAI);
             alert.setTitle("Challenge!");
             alert.setHeaderText(null);
             Optional<ButtonType> result = alert.showAndWait();
 
-            if (result.get().getButtonData() == ButtonBar.ButtonData.YES) {
+            // User clicked Play as AI
+            if (result.get().getButtonData() == ButtonBar.ButtonData.HELP) {
                 try {
+                    server.setIsAI(true);
+                    server.acceptChallenge(challenge);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            // Clicked play as Player
+            if (result.get().getButtonData() == ButtonBar.ButtonData.RIGHT) {
+                try {
+                    server.setIsAI(false);
                     server.acceptChallenge(challenge);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -222,12 +220,16 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
 
     @Override
     public void update(Observable o, Object arg) {
+        try {
+            updateGameList(server.getGameList());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 updatePlayerList(lobby.getPlayerList());
                 displayChallenges(lobby.getChallengesList());
-                updateGameModeList(gamemodes);
             }
         });
     }

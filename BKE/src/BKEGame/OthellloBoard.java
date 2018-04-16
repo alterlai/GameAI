@@ -16,7 +16,6 @@ public class OthellloBoard extends AbstractBoard {
         xy[4][3] = 'W';
         xy[3][4] = 'W';
         xy[4][4] = 'Z';
-
     }
 
     /**
@@ -103,6 +102,7 @@ public class OthellloBoard extends AbstractBoard {
 
         char correctMark = move.getPlayer().getMark();
 
+        path:
         for ( int i = 0; i < 8; i++) { //Outer for loop decides the direction to check
             int x = move.getX();
             int y = move.getY();
@@ -111,17 +111,17 @@ public class OthellloBoard extends AbstractBoard {
             for (int j = 0; j < size; j++) { //Inner for loop makes sure that every possible cell in path is checked.
                 x += xdir[i];
                 y += ydir[i];
-                    if (inBound(x, y) && xy[x][y] != correctMark && xy[x][y]!= ' ') { //Would need flipping if correctMark is found later on in the path
-                        flip.add(new Integer[]{x, y});
-                    }
-                    else if (inBound(x, y) && xy[x][y] == correctMark) { //Correct mark found - "sandwhich" identified - flip all the cells inbetween.
-                        for (Integer[] cell : flip) {
-                            xy[cell[0]][cell[1]] = correctMark;
-                        }
-                    }
-                    else { //Path checking is broken off when it becomes clear that no flips are needed
-                        break;
-                    }
+                if (inBound(x, y) && xy[x][y] != correctMark && xy[x][y]!= ' ') { //Would need flipping if correctMark is found later on in the path
+                    flip.add(new Integer[]{x, y});
+                }
+                else if (inBound(x, y) && xy[x][y] == correctMark) { //Correct mark found - "sandwhich" identified - flip all the cells inbetween.
+                    for (Integer[] cell : flip) {
+                        xy[cell[0]][cell[1]] = correctMark;
+                    } break;
+                }
+                else { //Path checking is broken off when it becomes clear that no flips are needed
+                    break;
+                }
             }
         }
     }
@@ -185,5 +185,35 @@ public class OthellloBoard extends AbstractBoard {
             }
         }
         return valid;
+    }
+
+    public int evalBoard(Player player) {
+        int cornerscore = 30;
+        int sidescore = 15;
+        int normalscore = 5;
+
+        int score = 0;
+        char mark = player.getMark();
+
+
+        for (int x = 0; x < this.size; x++) {
+            for (int y = 0; y < this.size; y++) {
+                char f = xy[x][y];
+                if ((x == 0 | x == 7) && f == mark) {
+                    if (y == 0 | y == 7) { //corner stone
+                        score += cornerscore;
+                    }
+                }
+                else if ((x == 0 | y == 0 || x == 7 || y == 7) && f == mark) {
+                    score += sidescore;
+                }
+                else if (f == mark) {
+                    score += normalscore;
+                }
+            }
+
+        }
+        return score;
+
     }
 }

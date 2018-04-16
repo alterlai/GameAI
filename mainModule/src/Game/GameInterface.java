@@ -2,6 +2,7 @@ package Game;
 
 import java.util.ArrayList;
 import java.util.Observer;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -35,7 +36,8 @@ public interface GameInterface {
      * @param player The player that is making the move
      * @return The best move that the player can play in the current situation.
      */
-    Move findBestMove(Player player);
+    Move findBestMove(Player player) throws InterruptedException, ExecutionException;
+
 
     /**
      * Creates a move object that can be played in the game that implements this interface. Takes boardsize into account.
