@@ -204,12 +204,12 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
     }
 
     private void ShowPlayerTurn(Move move){
-        if(Player2T.getText().contains(move.getPlayer().getName()))
+        if(Player2T.getText().equals("Player 2: " + move.getPlayer().getName()))
         {
-            Player1T.setUnderline(true);
+             Player1T.setUnderline(true);
             Player2T.setUnderline(false);
         }
-        else if(Player1T.getText().contains(move.getPlayer().getName()))
+        else if(Player1T.getText().equals("Player 1: " + move.getPlayer().getName()))
         {
             Player1T.setUnderline(false);
             Player2T.setUnderline(true);
