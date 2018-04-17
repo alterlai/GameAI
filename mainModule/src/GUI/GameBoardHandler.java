@@ -56,6 +56,8 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
     public void initialize(URL location, ResourceBundle resources) {
         ViewHandlers.getInstance().registerHandler("GameBoardHandler", this);
     }
+
+    //Creates the board cells with javafx Panes.
     public void createDisplayElements() {
         int X = this.boardSize;
         int Y = this.boardSize;
@@ -67,6 +69,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
             }
         });
 
+        //Creates a total of rows needed for the game size
         if(X > 2 || Y> 2) {
             for(int newrow = 1; newrow <= X-4; newrow++) {
                 GameB.setPrefHeight( GameB.getPrefHeight() + 100);
@@ -75,7 +78,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
                 row.setPrefHeight(100);
                 GameB.getRowConstraints().add(row);
             }
-
+        //Creates a total of collums needed for the game size
             for(int newcol = 1; newcol <= Y-4; newcol++) {
                 GameB.setPrefWidth( GameB.getPrefWidth() + 100);
 
@@ -86,6 +89,8 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         }
         ListV.setPrefHeight( ListV.getPrefHeight() + 100);
         GameHBox.setPrefSize(800, 800);
+
+        //adds the pane on the field
         for(int y = 0; y < Y; y++) {
             for(int x = 0; x < X; x++){
                 int pos = ((y) * X)  +  x;
@@ -107,6 +112,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         }
     }
 
+    //the game board is a observer and will update the board when needed
     @Override
     public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
 
@@ -123,7 +129,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         });
     }
 
-
+//checks which player has which mark before placing them on the board
     public void drawGrid(AbstractBoard board) {
         char[] boardVals = board.getCells1D();
 
@@ -159,7 +165,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
             Platform.runLater(r);
         }
     }
-
+    //redraws the needed stones on the board
     class paneUpdater implements Runnable {
         String mark = "none";
         Pane pane;
@@ -202,7 +208,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
             }
         }
     }
-
+//shows which player is able to play
     private void ShowPlayerTurn(Move move){
         if(Player2T.getText().equals("Player 2: " + move.getPlayer().getName()))
         {
@@ -246,6 +252,8 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
             }
         });
     }
+
+    //player is able to forfeit in game
     @FXML
     private void forfeit(){ //Deprecated -> will never be used. Please remove.
         try {
