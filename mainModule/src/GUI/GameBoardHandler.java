@@ -118,7 +118,11 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
 
         GameInterface game= (GameInterface) arg;
         AbstractBoard board = game.getLegalMoveBoard();
-        drawGrid(board);
+        try{
+            drawGrid(board);
+        } catch (Exception e) {
+        }
+
 
         Platform.runLater(new Runnable() {
             @Override
