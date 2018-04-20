@@ -2,12 +2,24 @@ package Server;
 
 import java.io.BufferedReader;
 
+/**
+ * <H1> MessageHandler</H1>
+ * This class handels messages and passes them to the appropiate handler
+ * @author Rudolf Klijnhout
+ * @version 1.0
+ * @since 16-04-2018
+ **/
+
 public class MessageHandler implements MessageHandlerInterface {
 
     private static boolean lastCommandAnswer = false;
 
+    /**
+     * This method is used to handle the messages
+     * @param message String server message
+     * @throws Exception if the is a unkown message
+     */
     public static void handleMessage(String message) throws Exception {
-       System.out.println(message);
         if(message.startsWith("SVR GAME")) {
             GameMessageHandler.handleMessage(message);
         }
@@ -20,10 +32,14 @@ public class MessageHandler implements MessageHandlerInterface {
         }
         else{
             System.out.println(message);
-            throw new Exception("unkown message");
         }
     }
 
+    /**
+     * This method is used to wait for an ok after a command and handels in between messages
+     * @param dataIn BufferedReader that is the dataIn for the connection
+     * @throws Exception if it is not able to read a new line
+     */
     public static void waitForOk(BufferedReader dataIn) throws Exception {
         String data = dataIn.readLine();
         while (!data.equals("OK")) {

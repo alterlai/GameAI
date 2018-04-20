@@ -1,6 +1,7 @@
 package BKEGame;
 
 
+import Game.AbstractBoard;
 import Game.GameInterface;
 import Game.Player;
 import Game.Move;
@@ -143,27 +144,29 @@ public class TicTacToe extends Observable implements GameInterface {
     public void playMove(Move move) {
         board.playMove(move);
         moveHistory.add(move);
-        board.print();
         setChanged();
         notifyObservers(this); //Should have a security proxy.
     }
 
-    public void registerView (Observer view) {addObserver(view);
-    }
+    public void registerView (Observer view) {addObserver(view); }
 
 
-    /**
-     * @return A copy of the current board state. Not a reference to the real board, risk of entities manipulating it from outside.
-     */
 
     @Override
     public TicTacToeBoard getBoard() {
         return new TicTacToeBoard(this.board);
     }
+
+    @Override
+    public AbstractBoard getLegalMoveBoard() {
+        return new TicTacToeBoard(this.board);
+    }
+
     @Override
     public ArrayList<Move> getMoveHistory() {
         return moveHistory;
     }
+
     public Player getPlayer1() {return this.player1;}
     public Player getPlayer2() {return this.player2;}
 

@@ -12,7 +12,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Useless object used for independent testing of module..
+ * Useless temporary object used for independent testing of module..
  */
 public class Main implements Observer {
 
@@ -48,7 +48,6 @@ public class Main implements Observer {
             else {t++;}
             if (t == 2) { cont = false;}
         }
-        System.out.println(System.currentTimeMillis() - start + " ms.");
     }
 
 

@@ -11,13 +11,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 import Game.Move;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 
 public class GameBoardHandler implements Initializable, Observer, ViewActionHandler {
 
@@ -57,6 +56,8 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
     public void initialize(URL location, ResourceBundle resources) {
         ViewHandlers.getInstance().registerHandler("GameBoardHandler", this);
     }
+
+    //Creates the board cells with javafx Panes.
     public void createDisplayElements() {
         int X = this.boardSize;
         int Y = this.boardSize;
@@ -68,6 +69,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
             }
         });
 
+        //Creates a total of rows needed for the game size
         if(X > 2 || Y> 2) {
             for(int newrow = 1; newrow <= X-4; newrow++) {
                 GameB.setPrefHeight( GameB.getPrefHeight() + 100);
@@ -76,7 +78,7 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
                 row.setPrefHeight(100);
                 GameB.getRowConstraints().add(row);
             }
-
+        //Creates a total of collums needed for the game size
             for(int newcol = 1; newcol <= Y-4; newcol++) {
                 GameB.setPrefWidth( GameB.getPrefWidth() + 100);
 
@@ -87,6 +89,8 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
         }
         ListV.setPrefHeight( ListV.getPrefHeight() + 100);
         GameHBox.setPrefSize(800, 800);
+
+        //adds the pane on the field
         for(int y = 0; y < Y; y++) {
             for(int x = 0; x < X; x++){
                 int pos = ((y) * X)  +  x;
@@ -102,51 +106,79 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
                 });
 
                 GameB.add(cell,x,y);
+                Player1T.setUnderline(true);
 
             }
         }
     }
 
+    //the game board is a observer and will update the board when needed
     @Override
     public void update(Observable o, Object arg) { //Not safe (not a representation of the board, just rebuilds it).
 
         GameInterface game= (GameInterface) arg;
-        AbstractBoard board = game.getBoard();
-        drawGrid(board);
+        AbstractBoard board = game.getLegalMoveBoard();
+        try{
+            drawGrid(board);
+        } catch (Exception e) {
+        }
+
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                ShowPlayerTurn(game.getMoveHistory().get(game.getMoveHistory().size()-1));
                 addToMoveHistory(game.getMoveHistory().get(game.getMoveHistory().size()-1));
             }
         });
     }
 
-
+//checks which player has which mark before placing them on the board
     public void drawGrid(AbstractBoard board) {
         char[] boardVals = board.getCells1D();
 
-        ArrayList<testrun> tasks  = new ArrayList<>();
+
+        ArrayList<paneUpdater> tasks  = new ArrayList<>();
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
             Pane selectedCell = (Pane) GameB.lookup("#" + i);
-            final String mark = Character.toString(boardVals[i]);
-            if(mark.equals("W")) {
-                tasks.add(new testrun(Color.WHITE, selectedCell));
+            char mark = boardVals[i];
+            switch (mark){
+                case 'W':
+                    tasks.add(new paneUpdater(Color.WHITE, selectedCell, "Circle"));
+                    break;
+                case 'Z':
+                    tasks.add(new paneUpdater(Color.BLACK, selectedCell, "Circle"));
+                    break;
+                case 'X':
+                    tasks.add(new paneUpdater(Color.BLACK, selectedCell, "Cross"));
+                    break;
+                case 'O':
+                    tasks.add(new paneUpdater(Color.WHITE, selectedCell, "Hcircle"));
+                    break;
+                case 'L': //Legit move
+                    tasks.add(new paneUpdater(Color.RED, selectedCell, "Circle"));
+                    break;
+                case ' ':
+                    tasks.add(new paneUpdater(selectedCell));
+                    break;
+
             }
-            else if(mark.equals("Z")){
-                tasks.add(new testrun(Color.BLACK, selectedCell));
-            }
+
         }
-        for (testrun r : tasks) {
+        for (paneUpdater r : tasks) {
             Platform.runLater(r);
         }
     }
-
-    class testrun implements Runnable {
-        String mark;
+    //redraws the needed stones on the board
+    class paneUpdater implements Runnable {
+        String mark = "none";
         Pane pane;
         Color color;
-        public testrun(Color color, Pane pane) {
+
+        public paneUpdater(Pane pane) {
+            this.pane = pane;
+        }
+        public paneUpdater(Color color, Pane pane, String mark) {
             this.mark = mark;
             this.pane = pane;
             this.color = color;
@@ -158,8 +190,39 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
             for (int circle = 0; circle < pane.getChildren().size(); circle++) {
                 pane.getChildren().remove(circle);
             }
-            pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/8), color));
-           // button.setText(mark);
+            switch(mark){
+                case "Circle":
+                    //draw a circle
+                    pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/8), color));
+                    break;
+                case "Cross":
+                    //draw a cross
+                    double size = pane.getHeight()/5.;
+                    Line lineX = new Line(0 + size,0 + size ,pane.getWidth() - size,pane.getHeight() - size);
+                    lineX.setStrokeWidth(size);
+                    Line lineY = new Line(0 + size,pane.getHeight() - size, pane.getWidth() - size,0 + size);
+                    lineY.setStrokeWidth(size);
+                    pane.getChildren().addAll(lineX,lineY);
+                    break;
+                case "Hcircle":
+                    //draw a hollow circle
+                    pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/7), color));
+                    pane.getChildren().add(new Circle(pane.getWidth()/2,pane.getHeight()/2, (pane.getHeight()/2) - (pane.getHeight()/4), Color.GREEN));
+                    break;
+            }
+        }
+    }
+//shows which player is able to play
+    private void ShowPlayerTurn(Move move){
+        if(Player2T.getText().equals("Player 2: " + move.getPlayer().getName()))
+        {
+             Player1T.setUnderline(true);
+            Player2T.setUnderline(false);
+        }
+        else if(Player1T.getText().equals("Player 1: " + move.getPlayer().getName()))
+        {
+            Player1T.setUnderline(false);
+            Player2T.setUnderline(true);
         }
     }
 
@@ -193,6 +256,8 @@ public class GameBoardHandler implements Initializable, Observer, ViewActionHand
             }
         });
     }
+
+    //player is able to forfeit in game
     @FXML
     private void forfeit(){ //Deprecated -> will never be used. Please remove.
         try {

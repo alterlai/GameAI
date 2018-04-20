@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -82,6 +83,8 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
                 e.printStackTrace();
             }
         }
+
+        showErrors(LobbyObservable.getInstance().getErrorList());
     }
 
     /**
@@ -194,8 +197,24 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
      */
     public void updateGameList(List<String> gameArrayList) {
         ObservableList<String> observableList = FXCollections.observableArrayList(gameArrayList);
-        challengeGameList.setItems(observableList);
-        gameList.setItems(observableList);
+        Platform.runLater(() -> {
+            challengeGameList.setItems(observableList);
+            gameList.setItems(observableList);
+        });
+    }
+
+    private void showErrors(ArrayList<String> errors) {
+        if (errors.size() > 0) {
+            String errorString = "";
+            for (String error : errors) {
+                errorString += error + "\n";
+            }
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("An error occured");
+            alert.setHeaderText(null);
+            alert.setContentText(errorString);
+            alert.showAndWait();
+        }
     }
 
     /**
@@ -255,6 +274,7 @@ public class LobbyViewHandler implements ViewActionHandler, Observer{
             public void run() {
                 updatePlayerList(lobby.getPlayerList());
                 displayChallenges(lobby.getChallengesList());
+                showErrors(LobbyObservable.getInstance().getErrorList());
             }
         });
     }
